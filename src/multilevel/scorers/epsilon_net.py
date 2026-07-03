@@ -5,7 +5,7 @@ import math
 import time
 from typing import Any
 
-from multilevel.canonical import attach_certificate_hash
+from multilevel.canonical import attach_certificate_hash, canonical_dumps
 from multilevel.numbers import json_point, parse_point
 
 
@@ -101,6 +101,17 @@ def score_instance(instance: dict[str, Any]) -> dict[str, Any]:
     epsilon = threshold / len(points)
     lower_bound_ratio = (k + 1) * epsilon
     exact = not missing
+    num_k_subsets = math.comb(len(points), k)
+    witness_signature_count = len(
+        {
+            (
+                tuple(witness.get("net", [])),
+                tuple(witness.get("contained", [])),
+                tuple(round(float(v), 12) for v in witness.get("normal", [])),
+            )
+            for witness in witnesses
+        }
+    )
     cert = {
         "schema": "epsilon_net_certificate_v1",
         "problem": "epsilon_net",
@@ -113,8 +124,11 @@ def score_instance(instance: dict[str, Any]) -> dict[str, Any]:
         "lower_bound_ratio": lower_bound_ratio,
         "exact_enumeration": True,
         "all_k_subsets_fail": exact,
-        "num_k_subsets": math.comb(len(points), k),
+        "num_k_subsets": num_k_subsets,
         "num_witness_halfplanes": len(witnesses),
+        "witness_coverage_fraction": len(witnesses) / max(1, num_k_subsets),
+        "witness_signature_count": witness_signature_count,
+        "missing_witness_count": len(missing),
         "witnesses": witnesses,
         "missing_witness_nets": missing,
         "direction_count": len(directions),
@@ -127,6 +141,7 @@ def score_instance(instance: dict[str, Any]) -> dict[str, Any]:
         "solver_status": "optimal" if exact else "not_counterexample",
         "exact_runtime_seconds": time.perf_counter() - start,
     }
+    cert["certificate_payload_bytes"] = len(canonical_dumps(cert).encode("utf-8"))
     return attach_certificate_hash(cert)
 
 

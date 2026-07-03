@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+import itertools
 import time
 from typing import Any
 
-from multilevel.canonical import attach_certificate_hash
+from multilevel.canonical import attach_certificate_hash, canonical_dumps
 from multilevel.numbers import json_box, parse_box
 from multilevel.scorers import misr
 
@@ -31,6 +32,54 @@ def _adjacency_matrix(n: int, edges: set[tuple[int, int]]) -> list[list[int]]:
         matrix[u][v] = 1
         matrix[v][u] = 1
     return matrix
+
+
+def _graph6(n: int, edges: set[tuple[int, int]]) -> str | None:
+    """Return graph6 for small graphs using the standard upper-triangle order."""
+    if n > 62:
+        return None
+    bits = []
+    for i in range(n):
+        for j in range(i + 1, n):
+            bits.append(1 if (i, j) in edges else 0)
+    while len(bits) % 6:
+        bits.append(0)
+    chars = [chr(n + 63)]
+    for offset in range(0, len(bits), 6):
+        value = 0
+        for bit in bits[offset : offset + 6]:
+            value = (value << 1) | bit
+        chars.append(chr(value + 63))
+    return "".join(chars)
+
+
+def _automorphism_group_size(n: int, adjacency: list[list[int]]) -> int | None:
+    """Brute-force automorphism count for the small graphs used in exploration."""
+    if n > 9:
+        return None
+    degrees = [sum(row) for row in adjacency]
+    classes: dict[int, list[int]] = {}
+    for vertex, degree in enumerate(degrees):
+        classes.setdefault(degree, []).append(vertex)
+    class_vertices = list(classes.values())
+    count = 0
+    for blocks in itertools.product(*(itertools.permutations(block) for block in class_vertices)):
+        perm = list(range(n))
+        for original_block, image_block in zip(class_vertices, blocks):
+            for vertex, image in zip(original_block, image_block):
+                perm[vertex] = image
+        ok = True
+        for i in range(n):
+            pi = perm[i]
+            for j in range(i + 1, n):
+                if adjacency[i][j] != adjacency[pi][perm[j]]:
+                    ok = False
+                    break
+            if not ok:
+                break
+        if ok:
+            count += 1
+    return count
 
 
 def _max_subset_size(n: int, edges: set[tuple[int, int]], *, want_clique: bool) -> int:
@@ -137,6 +186,8 @@ def score_instance(instance: dict[str, Any]) -> dict[str, Any]:
     edge_set = _edge_set(edges)
     adjacency = _adjacency_matrix(n, edge_set)
     degree_sequence = sorted((sum(row) for row in adjacency), reverse=True)
+    edge_count = len(edges)
+    density = edge_count / max(1, n * (n - 1) / 2)
     objects = _mixed_objects(grid)
     status = "unknown"
     assignment = None
@@ -153,16 +204,26 @@ def score_instance(instance: dict[str, Any]) -> dict[str, Any]:
         "rectangles": [json_box(rect) for rect in rectangles],
         "n": n,
         "rectangle_edges": edges,
+        "edge_count": edge_count,
+        "edge_density": density,
         "adjacency_matrix": adjacency,
+        "graph6": _graph6(n, edge_set),
         "degree_sequence": degree_sequence,
         "clique_number": _max_subset_size(n, edge_set, want_clique=True),
         "independence_number": _max_subset_size(n, edge_set, want_clique=False),
+        "automorphism_group_size": _automorphism_group_size(n, adjacency),
         "mixed_grid": grid,
         "mixed_candidate_count": len(objects),
         "mixed_status": status,
         "mixed_assignment": None if assignment is None else [list(obj) for obj in assignment],
         "score": score,
         "unconditional_separation": False,
+        "bounded_evidence_only": True,
+        "evidence_note": (
+            "bounded-grid infeasibility is not an unconditional separation"
+            if status == "bounded_grid_infeasible"
+            else "candidate has a bounded-grid mixed square/segment representation or timed out"
+        ),
         "solver": {
             "solver": "bounded_grid_backtracking_search",
             "mixed_object_family": "axis_aligned_squares_and_segments",
@@ -173,6 +234,7 @@ def score_instance(instance: dict[str, Any]) -> dict[str, Any]:
         "solver_status": status,
         "exact_runtime_seconds": time.perf_counter() - start,
     }
+    cert["certificate_payload_bytes"] = len(canonical_dumps(cert).encode("utf-8"))
     return attach_certificate_hash(cert)
 
 
