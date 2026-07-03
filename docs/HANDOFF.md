@@ -34,9 +34,10 @@ Read these files in order:
 
 1. `docs/EXPERIMENT_MATRIX.md`
 2. `docs/PATTERNBOOST_EXPERIMENT_REPORT.md`
-3. `docs/RESULTS.md`
-4. `docs/HPC_JUBAIL.md`
-5. `docs/archive/STRATEGY_STUDY_2026-06-30.md`
+3. `docs/manuscript/patternboost_experiment_report.pdf`
+4. `docs/RESULTS.md`
+5. `docs/HPC_JUBAIL.md`
+6. `docs/archive/STRATEGY_STUDY_2026-06-30.md`
 
 The active problem scope is `misr`, `unit_square`, and `guillotine`. Do not
 count `epsilon_net`, `graph_separation`, or discarded square-stabbing-14-9

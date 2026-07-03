@@ -5,6 +5,10 @@ Last audited run date: 2026-07-03, Asia/Dubai.
 For the full narrative report with methodology, figures, per-problem
 observations, and next steps, see
 [PATTERNBOOST_EXPERIMENT_REPORT.md](PATTERNBOOST_EXPERIMENT_REPORT.md).
+The formal manuscript-style version is in
+[manuscript/patternboost_experiment_report.tex](manuscript/patternboost_experiment_report.tex)
+and
+[manuscript/patternboost_experiment_report.pdf](manuscript/patternboost_experiment_report.pdf).
 
 ## Best Known Values from Current Code Path
 

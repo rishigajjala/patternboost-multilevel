@@ -135,8 +135,11 @@ guillotine  0.3
 
 See [docs/PATTERNBOOST_EXPERIMENT_REPORT.md](docs/PATTERNBOOST_EXPERIMENT_REPORT.md)
 for the detailed study report, including methodology, figures, observations,
-and next steps. See [docs/RESULTS.md](docs/RESULTS.md) for the shorter job-ID
-snapshot.
+and next steps. A formal LaTeX/PDF version is available at
+[docs/manuscript/patternboost_experiment_report.tex](docs/manuscript/patternboost_experiment_report.tex)
+and
+[docs/manuscript/patternboost_experiment_report.pdf](docs/manuscript/patternboost_experiment_report.pdf).
+See [docs/RESULTS.md](docs/RESULTS.md) for the shorter job-ID snapshot.
 
 ## Core Commands
 
