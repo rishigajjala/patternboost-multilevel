@@ -2,6 +2,10 @@
 
 Last audited run date: 2026-07-03, Asia/Dubai.
 
+For the full narrative report with methodology, figures, per-problem
+observations, and next steps, see
+[PATTERNBOOST_EXPERIMENT_REPORT.md](PATTERNBOOST_EXPERIMENT_REPORT.md).
+
 ## Best Known Values from Current Code Path
 
 | Problem | Best value | Source run | Certificate details |
@@ -48,4 +52,3 @@ audited.
   scope.
 - Checkpoint values are useful live progress, but paper tables should use
   audited `summary.json` rows and verified certificates.
-

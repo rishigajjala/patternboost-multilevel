@@ -133,8 +133,10 @@ unit_square 1.5000000000000004
 guillotine  0.3
 ```
 
-See [docs/RESULTS.md](docs/RESULTS.md) for job IDs, run roots, caveats, and
-certificate-size details.
+See [docs/PATTERNBOOST_EXPERIMENT_REPORT.md](docs/PATTERNBOOST_EXPERIMENT_REPORT.md)
+for the detailed study report, including methodology, figures, observations,
+and next steps. See [docs/RESULTS.md](docs/RESULTS.md) for the shorter job-ID
+snapshot.
 
 ## Core Commands
 
