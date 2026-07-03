@@ -1,0 +1,545 @@
+{
+  "current_record_attack_destroyed_fraction_upper_bound": 0.42500000000000004,
+  "current_record_largest_saved_found_by_attack": 23,
+  "destroyed_fraction_exact": 0.30000000000000004,
+  "dp_states": 2478,
+  "elapsed_sec": 0.02812361717224121,
+  "exact_quantity": "maximum number of rectangles saveable by an optimal guillotine slicing attack",
+  "grid": 80,
+  "k": 21,
+  "max_saved_exact": 28,
+  "max_saved_fraction_exact": 0.7,
+  "min_destroyed_exact": 12,
+  "n": 40,
+  "plan": {
+    "axis": "h",
+    "destroyed_here": 8,
+    "leaf": false,
+    "left": {
+      "axis": "v",
+      "destroyed_here": 0,
+      "leaf": false,
+      "left": {
+        "indices": [
+          0
+        ],
+        "leaf": true,
+        "saved": 1,
+        "size": 1
+      },
+      "left_size": 1,
+      "line": 1,
+      "right": {
+        "axis": "h",
+        "destroyed_here": 2,
+        "leaf": false,
+        "left": {
+          "indices": [
+            17
+          ],
+          "leaf": true,
+          "saved": 1,
+          "size": 1
+        },
+        "left_size": 1,
+        "line": 2,
+        "right": {
+          "axis": "v",
+          "destroyed_here": 1,
+          "leaf": false,
+          "left": {
+            "axis": "h",
+            "destroyed_here": 0,
+            "leaf": false,
+            "left": {
+              "indices": [
+                4
+              ],
+              "leaf": true,
+              "saved": 1,
+              "size": 1
+            },
+            "left_size": 1,
+            "line": 4,
+            "right": {
+              "axis": "h",
+              "destroyed_here": 0,
+              "leaf": false,
+              "left": {
+                "indices": [
+                  5
+                ],
+                "leaf": true,
+                "saved": 1,
+                "size": 1
+              },
+              "left_size": 1,
+              "line": 5,
+              "right": {
+                "axis": "v",
+                "destroyed_here": 0,
+                "leaf": false,
+                "left": {
+                  "indices": [
+                    6
+                  ],
+                  "leaf": true,
+                  "saved": 1,
+                  "size": 1
+                },
+                "left_size": 1,
+                "line": 4,
+                "right": {
+                  "axis": "v",
+                  "destroyed_here": 0,
+                  "leaf": false,
+                  "left": {
+                    "indices": [
+                      10
+                    ],
+                    "leaf": true,
+                    "saved": 1,
+                    "size": 1
+                  },
+                  "left_size": 1,
+                  "line": 5,
+                  "right": {
+                    "indices": [
+                      11
+                    ],
+                    "leaf": true,
+                    "saved": 1,
+                    "size": 1
+                  },
+                  "right_size": 1,
+                  "saved": 2,
+                  "size": 2
+                },
+                "right_size": 2,
+                "saved": 3,
+                "size": 3
+              },
+              "right_size": 3,
+              "saved": 4,
+              "size": 4
+            },
+            "right_size": 4,
+            "saved": 5,
+            "size": 5
+          },
+          "left_size": 5,
+          "line": 10,
+          "right": {
+            "axis": "v",
+            "destroyed_here": 0,
+            "leaf": false,
+            "left": {
+              "indices": [
+                19
+              ],
+              "leaf": true,
+              "saved": 1,
+              "size": 1
+            },
+            "left_size": 1,
+            "line": 11,
+            "right": {
+              "axis": "v",
+              "destroyed_here": 0,
+              "leaf": false,
+              "left": {
+                "indices": [
+                  20
+                ],
+                "leaf": true,
+                "saved": 1,
+                "size": 1
+              },
+              "left_size": 1,
+              "line": 12,
+              "right": {
+                "axis": "h",
+                "destroyed_here": 0,
+                "leaf": false,
+                "left": {
+                  "indices": [
+                    22
+                  ],
+                  "leaf": true,
+                  "saved": 1,
+                  "size": 1
+                },
+                "left_size": 1,
+                "line": 3,
+                "right": {
+                  "axis": "v",
+                  "destroyed_here": 1,
+                  "leaf": false,
+                  "left": {
+                    "indices": [
+                      23
+                    ],
+                    "leaf": true,
+                    "saved": 1,
+                    "size": 1
+                  },
+                  "left_size": 1,
+                  "line": 14,
+                  "right": {
+                    "axis": "v",
+                    "destroyed_here": 0,
+                    "leaf": false,
+                    "left": {
+                      "indices": [
+                        26
+                      ],
+                      "leaf": true,
+                      "saved": 1,
+                      "size": 1
+                    },
+                    "left_size": 1,
+                    "line": 15,
+                    "right": {
+                      "axis": "h",
+                      "destroyed_here": 0,
+                      "leaf": false,
+                      "left": {
+                        "axis": "v",
+                        "destroyed_here": 0,
+                        "leaf": false,
+                        "left": {
+                          "indices": [
+                            27
+                          ],
+                          "leaf": true,
+                          "saved": 1,
+                          "size": 1
+                        },
+                        "left_size": 1,
+                        "line": 18,
+                        "right": {
+                          "axis": "v",
+                          "destroyed_here": 0,
+                          "leaf": false,
+                          "left": {
+                            "indices": [
+                              31
+                            ],
+                            "leaf": true,
+                            "saved": 1,
+                            "size": 1
+                          },
+                          "left_size": 1,
+                          "line": 20,
+                          "right": {
+                            "axis": "v",
+                            "destroyed_here": 0,
+                            "leaf": false,
+                            "left": {
+                              "indices": [
+                                33
+                              ],
+                              "leaf": true,
+                              "saved": 1,
+                              "size": 1
+                            },
+                            "left_size": 1,
+                            "line": 21,
+                            "right": {
+                              "indices": [
+                                34
+                              ],
+                              "leaf": true,
+                              "saved": 1,
+                              "size": 1
+                            },
+                            "right_size": 1,
+                            "saved": 2,
+                            "size": 2
+                          },
+                          "right_size": 2,
+                          "saved": 3,
+                          "size": 3
+                        },
+                        "right_size": 3,
+                        "saved": 4,
+                        "size": 4
+                      },
+                      "left_size": 4,
+                      "line": 7,
+                      "right": {
+                        "axis": "h",
+                        "destroyed_here": 0,
+                        "leaf": false,
+                        "left": {
+                          "indices": [
+                            28
+                          ],
+                          "leaf": true,
+                          "saved": 1,
+                          "size": 1
+                        },
+                        "left_size": 1,
+                        "line": 8,
+                        "right": {
+                          "axis": "h",
+                          "destroyed_here": 0,
+                          "leaf": false,
+                          "left": {
+                            "axis": "v",
+                            "destroyed_here": 0,
+                            "leaf": false,
+                            "left": {
+                              "indices": [
+                                29
+                              ],
+                              "leaf": true,
+                              "saved": 1,
+                              "size": 1
+                            },
+                            "left_size": 1,
+                            "line": 19,
+                            "right": {
+                              "axis": "h",
+                              "destroyed_here": 0,
+                              "leaf": false,
+                              "left": {
+                                "indices": [
+                                  32
+                                ],
+                                "leaf": true,
+                                "saved": 1,
+                                "size": 1
+                              },
+                              "left_size": 1,
+                              "line": 11,
+                              "right": {
+                                "indices": [
+                                  35
+                                ],
+                                "leaf": true,
+                                "saved": 1,
+                                "size": 1
+                              },
+                              "right_size": 1,
+                              "saved": 2,
+                              "size": 2
+                            },
+                            "right_size": 2,
+                            "saved": 3,
+                            "size": 3
+                          },
+                          "left_size": 3,
+                          "line": 12,
+                          "right": {
+                            "indices": [
+                              30
+                            ],
+                            "leaf": true,
+                            "saved": 1,
+                            "size": 1
+                          },
+                          "right_size": 1,
+                          "saved": 4,
+                          "size": 4
+                        },
+                        "right_size": 4,
+                        "saved": 5,
+                        "size": 5
+                      },
+                      "right_size": 5,
+                      "saved": 9,
+                      "size": 9
+                    },
+                    "right_size": 9,
+                    "saved": 10,
+                    "size": 10
+                  },
+                  "right_size": 10,
+                  "saved": 11,
+                  "size": 12
+                },
+                "right_size": 12,
+                "saved": 12,
+                "size": 13
+              },
+              "right_size": 13,
+              "saved": 13,
+              "size": 14
+            },
+            "right_size": 14,
+            "saved": 14,
+            "size": 15
+          },
+          "right_size": 15,
+          "saved": 19,
+          "size": 21
+        },
+        "right_size": 21,
+        "saved": 20,
+        "size": 24
+      },
+      "right_size": 24,
+      "saved": 21,
+      "size": 25
+    },
+    "left_size": 25,
+    "line": 14,
+    "right": {
+      "axis": "v",
+      "destroyed_here": 0,
+      "leaf": false,
+      "left": {
+        "indices": [
+          2
+        ],
+        "leaf": true,
+        "saved": 1,
+        "size": 1
+      },
+      "left_size": 1,
+      "line": 2,
+      "right": {
+        "axis": "h",
+        "destroyed_here": 0,
+        "leaf": false,
+        "left": {
+          "axis": "v",
+          "destroyed_here": 0,
+          "leaf": false,
+          "left": {
+            "indices": [
+              9
+            ],
+            "leaf": true,
+            "saved": 1,
+            "size": 1
+          },
+          "left_size": 1,
+          "line": 6,
+          "right": {
+            "axis": "h",
+            "destroyed_here": 0,
+            "leaf": false,
+            "left": {
+              "indices": [
+                25
+              ],
+              "leaf": true,
+              "saved": 1,
+              "size": 1
+            },
+            "left_size": 1,
+            "line": 16,
+            "right": {
+              "axis": "h",
+              "destroyed_here": 0,
+              "leaf": false,
+              "left": {
+                "indices": [
+                  18
+                ],
+                "leaf": true,
+                "saved": 1,
+                "size": 1
+              },
+              "left_size": 1,
+              "line": 17,
+              "right": {
+                "indices": [
+                  14
+                ],
+                "leaf": true,
+                "saved": 1,
+                "size": 1
+              },
+              "right_size": 1,
+              "saved": 2,
+              "size": 2
+            },
+            "right_size": 2,
+            "saved": 3,
+            "size": 3
+          },
+          "right_size": 3,
+          "saved": 4,
+          "size": 4
+        },
+        "left_size": 4,
+        "line": 18,
+        "right": {
+          "axis": "h",
+          "destroyed_here": 0,
+          "leaf": false,
+          "left": {
+            "indices": [
+              7
+            ],
+            "leaf": true,
+            "saved": 1,
+            "size": 1
+          },
+          "left_size": 1,
+          "line": 19,
+          "right": {
+            "indices": [
+              8
+            ],
+            "leaf": true,
+            "saved": 1,
+            "size": 1
+          },
+          "right_size": 1,
+          "saved": 2,
+          "size": 2
+        },
+        "right_size": 2,
+        "saved": 6,
+        "size": 6
+      },
+      "right_size": 6,
+      "saved": 7,
+      "size": 7
+    },
+    "right_size": 7,
+    "saved": 28,
+    "size": 40
+  },
+  "saved_indices": [
+    0,
+    2,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    14,
+    17,
+    18,
+    19,
+    20,
+    22,
+    23,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35
+  ],
+  "saved_mask_hex": "0xffede4ff5",
+  "serialized_hash_sha256": "90fbf1455def4ee2c1c603f87a2dabb9854efd72dac949cae9786ca0fce9aadd",
+  "source": "/scratch/sg9396/pb_imported_7_16h/runs/guillotine_n40_large/best.json",
+  "source_status": "NEAR_FAIL",
+  "source_updated_at": "2026-06-30T10:16:48Z",
+  "target_met": false,
+  "unique_cuts": 43
+}

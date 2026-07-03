@@ -1,0 +1,448 @@
+\documentclass[11pt]{article}
+\usepackage[letterpaper,margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage[hidelinks]{hyperref}
+
+\newcommand{\Rcal}{\mathcal{R}}
+\newcommand{\Scal}{\mathcal{S}}
+\newcommand{\Lcal}{\mathcal{L}}
+\newcommand{\score}{\operatorname{score}}
+\newcommand{\save}{\operatorname{save}}
+\newcommand{\lp}{\operatorname{lp}}
+
+\title{Revised Experiments for PatternBoost Geometric Extremal Search}
+\author{Experiment design note}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This note replaces the earlier broad ablation schedule for the PatternBoost
+geometric extremal-search project.  The main observation from comparing the
+new multi-level experiments with the earlier code is that better bounds came
+from certificate-shaped search spaces, not from running a generic coordinate
+mutation pipeline longer.  The revised experiment plan therefore uses
+problem-specific representations and verifiers for the three current targets:
+MISR LP gaps, unit-square line-stabbing gaps, and recursive guillotine
+hardness.  Epsilon-net and representability-separation experiments are outside
+the present scope.
+\end{abstract}
+
+\section{Revision principle}
+
+The previous design treated the experiment as a large uniform matrix over
+representations, local moves, and surrogate scores.  That matrix was useful for
+debugging the harness, but it is not the right primary experiment for obtaining
+meaningful mathematical bounds.  The comparison with the earlier code shows the
+following pattern.
+
+\begin{enumerate}
+\item Unit-square progress came from a one-dimensional staircase certificate
+that was lifted to a two-dimensional square-stabbing instance.
+\item MISR progress came from changing the representation: endpoint-order
+sequence pairs found stronger small LP gaps than direct coordinate mutation.
+\item Guillotine progress should be formulated as a threshold obstruction
+problem over large saved subsets, with nonseparable cores and witness-breaking
+moves, rather than as a flat search over rectangle coordinates.
+\end{enumerate}
+
+Thus the new experimental question is not ``Which cell in a generic grid wins?''
+The new question is:
+\[
+        \text{Which certificate family, verifier, and search operator
+        produces the strongest auditable bound?}
+\]
+
+The revised experiments should report record-quality certificates and
+diagnostic ablations of the specific mathematical mechanisms that produced
+them.  Averages over many nominally identical random launches are not needed
+for the manuscript.
+
+\section{Global requirements}
+
+Every reported result must satisfy the following requirements.
+
+\begin{enumerate}
+\item The reported value is recomputed by an exact verifier independent of the
+training loop.
+\item The certificate is standalone: it contains the geometry or combinatorial
+template, objective components, solver status, and a canonical hash.
+\item The paper distinguishes between search score and proof score.  Surrogate
+values, sampled checks, and neural selection scores are never presented as
+certified bounds.
+\item Each problem has a known-baseline reproduction step before any new
+search is reported.
+\item The generic multi-level runs may be used as diagnostics, but not as the
+main evidence for record bounds.
+\end{enumerate}
+
+\section{Experiment schedule}
+
+\begin{center}
+\begin{tabularx}{\textwidth}{p{0.18\textwidth}p{0.25\textwidth}X}
+\toprule
+Phase & Output & Purpose \\
+\midrule
+Artifact audit & Verified reproduction of known certificates & Confirm that the old strong constructions and the new verifier agree. \\
+Targeted search & Candidate families and near-miss logs & Explore the certificate-shaped search spaces described below. \\
+Mechanism ablation & Small tables comparing components inside one problem & Test which mathematical ingredient matters: representation, verifier, local move, or model proposal. \\
+Record run & Best certificate per problem, plus verifier output & Produce final manuscript claims and certificate gallery. \\
+Independent audit & Recomputed objective values from frozen certificates & Guard against logging, solver, or search-pipeline mistakes. \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+The schedule is deliberately organized by mathematical target rather than by a
+uniform Cartesian product of implementation choices.  For each problem, the
+primary run should be the one that searches the most structured family first.
+Direct coordinate mutation is retained only as a sanity check.
+
+\section{Problem 1: unit-square line stabbing}
+
+\subsection{Objective}
+
+For a finite family $\Scal$ of axis-parallel unit squares, the exact score is
+\[
+        \score_{\rm stab}(\Scal)=\frac{\tau(\Scal)}{\tau^*(\Scal)}.
+\]
+Here $\tau(\Scal)$ is the minimum number of horizontal and vertical lines
+stabbing all squares, and $\tau^*(\Scal)$ is the LP optimum of the corresponding
+finite set-cover relaxation over critical horizontal and vertical line
+positions.
+
+\subsection{Primary experiment: staircase interval certificates}
+
+The primary unit-square experiment should be the staircase certificate search
+from the older successful code.  A candidate is a one-dimensional interval
+pattern with levels.  A rational measure on the line gives lower bounds
+$a_r$ on the mass of intervals in level $r$.  The certificate proves that
+fewer than a target number of lines cannot stab the two-dimensional product
+instance whenever
+\[
+        a_r+a_s\geq 1
+        \qquad\text{for all } r+s<k.
+\]
+The product instance includes $I\times J$ whenever the mass of $I$ plus the
+mass of $J$ is at least one.  After scaling, these products become unit
+squares.
+
+This experiment should first reproduce the known certificates:
+\[
+        \frac{14}{9}=1.555\ldots,
+        \qquad
+        \frac{20}{13}=1.538\ldots.
+\]
+The $14/9$ certificate is the current unit-square baseline for the manuscript.
+
+\subsection{Search variants}
+
+The staircase search should vary the following ingredients.
+
+\begin{enumerate}
+\item Level count and target number of required lines.
+\item Interval starts and common interval length.
+\item Rational support points for the one-axis measure.
+\item Deterministic scans over shifted-disjoint and near-staircase families.
+\item PatternBoost proposals trained on high-scoring interval patterns, not on
+raw square coordinates.
+\end{enumerate}
+
+The raw square-coordinate Axplorer environment remains a comparison baseline.
+It is useful for confirming that a less structured search can find small
+examples such as the $3/2$ pattern, but it should not be the primary search for
+new record certificates.
+
+\subsection{Verifier and certificate}
+
+The unit-square certificate must contain:
+\begin{enumerate}
+\item the interval levels and common length;
+\item the rational measure and support;
+\item level piercing numbers;
+\item all inequalities $a_r+a_s\geq 1$ used in the proof;
+\item the generated product squares;
+\item the compressed critical line universe;
+\item exact LP and IP values for the finite square instance.
+\end{enumerate}
+
+The verifier should recompute both the symbolic staircase proof and the finite
+LP/IP confirmation.  The manuscript table should report the exact ratio, the
+number of intervals, number of product squares, LP value, IP value, and
+certificate hash.
+
+\section{Problem 2: MISR LP gap}
+
+\subsection{Objective}
+
+For a finite family $\Rcal$ of axis-parallel rectangles, the exact score is
+\[
+        \score_{\rm MISR}(\Rcal)=\frac{\alpha^*(\Rcal)}{\alpha(\Rcal)}.
+\]
+Here $\alpha(\Rcal)$ is the maximum number of pairwise-disjoint rectangles, and
+$\alpha^*(\Rcal)$ is the standard clique LP optimum for the rectangle
+intersection graph.
+
+\subsection{Current baseline: endpoint-order sequence pairs}
+
+The active MISR baseline is no longer the direct-coordinate search.  A candidate
+is encoded by two double-occurrence sequences $H$ and $V$, each containing every
+rectangle label exactly twice.  Rectangle $i$ receives its $x$-span from the two
+positions of $i$ in $H$ and its $y$-span from the two positions of $i$ in $V$.
+The decoded rectangle family is then sent to the ordinary exact MISR verifier.
+
+This representation is the main useful difference from the earlier successful
+code.  It searches endpoint orders rather than raw coordinates, so swaps,
+block moves, reversals, label-pair swaps, motif refreshes, and depth-weighted
+lifting all remain in a compact geometric search space.  The role of this
+baseline is to test whether the endpoint-order inductive bias consistently
+beats direct coordinate mutation.
+
+\subsection{Primary search: sequence-pair PatternBoost}
+
+The main MISR search should train and mutate in the endpoint-sequence space,
+while keeping the exact verifier outside the training loop as the final
+authority.  The preferred cell is:
+\[
+  \texttt{endpoint\_sequence\_pair}
+  \times
+  \texttt{sequence\_pair\_pivot}
+  \times
+  \texttt{exact\_lp\_gap\_pressure}.
+\]
+The exact surrogate is expensive, but for MISR it is scientifically preferable
+to ranking candidates by a weak graph proxy when the target is a record LP gap.
+Cheaper proxies remain in the matrix only as controls.
+
+\subsection{Search tracks}
+
+The MISR experiments should have three tracks.
+
+\begin{enumerate}
+\item \textbf{Sequence-pair track.}  Use double-occurrence endpoint sequences,
+motif seeds, local endpoint-order moves, recombination, and lifting.  Report
+only decoded rectangle certificates verified by the framework scorer.
+\item \textbf{Direct-coordinate diagnostic.}  Keep direct coordinates as a
+negative control.  It should explain the earlier $1.25$ plateau rather than
+serve as the main search.
+\item \textbf{Structured-program follow-up.}  If sequence-pair search stalls,
+test triangle-free or bounded-program variants as additional structured
+families.  These should be treated as follow-up, not as the first run.
+\end{enumerate}
+
+Four-port reproduction is explicitly outside the current active plan.  It can
+be revived as a separate archival/certificate project, but the present MISR
+experiments should focus on endpoint-sequence search and explicit finite
+rectangle certificates.
+
+\subsection{Verifier and certificate}
+
+For an unweighted finite certificate, save:
+\begin{enumerate}
+\item rectangle coordinates;
+\item intersection graph;
+\item triangle-free status and witness if violated;
+\item all maximal clique constraints, or all edge constraints in the
+triangle-free case;
+\item LP optimum $\alpha^*$ and primal solution;
+\item exact maximum independent set and value $\alpha$;
+\item solver status, runtime, and certificate hash.
+\end{enumerate}
+
+For sequence-pair candidates, also save the two sequences $H,V$, the decoded
+rectangles, and the sequence mutation/lift history when available.  The
+manuscript should distinguish the search representation from the certified
+geometry: the proof object is still the decoded rectangle family.
+
+\section{Problem 3: recursive guillotine hardness}
+
+\subsection{Objective}
+
+For a pairwise-disjoint family $\Rcal$ of axis-parallel rectangles, define
+$\save(\Rcal)$ as the maximum number of rectangles that can be preserved by a
+recursive guillotine cutting strategy.  The exact destroyed-fraction score is
+\[
+        \score_{\rm guill}(\Rcal)
+        =
+        1-\frac{\save(\Rcal)}{|\Rcal|}.
+\]
+
+The generic exact DP can compute this value for finalists.  However, it is not
+the best search objective.  The stronger experimental formulation is a
+threshold obstruction:
+\[
+        K=\left\lfloor\frac{|\Rcal|}{2}\right\rfloor+1.
+\]
+If there is no guillotine-separable subset of size $K$, then every guillotine
+strategy destroys at least half the rectangles.
+
+\subsection{Primary experiment: threshold obstruction search}
+
+The guillotine search should use the threshold formulation as its main driver.
+For each subset $S$, build the $x$-projection and $y$-projection overlap
+graphs.  A vertical guillotine cut avoiding all rectangles in $S$ exists
+exactly when the $x$-projection graph induced by $S$ is disconnected; the
+horizontal case is analogous.  This gives a fast recursive oracle for testing
+whether $S$ is guillotine-separable.
+
+The search score is the fraction of tested $K$-subsets that are
+nonseparable.  A certified pass has zero separable $K$-subsets.  Near-misses
+with very few separable witnesses are valuable and should be retained for
+local improvement.
+
+\subsection{Local moves}
+
+Use local moves that directly attack separable witnesses.
+\begin{enumerate}
+\item If a separable witness splits along a vertical gap, stretch or move
+rectangles so that the corresponding $x$-projection components become linked.
+\item If a witness splits along a horizontal gap, do the analogous move in the
+$y$-projection.
+\item Mine small nonseparable cores and preserve them during mutation.
+\item Assemble recursive arrangements by placing hard cores so that every
+large subset contains at least one nonseparable core.
+\item Use long thin blockers, pinwheel motifs, brick-wall motifs, and
+skew-grid templates as structured starting families.
+\end{enumerate}
+
+This is different from optimizing only the best first cut.  First-cut hardness
+is a useful diagnostic, but the final claim must be about recursive
+separability or exact saved count.
+
+\subsection{Verifier and certificate}
+
+The guillotine certificate should have two layers.
+
+\begin{enumerate}
+\item \textbf{Threshold certificate.}  Prove that no $K$-subset is
+guillotine-separable, either by exact enumeration or by a nonseparable-core
+cover certificate.
+\item \textbf{Exact-score certificate.}  For smaller finalists, run the full
+recursive DP and report $\save(\Rcal)$ and the destroyed fraction.
+\end{enumerate}
+
+For final reported arrangements, save the rectangles, $K$, separability oracle
+status, number of checked subsets, any separable witness if the candidate
+fails, nonseparable cores, exact DP value when computed, and certificate hash.
+
+\section{Controls and comparisons}
+
+The controls should compare mathematical mechanisms, not repeated launches.
+Use the following comparisons.
+
+\begin{enumerate}
+\item \textbf{Structured versus direct representation.}  Compare the primary
+certificate-shaped representation against direct coordinate mutation.
+\item \textbf{Model proposal versus local search.}  Run the same verifier and
+local moves with and without PatternBoost proposals.
+\item \textbf{Surrogate relevance.}  Compare the search surrogate to exact
+scores on audited candidates and report rank correlation or clear failure
+cases.
+\item \textbf{Known-baseline reproduction.}  Every problem should first
+reproduce the strongest available old construction or explain why no such
+construction exists.
+\item \textbf{Near-miss analysis.}  For failed guillotine and MISR candidates,
+report the obstruction that prevented certification: separable witness,
+triangle, solver timeout, large independent set, or collapsed geometry.
+\end{enumerate}
+
+\section{Manuscript tables}
+
+The main manuscript should contain compact tables of certified results, not
+large random-launch matrices.
+
+\begin{center}
+\begin{tabularx}{\textwidth}{p{0.2\textwidth}p{0.24\textwidth}p{0.2\textwidth}X}
+\toprule
+Problem & Primary search family & Certified objective & Baseline to reproduce \\
+\midrule
+Unit-square stabbing & Staircase interval certificate and product lift & $\tau/\tau^*$ & $14/9$ certificate \\
+MISR & Endpoint-order sequence pairs with exact LP-gap audit & $\alpha^*/\alpha$ & Endpoint-sequence smoke certificate \\
+Guillotine & Threshold nonseparable-subset search & destroyed fraction or no separable $K$-subset & Current small obstruction motifs; no stronger old certificate found \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+For each final result, report:
+\begin{enumerate}
+\item exact ratio or threshold statement;
+\item instance size;
+\item objective components;
+\item verifier status;
+\item runtime of the verifier;
+\item certificate hash;
+\item path to rendering or gallery figure.
+\end{enumerate}
+
+The appendix may include diagnostic tables for direct-coordinate experiments,
+but these should be framed as evidence that generic search is insufficient for
+record bounds.
+
+\section{Artifact layout}
+
+The final artifact should organize outputs by problem and certificate family.
+A recommended layout is:
+\begin{verbatim}
+artifacts/
+  unit_square/
+    staircase_14_9/
+      certificate.json
+      verify_certificate.py
+      rendered_instance.pdf
+    staircase_search/
+      run_config.json
+      candidates.jsonl
+      audited_summary.csv
+  misr/
+    four_port/
+      certificate.json
+      verify_four_port.py
+      verification_output.txt
+    triangle_free_programs/
+      programs.jsonl
+      best_certificates/
+      audited_summary.csv
+  guillotine/
+    threshold_search/
+      best_instance.rect
+      threshold_certificate.json
+      separable_witnesses.jsonl
+      nonseparable_cores.jsonl
+    exact_dp_audit/
+      dp_certificate.json
+\end{verbatim}
+
+Each verifier should run without training logs.  Training logs are useful for
+reproducibility, but certificate verification must not depend on them.
+
+\section{What not to run}
+
+The following experiments should not be part of the immediate manuscript plan.
+
+\begin{enumerate}
+\item The full generic $3\times 3\times 3$ matrix as the primary evidence.
+\item Long direct-coordinate MISR runs whose best result remains near small
+cycle-like plateaus.
+\item Guillotine runs scored only by first-cut hardness.
+\item Epsilon-net and graph-representability experiments, unless the paper is
+expanded beyond the three current geometric objectives.
+\item Any result whose exact verifier times out or whose certificate cannot be
+recomputed from a standalone file.
+\end{enumerate}
+
+\section{Summary}
+
+The revised experimental strategy is certificate-first.  Unit-square stabbing
+should use staircase interval certificates.  MISR should use endpoint-order
+sequence pairs as the primary search space, with direct coordinates retained
+only as a diagnostic baseline.  Guillotine hardness should use the threshold
+nonseparable-subset formulation and core-cover certificates, with full DP only
+for finalists.  Generic PatternBoost remains useful as a proposal mechanism
+and diagnostic baseline, but the mathematical search space must encode the
+proof pattern we want the system to discover.
+
+\end{document}

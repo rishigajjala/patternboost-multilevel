@@ -1,0 +1,11 @@
+{
+  "schema": "epsilon_net_instance_v1",
+  "points": [
+    [0, 0],
+    [1, 0],
+    [0, 1]
+  ],
+  "threshold": 2,
+  "k": 1
+}
+

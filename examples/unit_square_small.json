@@ -1,0 +1,10 @@
+{
+  "schema": "unit_square_instance_v1",
+  "squares": [
+    [0, 0],
+    [1, 0],
+    [0, 1],
+    [2, 2]
+  ]
+}
+
