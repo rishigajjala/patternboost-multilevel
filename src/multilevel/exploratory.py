@@ -107,6 +107,7 @@ def run_exploratory_search(
                     "elapsed_seconds": time.perf_counter() - start,
                     "budget_seconds": budget_seconds,
                 }, sort_keys=True) + "\n")
+                events.flush()
                 break
             scored: list[tuple[float, dict[str, Any], dict[str, Any], str]] = []
             for instance in population:
@@ -161,6 +162,7 @@ def run_exploratory_search(
                         "wall_seconds": time.perf_counter() - candidate_start,
                     }
                 events.write(json.dumps(event, sort_keys=True) + "\n")
+                events.flush()
             scored.sort(key=lambda item: item[0], reverse=True)
             elites = [instance for _, instance, _, _ in scored[: max(1, elite_size)]]
             next_population = [copy.deepcopy(instance) for instance in elites]
