@@ -70,7 +70,9 @@ for key in (
 PY
 )"
 
-OUT_DIR="$RESULTS_DIR/$PROBLEM"
+ROW_NAME="${RUN_ID:-row_${SLURM_ARRAY_TASK_ID}}"
+OUT_DIR="$RESULTS_DIR/$PROBLEM/$ROW_NAME"
+mkdir -p "$OUT_DIR"
 
 ARGS=(
   explore "$PROBLEM"
