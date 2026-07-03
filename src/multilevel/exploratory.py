@@ -384,7 +384,7 @@ def _clean_rectangles(raw: Any, *, n_min: int, n_max: int, grid: int) -> list[li
             y2 = min(grid + 2, y1 + 1)
         rects.append([x1, x2, y1, y2])
     while len(rects) < n_min:
-        rects.append(_random_rectangle(random.Random(len(rects) + grid), grid=grid))
+        rects.append(_fallback_rectangle(len(rects), grid=grid))
     return rects
 
 
@@ -418,6 +418,15 @@ def _random_rectangle(rng: random.Random, *, grid: int) -> list[int]:
     y1 = rng.randrange(0, grid + 1)
     y2 = rng.randrange(y1 + 1, grid + 3)
     return [x1, x2, y1, y2]
+
+
+def _fallback_rectangle(index: int, *, grid: int) -> list[int]:
+    side = max(1, grid + 1)
+    x1 = index % side
+    y1 = (index // side) % side
+    width = 1 + ((index // max(1, side * side)) % 2)
+    height = 1 + ((index // max(1, 2 * side * side)) % 2)
+    return [x1, min(grid + 2, x1 + width), y1, min(grid + 2, y1 + height)]
 
 
 def _clamp_int(value: Any, low: int, high: int) -> int:
