@@ -28,7 +28,7 @@ If `pytest` is missing:
 python3 -m pip install pytest
 ```
 
-## 2. Understand the Three Problems
+## 2. Understand the Problems
 
 Read these files in order:
 
@@ -36,12 +36,14 @@ Read these files in order:
 2. `docs/PATTERNBOOST_EXPERIMENT_REPORT.md`
 3. `docs/manuscript/patternboost_experiment_report.pdf`
 4. `docs/RESULTS.md`
-5. `docs/HPC_JUBAIL.md`
-6. `docs/archive/STRATEGY_STUDY_2026-06-30.md`
+5. `docs/EXPLORATORY_RESULTS.md`
+6. `docs/HPC_JUBAIL.md`
+7. `docs/archive/STRATEGY_STUDY_2026-06-30.md`
 
-The active problem scope is `misr`, `unit_square`, and `guillotine`. Do not
-count `epsilon_net`, `graph_separation`, or discarded square-stabbing-14-9
-evidence in current paper tables.
+The main paper table scope is `misr`, `unit_square`, and `guillotine`.
+`epsilon_net` and `graph_separation` are implemented and have an audited
+exploratory snapshot, but keep them in a separate appendix/results section. Do
+not count discarded square-stabbing-14-9 evidence in current paper tables.
 
 ## 3. Run a Tiny Local Cell
 
@@ -84,6 +86,26 @@ scripts/prepare_hpc_scratch_venv.sh
 PYTHONPATH=src python3 -m multilevel.cli smoke --out runs/hpc_smoke
 scripts/make_main_matrix.sh
 ```
+
+For the exploratory appendix tasks, generate a separate matrix and Slurm
+script:
+
+```bash
+scripts/make_exploratory_matrix.sh runs/explore_overnight_matrix.jsonl
+PYTHONPATH=src python3 -m multilevel.cli make-slurm \
+  --matrix runs/explore_overnight_matrix.jsonl \
+  --out scripts/explore_overnight_array.slurm \
+  --project-dir "$PWD" \
+  --results-dir runs/explore_overnight_$(date +%Y%m%d_%H%M%S) \
+  --time 09:00:00 \
+  --partition compute \
+  --cpus-per-task 1 \
+  --mem 8G \
+  --runner explore
+```
+
+Do not use a hand-written exploratory Slurm script; generate it from the CLI so
+the array range matches the matrix.
 
 ## 5. Reporting Rule
 

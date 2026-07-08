@@ -1,0 +1,188 @@
+{
+  "adjacency_matrix": [
+    [
+      0,
+      0,
+      1,
+      1,
+      1
+    ],
+    [
+      0,
+      0,
+      1,
+      0,
+      0
+    ],
+    [
+      1,
+      1,
+      0,
+      1,
+      1
+    ],
+    [
+      1,
+      0,
+      1,
+      0,
+      1
+    ],
+    [
+      1,
+      0,
+      1,
+      1,
+      0
+    ]
+  ],
+  "automorphism_group_size": 6,
+  "bounded_evidence_only": true,
+  "candidate_id": "8362c60d2ec7a39276e2980a08537162f5aa5c2bb106e17388f7600f6aeddc79",
+  "certificate_hash": "08f6a59fafc56b4b7c6fbc48f7268216b871087c2eb0beb8624b7661f38497ba",
+  "certificate_payload_bytes": 1044,
+  "clique_number": 4,
+  "created_at": "2026-07-04T01:16:25.760613+00:00",
+  "degree_sequence": [
+    4,
+    3,
+    3,
+    3,
+    1
+  ],
+  "dependency_versions": {
+    "numpy": "2.0.2",
+    "scipy": "1.13.1",
+    "torch": "2.8.0+cu128"
+  },
+  "edge_count": 7,
+  "edge_density": 0.7,
+  "evidence_note": "candidate has a bounded-grid mixed square/segment representation or timed out",
+  "exact_runtime_seconds": 0.25286709098145366,
+  "generation": 0,
+  "git_commit": "",
+  "git_dirty": null,
+  "graph6": "D][",
+  "hardware": {
+    "platform": "Linux-4.18.0-193.6.3.el8_2.x86_64-x86_64-with-glibc2.28",
+    "python": "3.11.3"
+  },
+  "independence_number": 2,
+  "mixed_assignment": [
+    [
+      "square",
+      0,
+      1,
+      1,
+      2
+    ],
+    [
+      "hseg",
+      0,
+      1,
+      0,
+      0
+    ],
+    [
+      "square",
+      0,
+      1,
+      0,
+      1
+    ],
+    [
+      "square",
+      0,
+      1,
+      1,
+      2
+    ],
+    [
+      "square",
+      0,
+      1,
+      1,
+      2
+    ]
+  ],
+  "mixed_candidate_count": 130,
+  "mixed_grid": 4,
+  "mixed_status": "representable",
+  "n": 5,
+  "problem": "graph_separation",
+  "rectangle_edges": [
+    [
+      0,
+      2
+    ],
+    [
+      0,
+      3
+    ],
+    [
+      0,
+      4
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      2,
+      4
+    ],
+    [
+      3,
+      4
+    ]
+  ],
+  "rectangles": [
+    [
+      5,
+      7,
+      0,
+      5
+    ],
+    [
+      0,
+      1,
+      2,
+      7
+    ],
+    [
+      1,
+      6,
+      5,
+      6
+    ],
+    [
+      3,
+      7,
+      0,
+      6
+    ],
+    [
+      3,
+      6,
+      5,
+      6
+    ]
+  ],
+  "schema": "graph_separation_certificate_v1",
+  "score": 0.0,
+  "solver": {
+    "candidate_objects": 130,
+    "mixed_grid": 4,
+    "mixed_object_family": "axis_aligned_squares_and_segments",
+    "solver": "bounded_grid_backtracking_search",
+    "timeout_seconds": 7.0
+  },
+  "solver_status": "representable",
+  "source_type": "exploratory_search",
+  "tool_version": "0.1.0",
+  "unconditional_separation": false
+}

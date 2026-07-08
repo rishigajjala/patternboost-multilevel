@@ -1,0 +1,50 @@
+{
+  "best_certificate_hash": "a64f269680eb0c2814a638c44e4c3067e98f1bb4f8c846cc57684e8a625971fb",
+  "best_certificate_path": "/home/sg9396/patternboost/multi-level/runs/explore_overnight_20260704_051618/graph_separation/graph_g3_n7_motif/certificates/best_iter000000_a64f269680eb.json",
+  "best_exact_score": 0.0,
+  "best_rendering_path": "/home/sg9396/patternboost/multi-level/runs/explore_overnight_20260704_051618/graph_separation/graph_g3_n7_motif/renderings/best_iter000000_a64f269680eb.svg",
+  "budget_seconds": 28800,
+  "completed_iterations": 329,
+  "control_mode": "exploratory_search",
+  "elapsed_seconds": 28840.706764363014,
+  "elite_size": 6,
+  "end_time": "2026-07-04T09:17:06.444632+00:00",
+  "event_stream": "/home/sg9396/patternboost/multi-level/runs/explore_overnight_20260704_051618/graph_separation/graph_g3_n7_motif/events.jsonl",
+  "exploratory_hparams": {
+    "k": null,
+    "mixed_grid": 3,
+    "threshold": null,
+    "timeout_seconds": 6.0
+  },
+  "grid": 7,
+  "hardware": {
+    "platform": "Linux-4.18.0-193.6.3.el8_2.x86_64-x86_64-with-glibc2.28",
+    "python": "3.11.3"
+  },
+  "iterations": 10000,
+  "local_search": "graph_aware_coordinate_mutation",
+  "n": 7,
+  "num_duplicates": 2403,
+  "num_exact_calls": 5493,
+  "num_exact_timeouts": 4636,
+  "num_exports": 1,
+  "num_invalid_samples": 0,
+  "num_repaired_samples": 0,
+  "population_size": 24,
+  "problem": "graph_separation",
+  "representation": "rectangle_graph_bounded_mixed",
+  "return_code": 0,
+  "rng_seed": 3271365294344772362,
+  "run_id": "graph_g3_n7_motif",
+  "schema": "run_summary_v1",
+  "solver_versions": {
+    "numpy": "2.0.2",
+    "scipy": "1.13.1",
+    "torch": "2.8.0+cu128"
+  },
+  "stage": "exploratory",
+  "start_time": "2026-07-04T01:16:25.739033+00:00",
+  "stop_reason": "budget_exhausted",
+  "surrogate": "mixed_representation_stress",
+  "time_to_best": 7.781413534015883
+}

@@ -1,6 +1,6 @@
 # Current Results Snapshot
 
-Last audited run date: 2026-07-03, Asia/Dubai.
+Last audited run date: 2026-07-04, Asia/Dubai.
 
 For the full narrative report with methodology, figures, per-problem
 observations, and next steps, see
@@ -9,6 +9,8 @@ The formal manuscript-style version is in
 [manuscript/patternboost_experiment_report.tex](manuscript/patternboost_experiment_report.tex)
 and
 [manuscript/patternboost_experiment_report.pdf](manuscript/patternboost_experiment_report.pdf).
+The exploratory appendix tasks are summarized separately in
+[EXPLORATORY_RESULTS.md](EXPLORATORY_RESULTS.md).
 
 ## Best Known Values from Current Code Path
 
@@ -19,6 +21,30 @@ and
 | `guillotine` | `0.3` | previous-best warm-start | 10 rectangles, 3 destroyed |
 
 ## NYUAD Jubail Jobs
+
+### Exploratory Appendix Run
+
+- Slurm job: `16501338`
+- Run root: `runs/explore_overnight_20260704_051618`
+- Preserved repository snapshot:
+  `docs/assets/exploratory_overnight_20260704_051618/`
+- Scope: `epsilon_net` and `graph_separation`
+- Status: `12/12 COMPLETED|0:0`
+- Stderr: `0` nonempty files
+- Summaries: `12/12`
+- Matrix: `12` rows, `12` unique fresh seeds, no old fixed-seed hits
+- Validation: all best certificates verified against summaries
+
+Best rows:
+
+```text
+epsilon_net       1.4545454545454546  eps_n11_t4_k3
+graph_separation 0.0                 graph_g3_n5_dense
+```
+
+The best graph-separation pressure/search score was `1.3845054945054946`
+from `graph_g3_n7_motif`, but no exact bounded-grid separation witness was
+certified.
 
 ### Previous-Best Warm-Start
 
@@ -52,7 +78,7 @@ audited.
 ## Important Caveats
 
 - The square-stabbing-14-9 package is excluded from current evidence.
-- `epsilon_net` and `graph_separation` are not part of the current three-problem
-  scope.
+- `epsilon_net` and `graph_separation` are exploratory appendix tasks. Keep
+  them separate from the main three-problem paper table.
 - Checkpoint values are useful live progress, but paper tables should use
   audited `summary.json` rows and verified certificates.

@@ -51,6 +51,16 @@ elif [[ "$RUNNER" == "search-cell" ]]; then
     --exact-every "$EXACT_EVERY" \
     --n "$N" \
     --grid "$GRID"
+elif [[ "$RUNNER" == "explore-cell" ]]; then
+  python3 -m multilevel.cli explore-cell \
+    --matrix "$MATRIX" \
+    --index "$INDEX" \
+    --out-root "$OUT_ROOT" \
+    --iterations "$ITERATIONS" \
+    --population "$POPULATION" \
+    --elite "$ELITE" \
+    --n "$N" \
+    --grid "$GRID"
 else
   python3 -m multilevel.cli run-cell \
   --matrix "$MATRIX" \

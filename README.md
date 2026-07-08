@@ -1,11 +1,17 @@
 # PatternBoost Multi-Level Experiments
 
 This repository contains the cleaned experiment harness for the PatternBoost
-geometric extremal-search project. It focuses on three problems:
+geometric extremal-search project. The main paper track focuses on three
+problems:
 
 - `misr`: maximum independent set of rectangles LP-gap search
 - `unit_square`: unit-square stabbing LP-gap search
 - `guillotine`: rectangle packing / guillotine nonseparability search
+
+Two exploratory appendix tasks are also implemented and audited separately:
+
+- `epsilon_net`: finite halfplane epsilon-net lower-bound rediscovery
+- `graph_separation`: rectangle graphs versus bounded mixed square/segment representations
 
 The code generates random search instances, scores every reported candidate
 with an exact problem-specific verifier, writes certificate JSON files, and
@@ -121,7 +127,8 @@ scripts/monitor_hpc_run.sh JOB_ID runs/main_81_hpc
 ```
 
 See [docs/HPC_JUBAIL.md](docs/HPC_JUBAIL.md) for the full step-by-step HPC
-workflow, including smoke tests, resume commands, collection, and audit.
+workflow, including smoke tests, generated Slurm arrays, exploratory runs,
+resume commands, collection, and audit.
 
 ## Current Best Known Values
 
@@ -140,6 +147,16 @@ and next steps. A formal LaTeX/PDF version is available at
 and
 [docs/manuscript/patternboost_experiment_report.pdf](docs/manuscript/patternboost_experiment_report.pdf).
 See [docs/RESULTS.md](docs/RESULTS.md) for the shorter job-ID snapshot.
+
+The separately audited exploratory run produced:
+
+```text
+epsilon_net       1.4545454545454546
+graph_separation 0.0 exact, 1.3845054945054946 pressure/search
+```
+
+See [docs/EXPLORATORY_RESULTS.md](docs/EXPLORATORY_RESULTS.md). These values
+are not part of the three-problem main table.
 
 ## Core Commands
 

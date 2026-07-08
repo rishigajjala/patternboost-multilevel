@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import json
 import tempfile
 from pathlib import Path
 
+from multilevel.cli import main
 from multilevel.exploratory import run_exploratory_search
 
 
@@ -42,3 +44,45 @@ def test_exploratory_search_smoke_graph_separation():
     assert summary["problem"] == "graph_separation"
     assert summary["completed_iterations"] == 1
     assert summary["num_exact_calls"] > 0
+
+
+def test_explore_cell_runs_exploratory_matrix_row(tmp_path):
+    matrix = tmp_path / "explore_matrix.jsonl"
+    matrix.write_text(
+        json.dumps(
+            {
+                "problem": "epsilon_net",
+                "run_id": "eps_smoke",
+                "rng_seed": 0,
+                "iterations": 2,
+                "population": 4,
+                "elite": 2,
+                "n": 5,
+                "grid": 5,
+                "threshold": 2,
+                "k": 1,
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    out_root = tmp_path / "runs"
+
+    rc = main(
+        [
+            "explore-cell",
+            "--matrix",
+            str(matrix),
+            "--index",
+            "0",
+            "--out-root",
+            str(out_root),
+        ]
+    )
+
+    summary_path = out_root / "epsilon_net" / "eps_smoke" / "summary.json"
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    assert rc == 0
+    assert summary["problem"] == "epsilon_net"
+    assert summary["run_id"] == "eps_smoke"
+    assert summary["completed_iterations"] == 2

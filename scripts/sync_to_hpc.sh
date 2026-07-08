@@ -17,6 +17,7 @@ RSYNC_ARGS=(
   --exclude '.venv*'
   --exclude '.local_artifacts'
   --exclude runs
+  --exclude 'runs 2'
   --exclude output
   --exclude tmp
   --exclude .pytest_cache

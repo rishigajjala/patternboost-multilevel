@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="640" viewBox="0 0 900 640">
+<title>Graph separation bounded status=representable n=5</title>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<rect x="598.026" y="214.737" width="197.368" height="350.877" fill="#a78bfa" fill-opacity="0.3" stroke="#5b21b6" stroke-width="1.4"/>
+<text x="598.026" y="214.737" font-size="13" font-family="monospace" fill="#111827">0</text>
+<rect x="104.605" y="74.386" width="98.684" height="350.877" fill="#a78bfa" fill-opacity="0.3" stroke="#5b21b6" stroke-width="1.4"/>
+<text x="104.605" y="74.386" font-size="13" font-family="monospace" fill="#111827">1</text>
+<rect x="203.289" y="144.561" width="493.421" height="70.175" fill="#a78bfa" fill-opacity="0.3" stroke="#5b21b6" stroke-width="1.4"/>
+<text x="203.289" y="144.561" font-size="13" font-family="monospace" fill="#111827">2</text>
+<rect x="400.658" y="144.561" width="394.737" height="421.053" fill="#a78bfa" fill-opacity="0.3" stroke="#5b21b6" stroke-width="1.4"/>
+<text x="400.658" y="144.561" font-size="13" font-family="monospace" fill="#111827">3</text>
+<rect x="400.658" y="144.561" width="296.053" height="70.175" fill="#a78bfa" fill-opacity="0.3" stroke="#5b21b6" stroke-width="1.4"/>
+<text x="400.658" y="144.561" font-size="13" font-family="monospace" fill="#111827">4</text>
+</svg>

@@ -29,8 +29,9 @@ from certificate-shaped search spaces, not from running a generic coordinate
 mutation pipeline longer.  The revised experiment plan therefore uses
 problem-specific representations and verifiers for the three current targets:
 MISR LP gaps, unit-square line-stabbing gaps, and recursive guillotine
-hardness.  Epsilon-net and representability-separation experiments are outside
-the present scope.
+hardness.  Epsilon-net and representability-separation experiments are treated
+as separate exploratory appendix tasks, not as rows in the main three-problem
+table.
 \end{abstract}
 
 \section{Revision principle}
@@ -131,13 +132,16 @@ The product instance includes $I\times J$ whenever the mass of $I$ plus the
 mass of $J$ is at least one.  After scaling, these products become unit
 squares.
 
-This experiment should first reproduce the known certificates:
+This experiment should first reproduce known staircase-style certificates only
+after they are implemented inside the allowed code path:
 \[
         \frac{14}{9}=1.555\ldots,
         \qquad
         \frac{20}{13}=1.538\ldots.
 \]
-The $14/9$ certificate is the current unit-square baseline for the manuscript.
+Those values are targets, not current evidence from this repository.  The
+discarded \texttt{square-stabbing-14-9} package should not be used as a
+manuscript source.
 
 \subsection{Search variants}
 
@@ -350,6 +354,50 @@ report the obstruction that prevented certification: separable witness,
 triangle, solver timeout, large independent set, or collapsed geometry.
 \end{enumerate}
 
+\section{Exploratory appendix tasks}
+
+Two exploratory tasks are implemented and have one audited overnight baseline.
+They should be reported separately from the three main geometric objectives.
+
+\subsection{Task A: rectangle graphs versus mixed square/segment graphs}
+
+The run searched for a rectangle intersection graph with no bounded-grid
+representation by a mixed family of squares and horizontal/vertical segments.
+The audited baseline was:
+\begin{itemize}
+\item Slurm job \texttt{16501338};
+\item run root \texttt{runs/explore\_overnight\_20260704\_051618};
+\item six graph-separation rows;
+\item all rows completed with exit code \texttt{0:0};
+\item best exact score $0.0$;
+\item best pressure/search score $1.3845054945054946$ from
+\texttt{graph\_g3\_n7\_motif}.
+\end{itemize}
+
+Interpretation: the current stress objective finds difficult-looking
+rectangle graphs, but the bounded mixed-representation verifier did not certify
+a separation witness.  The next useful change is a stronger
+non-representability verifier or a smaller structured graph family with more
+informative unsat cores.
+
+\subsection{Task B: halfplane epsilon-net lower-bound rediscovery}
+
+The run searched for finite point sets and thresholds where every tested
+$k$-point net misses a heavy halfplane.  The audited baseline was:
+\begin{itemize}
+\item six epsilon-net rows;
+\item all rows completed with exit code \texttt{0:0};
+\item best exact value $1.4545454545454546$ from
+\texttt{eps\_n11\_t4\_k3};
+\item \texttt{eps\_n12\_t5\_k3} reached the 8-hour budget without a positive
+exact certificate.
+\end{itemize}
+
+The repository snapshot is kept at
+\texttt{docs/assets/exploratory\_overnight\_20260704\_051618/}.  It contains
+the matrix, summaries, best certificates, renderings, and a compact final
+audit JSON, but not the large event streams.
+
 \section{Manuscript tables}
 
 The main manuscript should contain compact tables of certified results, not
@@ -360,7 +408,7 @@ large random-launch matrices.
 \toprule
 Problem & Primary search family & Certified objective & Baseline to reproduce \\
 \midrule
-Unit-square stabbing & Staircase interval certificate and product lift & $\tau/\tau^*$ & $14/9$ certificate \\
+Unit-square stabbing & Staircase interval certificate and product lift & $\tau/\tau^*$ & independently reimplemented staircase target; current allowed baseline is $3/2$ \\
 MISR & Endpoint-order sequence pairs with exact LP-gap audit & $\alpha^*/\alpha$ & Endpoint-sequence smoke certificate \\
 Guillotine & Threshold nonseparable-subset search & destroyed fraction or no separable $K$-subset & Current small obstruction motifs; no stronger old certificate found \\
 \bottomrule
@@ -428,8 +476,9 @@ The following experiments should not be part of the immediate manuscript plan.
 \item Long direct-coordinate MISR runs whose best result remains near small
 cycle-like plateaus.
 \item Guillotine runs scored only by first-cut hardness.
-\item Epsilon-net and graph-representability experiments, unless the paper is
-expanded beyond the three current geometric objectives.
+\item Mixing epsilon-net and graph-representability exploratory rows into the
+main three-problem table.  They belong in a separate appendix unless the paper
+scope is explicitly expanded.
 \item Any result whose exact verifier times out or whose certificate cannot be
 recomputed from a standalone file.
 \end{enumerate}

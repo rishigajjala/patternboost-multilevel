@@ -19,7 +19,7 @@ tmp/
 runs/*
 !runs/README.md
 !runs/.gitkeep
+runs 2/
 
 slurm-*.out
 *.log
-

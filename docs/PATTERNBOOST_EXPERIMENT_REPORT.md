@@ -1,7 +1,11 @@
 # PatternBoost Three-Problem Experiment Report
 
-Updated: 2026-07-04  
-Scope: `misr`, `unit_square`, and `guillotine` only  
+Updated: 2026-07-04
+
+Main scope: `misr`, `unit_square`, and `guillotine`
+
+Exploratory appendix: `epsilon_net` and `graph_separation`
+
 Repository: `patternboost-multilevel`
 
 This report summarizes the current PatternBoost experiment state, the best
@@ -9,9 +13,11 @@ audited results, the strategies used for each problem, what appears to be
 working, and what should be improved next. It is intended as a clean handoff
 document for continuing the project, not as a final publication table.
 
-The active scope intentionally excludes `epsilon_net`, `graph_separation`, and
-all evidence from the discarded `square-stabbing-14-9` package. In particular,
-the excluded `14/9` and `20/13` square-stabbing values are not used here.
+The main paper table intentionally keeps `epsilon_net` and `graph_separation`
+separate as exploratory appendix tasks. Evidence from the discarded
+`square-stabbing-14-9` package remains excluded. In particular, the excluded
+`14/9` and `20/13` square-stabbing values are not used as current evidence
+unless independently reimplemented and audited inside the allowed code path.
 
 ## Executive Summary
 
@@ -48,6 +54,7 @@ The project has several kinds of evidence. They should not be mixed.
 | Current-code audited summaries | Primary evidence | These are the safest values to cite for current experiments. |
 | Previous-best warm-start runs | Primary follow-up evidence | Useful for record recovery, but not a neutral ablation. |
 | Broad 81-row matrix | Diagnostic evidence | One no-seed-axis sweep over all component combinations. |
+| Exploratory appendix run | Separate appendix evidence | Covers `epsilon_net` and `graph_separation`; do not mix with the three-problem table. |
 | Imported allowed unit-square code | Allowed comparison evidence | `square_stabbing_code.zip` is allowed. |
 | Discarded `square-stabbing-14-9` code | Excluded | Do not quote `14/9`, `20/13`, or figures from that package. |
 | Historical claims without recovered certificates | Targets only | Values such as earlier `1.5` MISR should be recovered and audited before citation. |
@@ -125,6 +132,33 @@ The broad run is useful for component comparison, but it should not be treated
 as a complete publication table because 10 guillotine rows timed out. Those
 timed-out guillotine checkpoint values were all weaker than the warm-start
 `0.3` row.
+
+### Exploratory Appendix Run
+
+The exploratory tasks were run separately from the three-problem matrix:
+
+- Slurm job: `16501338`
+- Run root: `runs/explore_overnight_20260704_051618`
+- Preserved repository snapshot:
+  `docs/assets/exploratory_overnight_20260704_051618/`
+- Scope: `epsilon_net` and `graph_separation`
+- Status: `12/12 COMPLETED|0:0`
+- Stderr: `0` nonempty files
+- Summaries: `12/12`
+- Matrix: `12` rows, `12` unique fresh seeds, no old fixed-seed hits
+- Validation: all best certificates verified against summaries
+
+| Task | Best exact value | Row | Interpretation |
+| --- | ---: | --- | --- |
+| `epsilon_net` | `1.4545454545454546` | `eps_n11_t4_k3` | nontrivial small exact witness recovered |
+| `graph_separation` | `0.0` | `graph_g3_n5_dense` | no bounded-grid separation witness certified |
+
+The best graph-separation pressure/search score was `1.3845054945054946` from
+`graph_g3_n7_motif`, but its exact score remained `0.0`. This indicates that
+the current stress score can find difficult-looking rectangle graphs, but the
+bounded mixed square/segment verifier did not certify a separation. The next
+useful improvement is a stronger non-representability verifier or a more
+structured graph family, not simply a longer run of the same search.
 
 ## Problem 1: MISR LP-Gap Search
 
@@ -404,7 +438,8 @@ Use these rules before quoting a result:
 6. Wall-time-killed rows may be used for debugging but not final tables unless
    resumed and audited.
 7. Figures are illustrations, not proofs.
-8. Excluded packages and problems must remain excluded.
+8. Excluded packages must remain excluded, and exploratory tasks must remain
+   separate from the main three-problem table.
 
 ## Recommended Next Experiments
 
@@ -489,6 +524,13 @@ experiments. The current best values are:
 misr         1.4
 unit_square 1.5000000000000004
 guillotine  0.3
+```
+
+The audited exploratory appendix values are:
+
+```text
+epsilon_net       1.4545454545454546
+graph_separation 0.0 exact, 1.3845054945054946 pressure/search
 ```
 
 The next meaningful gains will likely come from improving the construction

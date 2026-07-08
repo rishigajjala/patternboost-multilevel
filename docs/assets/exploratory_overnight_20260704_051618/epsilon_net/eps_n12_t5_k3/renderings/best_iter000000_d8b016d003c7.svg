@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="640" viewBox="0 0 900 640">
+<title>Epsilon-net n=12 t=5 k=3 score=0.0</title>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<circle cx="809.738" cy="343.256" r="5" fill="#111827"/>
+<text x="809.738" y="343.256" font-size="13" font-family="monospace" fill="#111827"> 0</text>
+<circle cx="482.703" cy="157.209" r="5" fill="#111827"/>
+<text x="482.703" y="157.209" font-size="13" font-family="monospace" fill="#111827"> 1</text>
+<circle cx="417.297" cy="203.721" r="5" fill="#111827"/>
+<text x="417.297" y="203.721" font-size="13" font-family="monospace" fill="#111827"> 2</text>
+<circle cx="482.703" cy="343.256" r="5" fill="#111827"/>
+<text x="482.703" y="343.256" font-size="13" font-family="monospace" fill="#111827"> 3</text>
+<circle cx="221.076" cy="157.209" r="5" fill="#111827"/>
+<text x="221.076" y="157.209" font-size="13" font-family="monospace" fill="#111827"> 4</text>
+<circle cx="221.076" cy="389.767" r="5" fill="#111827"/>
+<text x="221.076" y="389.767" font-size="13" font-family="monospace" fill="#111827"> 5</text>
+<circle cx="482.703" cy="110.698" r="5" fill="#111827"/>
+<text x="482.703" y="110.698" font-size="13" font-family="monospace" fill="#111827"> 6</text>
+<circle cx="90.262" cy="436.279" r="5" fill="#111827"/>
+<text x="90.262" y="436.279" font-size="13" font-family="monospace" fill="#111827"> 7</text>
+<circle cx="744.331" cy="343.256" r="5" fill="#111827"/>
+<text x="744.331" y="343.256" font-size="13" font-family="monospace" fill="#111827"> 8</text>
+<circle cx="286.483" cy="250.233" r="5" fill="#111827"/>
+<text x="286.483" y="250.233" font-size="13" font-family="monospace" fill="#111827"> 9</text>
+<circle cx="613.517" cy="64.186" r="5" fill="#111827"/>
+<text x="613.517" y="64.186" font-size="13" font-family="monospace" fill="#111827"> 10</text>
+<circle cx="286.483" cy="575.814" r="5" fill="#111827"/>
+<text x="286.483" y="575.814" font-size="13" font-family="monospace" fill="#111827"> 11</text>
+<line x1="0" y1="648.837" x2="8.285" y2="640" stroke="#dc2626" stroke-width="2.0" stroke-dasharray="6 4"/>
+</svg>

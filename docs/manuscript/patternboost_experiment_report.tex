@@ -38,14 +38,15 @@ This report summarizes the current state of the PatternBoost geometric
 extremal-search experiments.  The active scope is restricted to three
 problems: maximum independent set of rectangles (MISR) LP-gap search,
 unit-square line-stabbing LP-gap search, and recursive guillotine hardness.
-The report records the best audited values, the run inventory, the strategy
-used for each problem, the observed failure modes, and the next modifications
-that are most likely to improve the bounds.  The current best audited values
-are $1.4$ for MISR, $1.5000000000000004$ for unit-square stabbing, and $0.3$
-for guillotine hardness.  These values should be interpreted as the present
-state of a structured computational search, not as final publication-quality
-theorems.  All reported scores must be recomputed by exact verifiers from
-standalone certificates before they are used in a manuscript.
+The report also records a separate exploratory appendix run for
+\code{epsilon\_net} and \code{graph\_separation}.  The current best audited
+main-track values are $1.4$ for MISR, $1.5000000000000004$ for unit-square
+stabbing, and $0.3$ for guillotine hardness.  The exploratory run reached
+$1.4545454545454546$ for \code{epsilon\_net} and no exact positive
+\code{graph\_separation} witness.  These values should be interpreted as the
+present state of a structured computational search, not as final
+publication-quality theorems.  All reported scores must be recomputed by exact
+verifiers from standalone certificates before they are used in a manuscript.
 \end{abstract}
 
 \tableofcontents
@@ -53,7 +54,7 @@ standalone certificates before they are used in a manuscript.
 
 \section{Scope and evidence boundaries}
 
-The project currently studies three main extremal-search problems:
+The main paper track currently studies three extremal-search problems:
 \begin{enumerate}
 \item \textbf{MISR LP gap:} find axis-parallel rectangle families with large
 LP relaxation gap for maximum independent set of rectangles.
@@ -63,12 +64,13 @@ integer/LP gap for stabbing by horizontal and vertical lines.
 every recursive guillotine strategy destroys a large fraction of rectangles.
 \end{enumerate}
 
-Two earlier exploratory tasks, \code{epsilon\_net} and
-\code{graph\_separation}, are outside the present scope.  All evidence from
-the discarded \code{square-stabbing-14-9} package is also excluded.  In
-particular, the old $14/9$ and $20/13$ square-stabbing values should not be
-quoted as current evidence unless they are reimplemented and audited inside the
-allowed code path.
+Two additional tasks, \code{epsilon\_net} and \code{graph\_separation}, are
+implemented as exploratory appendix tasks and should not be mixed with the main
+three-problem table.  All evidence from the discarded
+\code{square-stabbing-14-9} package is excluded.  In particular, the old
+$14/9$ and $20/13$ square-stabbing values should not be quoted as current
+evidence unless they are reimplemented and audited inside the allowed code
+path.
 
 \begin{table}[htbp]
 \centering
@@ -84,6 +86,9 @@ record recovery and focused continuation, but not a neutral ablation. \\
 Broad 81-row matrix & Diagnostic evidence & A component sweep over all
 three problems; useful for comparisons, but incomplete for guillotine because
 some rows timed out. \\
+Exploratory appendix run & Separate appendix evidence & Covers
+\code{epsilon\_net} and \code{graph\_separation}; do not mix with the
+three-problem table. \\
 Allowed imported unit-square code & Allowed comparison evidence & May be used
 when the exact IP/LP result and certificate hash are recorded. \\
 Discarded \code{square-stabbing-14-9} code & Excluded & Do not use its
@@ -283,6 +288,44 @@ The broad run is useful for component comparison.  It should not be treated as
 a complete publication table until the timed-out guillotine rows are resumed
 or explicitly removed from the comparison.  Importantly, the timed-out
 guillotine checkpoint values were weaker than the warm-start score of $0.3$.
+
+\subsection{Exploratory appendix run}
+
+The exploratory appendix tasks were run separately from the main three-problem
+matrix:
+\begin{itemize}
+\item Slurm job: \code{16501338}.
+\item Run root: \code{runs/explore\_overnight\_20260704\_051618}.
+\item Preserved repository snapshot:
+\code{docs/assets/exploratory\_overnight\_20260704\_051618/}.
+\item Scope: \code{epsilon\_net} and \code{graph\_separation}.
+\item Status: 12 of 12 rows completed with exit code \code{0:0}.
+\item Stderr: zero nonempty stderr files.
+\item Matrix: 12 rows, 12 unique fresh seeds, no old fixed-seed hits.
+\item Validation: every best certificate verified against its summary.
+\end{itemize}
+
+\begin{table}[htbp]
+\centering
+\caption{Best values in the exploratory appendix run.}
+\begin{tabularx}{\textwidth}{p{0.22\textwidth}p{0.16\textwidth}p{0.24\textwidth}X}
+\toprule
+Task & Best exact value & Row & Interpretation \\
+\midrule
+\code{epsilon\_net} & $1.4545454545454546$ & \code{eps\_n11\_t4\_k3}
+& Nontrivial small exact witness recovered. \\
+\code{graph\_separation} & $0.0$ & \code{graph\_g3\_n5\_dense}
+& No bounded-grid mixed square/segment separation witness certified. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The best graph-separation pressure score was $1.3845054945054946$ from
+\code{graph\_g3\_n7\_motif}, but the exact score remained $0.0$.  This means
+the current stress objective can produce difficult-looking rectangle graphs,
+but the bounded mixed-representation verifier did not certify a separation.
+The next useful improvement is a stronger non-representability verifier or a
+more structured graph family, not simply a longer run of the same search.
 
 \clearpage
 \section{Problem 1: MISR LP-gap search}
@@ -675,7 +718,8 @@ value.
 \item Wall-time-killed rows are used only for debugging unless resumed and
 audited.
 \item Figures are treated as illustrations, not proof objects.
-\item Excluded packages and out-of-scope problems remain excluded.
+\item Excluded packages remain excluded, and exploratory tasks remain separate
+from the main three-problem table.
 \end{enumerate}
 
 \section{Recommended next experiments}
@@ -865,7 +909,7 @@ surrogates:
 \section{Bottom line}
 
 The cleaned repository is ready for a student to run and audit the current
-three-problem experiments.  The present best values are:
+three-problem experiments.  The present main-track best values are:
 \begin{center}
 \begin{tabular}{lr}
 \toprule
@@ -874,6 +918,18 @@ Problem & Current best \\
 MISR & $1.4$ \\
 Unit-square stabbing & $1.5000000000000004$ \\
 Guillotine & $0.3$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The audited exploratory appendix values are:
+\begin{center}
+\begin{tabular}{lr}
+\toprule
+Task & Current best \\
+\midrule
+\code{epsilon\_net} & $1.4545454545454546$ \\
+\code{graph\_separation} & $0.0$ exact; $1.3845054945054946$ pressure \\
 \bottomrule
 \end{tabular}
 \end{center}

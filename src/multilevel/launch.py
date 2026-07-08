@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import os
+import posixpath
 import shlex
 from pathlib import Path
 from typing import Any
@@ -38,10 +40,12 @@ def write_slurm_array(
     rows = read_matrix(matrix_path)
     if not rows:
         raise ValueError("matrix has no rows")
-    project = Path(project_dir).resolve()
-    matrix = Path(matrix_path).resolve()
-    results = Path(results_dir)
-    (results / "slurm").mkdir(parents=True, exist_ok=True)
+    project = os.fspath(project_dir)
+    matrix = os.fspath(matrix_path)
+    results = os.fspath(results_dir)
+    slurm_log_dir = posixpath.join(results, "slurm")
+    if not posixpath.isabs(slurm_log_dir) or Path(project).exists():
+        Path(slurm_log_dir).mkdir(parents=True, exist_ok=True)
     conda_line = (
         f'  conda activate "${{CONDA_ENV:-{conda_env}}}"'
         if conda_env
@@ -65,6 +69,9 @@ def write_slurm_array(
     elif runner == "search":
         command = "search-cell"
         extra = "--iterations ${ITERATIONS:-40} --population ${POPULATION:-24} --elite ${ELITE:-4} --exact-every ${EXACT_EVERY:-5}"
+    elif runner == "explore":
+        command = "explore-cell"
+        extra = "--iterations ${ITERATIONS:-50} --population ${POPULATION:-32} --elite ${ELITE:-6}"
     elif runner == "baseline":
         command = "run-cell"
         extra = "--iterations ${ITERATIONS:-100}"
@@ -72,8 +79,8 @@ def write_slurm_array(
         raise ValueError(f"unknown runner: {runner}")
     script = f"""#!/bin/bash
 #SBATCH --job-name=pb_multilevel
-#SBATCH --output={results}/slurm/%A_%a.out
-#SBATCH --error={results}/slurm/%A_%a.err
+#SBATCH --output={slurm_log_dir}/%A_%a.out
+#SBATCH --error={slurm_log_dir}/%A_%a.err
 #SBATCH --array=0-{len(rows) - 1}
 #SBATCH --time={time_limit}
 #SBATCH --partition={partition}
@@ -83,8 +90,8 @@ def write_slurm_array(
 #SBATCH --mem={mem}
 
 set -euo pipefail
-cd {shlex.quote(str(project))}
-mkdir -p {shlex.quote(str(results))}/slurm
+cd {shlex.quote(project)}
+mkdir -p {shlex.quote(slurm_log_dir)}
 
 VENV="${{VENV:-}}"
 if [ -n "$VENV" ] && [ -f "$VENV/bin/activate" ]; then
@@ -113,9 +120,9 @@ export MKL_NUM_THREADS="${{SLURM_CPUS_PER_TASK:-{cpus_per_task}}}"
 export NUMEXPR_NUM_THREADS="${{SLURM_CPUS_PER_TASK:-{cpus_per_task}}}"
 export VECLIB_MAXIMUM_THREADS="${{SLURM_CPUS_PER_TASK:-{cpus_per_task}}}"
 python3 -m multilevel.cli {command} \\
-  --matrix {shlex.quote(str(matrix))} \\
+  --matrix {shlex.quote(matrix)} \\
   --index "${{SLURM_ARRAY_TASK_ID}}" \\
-  --out-root {shlex.quote(str(results))} \\
+  --out-root {shlex.quote(results)} \\
   {extra} \\
   --n "${{N:-12}}" \\
   --grid "${{GRID:-8}}"

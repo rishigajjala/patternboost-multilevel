@@ -10,7 +10,14 @@ from typing import Any
 from multilevel import __version__
 from multilevel.audit import audit_summary_csv, audit_summary_root, write_audit_outputs
 from multilevel.canonical import attach_certificate_hash, load_json, write_json
-from multilevel.components import COMPONENTS, CONTROL_MODES, DEFAULT_STAGE_BUDGETS, build_control_matrix, build_matrix
+from multilevel.components import (
+    COMPONENTS,
+    CONTROL_MODES,
+    DEFAULT_STAGE_BUDGETS,
+    build_control_matrix,
+    build_matrix,
+    fresh_rng_seed,
+)
 from multilevel.exploratory import run_exploratory_search
 from multilevel.followup import build_followup_matrix
 from multilevel.gitinfo import git_commit
@@ -141,9 +148,25 @@ def _row_out_dir(row: dict[str, Any], out_root: str | Path) -> Path:
     return Path(out_root).joinpath(*parts)
 
 
+def _explore_row_out_dir(row: dict[str, Any], out_root: str | Path, index: int) -> Path:
+    problem = str(row["problem"])
+    run_id = str(row.get("run_id") or f"row_{index}")
+    return Path(out_root) / problem / run_id
+
+
 def _row_int(row: dict[str, Any], key: str, default: int) -> int:
     value = row.get(key)
     return default if value is None else int(value)
+
+
+def _row_optional_int(row: dict[str, Any], key: str, default: int | None) -> int | None:
+    value = row.get(key)
+    return default if value is None else int(value)
+
+
+def _row_optional_float(row: dict[str, Any], key: str, default: float | None) -> float | None:
+    value = row.get(key)
+    return default if value is None else float(value)
 
 
 def _row_rng_seed(row: dict[str, Any]) -> int:
@@ -226,9 +249,10 @@ def cmd_smoke(args: argparse.Namespace) -> int:
 
 
 def cmd_local_only(args: argparse.Namespace) -> int:
+    seed = args.seed if args.seed is not None else fresh_rng_seed()
     summary = run_random_exact_baseline(
         problem=args.problem,
-        seed=args.seed,
+        seed=seed,
         iterations=args.iterations,
         out_dir=args.out,
         n=args.n,
@@ -241,9 +265,10 @@ def cmd_local_only(args: argparse.Namespace) -> int:
 
 
 def cmd_explore(args: argparse.Namespace) -> int:
+    seed = args.seed if args.seed is not None else fresh_rng_seed()
     summary = run_exploratory_search(
         problem=args.problem,
-        seed=args.seed,
+        seed=seed,
         iterations=args.iterations,
         population_size=args.population,
         elite_size=args.elite,
@@ -297,6 +322,30 @@ def cmd_search_cell(args: argparse.Namespace) -> int:
         run_id=str(row["run_id"]),
         stage=str(row["stage"]),
         budget_seconds=int(row["budget_seconds"]) if row.get("budget_seconds") is not None else None,
+    )
+    print(json.dumps(summary, indent=2, sort_keys=True))
+    return 0
+
+
+def cmd_explore_cell(args: argparse.Namespace) -> int:
+    row = matrix_row(args.matrix, args.index)
+    out_dir = _explore_row_out_dir(row, args.out_root, args.index)
+    run_id = str(row.get("run_id") or f"row_{args.index}")
+    summary = run_exploratory_search(
+        problem=str(row["problem"]),
+        seed=_row_rng_seed(row),
+        iterations=_row_int(row, "iterations", args.iterations),
+        population_size=_row_int(row, "population", args.population),
+        elite_size=_row_int(row, "elite", args.elite),
+        out_dir=out_dir,
+        n=_row_int(row, "n", args.n),
+        grid=_row_int(row, "grid", args.grid),
+        run_id=run_id,
+        budget_seconds=int(row["budget_seconds"]) if row.get("budget_seconds") is not None else None,
+        mixed_grid=_row_optional_int(row, "mixed_grid", args.mixed_grid),
+        timeout_seconds=_row_optional_float(row, "timeout_seconds", args.timeout_seconds),
+        threshold=_row_optional_int(row, "threshold", args.threshold),
+        k=_row_optional_int(row, "k", args.k),
     )
     print(json.dumps(summary, indent=2, sort_keys=True))
     return 0
@@ -438,7 +487,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     local = sub.add_parser("local-only", help="run an exact-scored random local-only baseline")
     local.add_argument("problem", choices=sorted(SCORERS))
-    local.add_argument("--seed", type=int, default=0)
+    local.add_argument("--seed", type=int, default=None, help="optional reproducibility seed; omitted means fresh random")
     local.add_argument("--iterations", type=int, default=25)
     local.add_argument("--n", type=int, default=12)
     local.add_argument("--grid", type=int, default=8)
@@ -449,7 +498,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     explore = sub.add_parser("explore", help="run an exploratory exact-scored elite/mutation search")
     explore.add_argument("problem", choices=["graph_separation", "epsilon_net"])
-    explore.add_argument("--seed", type=int, default=0)
+    explore.add_argument("--seed", type=int, default=None, help="optional reproducibility seed; omitted means fresh random")
     explore.add_argument("--iterations", type=int, default=50)
     explore.add_argument("--population", type=int, default=32)
     explore.add_argument("--elite", type=int, default=6)
@@ -484,6 +533,21 @@ def build_parser() -> argparse.ArgumentParser:
     search_cell.add_argument("--n", type=int, default=12)
     search_cell.add_argument("--grid", type=int, default=8)
     search_cell.set_defaults(func=cmd_search_cell)
+
+    explore_cell = sub.add_parser("explore-cell", help="execute one exploratory matrix row")
+    explore_cell.add_argument("--matrix", required=True)
+    explore_cell.add_argument("--index", type=int, required=True)
+    explore_cell.add_argument("--out-root", required=True)
+    explore_cell.add_argument("--iterations", type=int, default=50)
+    explore_cell.add_argument("--population", type=int, default=32)
+    explore_cell.add_argument("--elite", type=int, default=6)
+    explore_cell.add_argument("--n", type=int, default=12)
+    explore_cell.add_argument("--grid", type=int, default=8)
+    explore_cell.add_argument("--mixed-grid", type=int, default=None)
+    explore_cell.add_argument("--timeout-seconds", type=float, default=None)
+    explore_cell.add_argument("--threshold", type=int, default=None)
+    explore_cell.add_argument("--k", type=int, default=None)
+    explore_cell.set_defaults(func=cmd_explore_cell)
 
     patternboost_cell = sub.add_parser("patternboost-cell", help="execute one matrix row with PatternBoost model-guided search")
     patternboost_cell.add_argument("--matrix", required=True)
@@ -532,7 +596,7 @@ def build_parser() -> argparse.ArgumentParser:
     slurm.add_argument("--partition", default="compute")
     slurm.add_argument("--cpus-per-task", type=int, default=1)
     slurm.add_argument("--mem", default="8G")
-    slurm.add_argument("--runner", choices=["patternboost", "search", "baseline"], default="patternboost")
+    slurm.add_argument("--runner", choices=["patternboost", "search", "baseline", "explore"], default="patternboost")
     slurm.add_argument("--conda-env", default=None)
     slurm.set_defaults(func=cmd_make_slurm)
 

@@ -1,0 +1,50 @@
+{
+  "best_certificate_hash": "5b76f22df1289343329129dc256588b48e162dee889166668c5a2a86022645d6",
+  "best_certificate_path": "/home/sg9396/patternboost/multi-level/runs/explore_overnight_20260704_051618/epsilon_net/eps_n8_t3_k2/certificates/best_iter000000_5b76f22df128.json",
+  "best_exact_score": 1.125,
+  "best_rendering_path": "/home/sg9396/patternboost/multi-level/runs/explore_overnight_20260704_051618/epsilon_net/eps_n8_t3_k2/renderings/best_iter000000_5b76f22df128.svg",
+  "budget_seconds": 28800,
+  "completed_iterations": 10000,
+  "control_mode": "exploratory_search",
+  "elapsed_seconds": 1997.1921927258372,
+  "elite_size": 6,
+  "end_time": "2026-07-04T01:49:43.091185+00:00",
+  "event_stream": "/home/sg9396/patternboost/multi-level/runs/explore_overnight_20260704_051618/epsilon_net/eps_n8_t3_k2/events.jsonl",
+  "exploratory_hparams": {
+    "k": 2,
+    "mixed_grid": 5,
+    "threshold": 3,
+    "timeout_seconds": 8.0
+  },
+  "grid": 8,
+  "hardware": {
+    "platform": "Linux-4.18.0-193.6.3.el8_2.x86_64-x86_64-with-glibc2.28",
+    "python": "3.11.3"
+  },
+  "iterations": 10000,
+  "local_search": "order_type_mutation",
+  "n": 8,
+  "num_duplicates": 70925,
+  "num_exact_calls": 169075,
+  "num_exact_timeouts": 0,
+  "num_exports": 1,
+  "num_invalid_samples": 0,
+  "num_repaired_samples": 0,
+  "population_size": 24,
+  "problem": "epsilon_net",
+  "representation": "order_type_points",
+  "return_code": 0,
+  "rng_seed": 7897923933422259269,
+  "run_id": "eps_n8_t3_k2",
+  "schema": "run_summary_v1",
+  "solver_versions": {
+    "numpy": "2.0.2",
+    "scipy": "1.13.1",
+    "torch": "2.8.0+cu128"
+  },
+  "stage": "exploratory",
+  "start_time": "2026-07-04T01:16:25.900481+00:00",
+  "stop_reason": "completed",
+  "surrogate": "witness_coverage_exact",
+  "time_to_best": 7.867780417203903
+}

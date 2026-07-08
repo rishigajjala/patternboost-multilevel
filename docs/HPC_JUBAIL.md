@@ -20,6 +20,19 @@ DRY_RUN=1 scripts/sync_to_hpc.sh
 
 The sync excludes `.git`, virtualenvs, local generated outputs, and `runs/`.
 
+For final submission runs, deploy an exact git commit instead of the loose
+working tree:
+
+```bash
+scripts/sync_git_commit_to_hpc.sh
+```
+
+This refuses tracked local changes, sends `git archive HEAD`, and creates a
+clean commit-stamped directory such as
+`/home/sg9396/patternboost/multi-level-<commit>`. Generate final matrices from
+inside that deployed directory so each row records the same commit SHA that was
+actually run.
+
 ## 2. Create the HPC Python Environment
 
 On Jubail:
@@ -46,6 +59,19 @@ wc -l runs/main_81_matrix.jsonl
 ```
 
 Expected row count: `81`.
+
+## 3b. Generate the Exploratory Appendix Matrix
+
+Use this only for the two exploratory tasks, `epsilon_net` and
+`graph_separation`. Keep these results separate from the main
+`misr`/`unit_square`/`guillotine` table.
+
+```bash
+scripts/make_exploratory_matrix.sh runs/explore_overnight_matrix.jsonl
+wc -l runs/explore_overnight_matrix.jsonl
+```
+
+Expected row count: `12`.
 
 ## 4. Generate a Slurm Array
 
@@ -79,6 +105,25 @@ export N=8
 export GRID=8
 ```
 
+For the exploratory appendix matrix, generate a separate Slurm script. Do not
+reuse the main 81-row script.
+
+```bash
+PYTHONPATH=src python3 -m multilevel.cli make-slurm \
+  --matrix runs/explore_overnight_matrix.jsonl \
+  --out scripts/explore_overnight_array.slurm \
+  --project-dir "$PWD" \
+  --results-dir runs/explore_overnight_$(date +%Y%m%d_%H%M%S) \
+  --time 09:00:00 \
+  --partition compute \
+  --cpus-per-task 1 \
+  --mem 8G \
+  --runner explore
+```
+
+The generated script invokes `multilevel.cli explore-cell`, reads each matrix
+row directly, and writes one result directory per `problem/run_id`.
+
 ## 5. Submit a Smoke Slice
 
 Run three representative rows first:
@@ -105,6 +150,12 @@ ITERATIONS=400 \
 TRAIN_EVERY=7 \
 MODEL_KIND=transformer \
 sbatch scripts/main_81_array.slurm
+```
+
+For exploratory runs, submit the generated exploratory script:
+
+```bash
+VENV=/scratch/$USER/pb_multilevel_venv sbatch scripts/explore_overnight_array.slurm
 ```
 
 ## 6. Monitor
@@ -155,3 +206,29 @@ runs/main_81_hpc/audit/audit.csv
 
 A result is paper-usable only when the audit passes.
 
+For exploratory runs, preserve only compact final artifacts in git:
+
+```text
+matrix.jsonl
+*/summary.json
+*/certificates/*.json
+*/renderings/*.svg
+final_audit.json
+```
+
+Do not commit full `events.jsonl` streams; they are useful for live monitoring
+but too large for the repository.
+
+## 9. Audited Exploratory Baseline
+
+The most recent audited exploratory run is:
+
+- Slurm job: `16501338`
+- Run root: `runs/explore_overnight_20260704_051618`
+- Status: `12/12 COMPLETED|0:0`
+- Stderr: `0` nonempty files
+- Best `epsilon_net`: `1.4545454545454546` from `eps_n11_t4_k3`
+- Best `graph_separation`: exact `0.0`; best pressure/search
+  `1.3845054945054946` from `graph_g3_n7_motif`
+- Preserved snapshot:
+  `docs/assets/exploratory_overnight_20260704_051618/`

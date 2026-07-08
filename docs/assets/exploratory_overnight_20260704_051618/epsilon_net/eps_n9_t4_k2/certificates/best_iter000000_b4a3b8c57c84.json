@@ -1,0 +1,704 @@
+{
+  "all_k_subsets_fail": true,
+  "candidate_id": "4eefe57b1debe6db6dec5256ae64be33a8523363b39fa3c6517cc6c5ebf31adc",
+  "certificate_hash": "b4a3b8c57c84823423676d6afbfff65416576650d524f46f31c85a1fd508fd12",
+  "certificate_payload_bytes": 4682,
+  "created_at": "2026-07-04T01:16:25.734370+00:00",
+  "dependency_versions": {
+    "numpy": "2.0.2",
+    "scipy": "1.13.1",
+    "torch": "2.8.0+cu128"
+  },
+  "direction_count": 116,
+  "epsilon": 0.4444444444444444,
+  "exact_enumeration": true,
+  "exact_runtime_seconds": 0.006962515413761139,
+  "generation": 0,
+  "git_commit": "",
+  "git_dirty": null,
+  "hardware": {
+    "platform": "Linux-4.18.0-193.6.3.el8_2.x86_64-x86_64-with-glibc2.28",
+    "python": "3.11.3"
+  },
+  "k": 2,
+  "lower_bound_ratio": 1.3333333333333333,
+  "missing_witness_count": 0,
+  "missing_witness_nets": [],
+  "n": 9,
+  "num_k_subsets": 36,
+  "num_witness_halfplanes": 36,
+  "points": [
+    [
+      7,
+      5
+    ],
+    [
+      5,
+      6
+    ],
+    [
+      9,
+      0
+    ],
+    [
+      5,
+      1
+    ],
+    [
+      1,
+      7
+    ],
+    [
+      4,
+      9
+    ],
+    [
+      9,
+      6
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      8,
+      3
+    ]
+  ],
+  "problem": "epsilon_net",
+  "schema": "epsilon_net_certificate_v1",
+  "score": 1.3333333333333333,
+  "solver": {
+    "halfplane_family": "critical_normal_directions",
+    "num_directions": 116,
+    "projection_tolerance": 1e-10,
+    "solver": "exact_k_subset_enumeration"
+  },
+  "solver_status": "optimal",
+  "source_type": "exploratory_search",
+  "threshold": 4,
+  "tool_version": "0.1.0",
+  "witness_coverage_fraction": 1.0,
+  "witness_signature_count": 36,
+  "witnesses": [
+    {
+      "contained": [
+        3,
+        4,
+        5,
+        7
+      ],
+      "net": [
+        0,
+        1
+      ],
+      "normal": [
+        -0.992277876713668,
+        -0.124034734589209
+      ],
+      "strict_threshold": -5.705597791103594
+    },
+    {
+      "contained": [
+        1,
+        4,
+        5,
+        6
+      ],
+      "net": [
+        0,
+        2
+      ],
+      "normal": [
+        0.242535625036333,
+        0.970142500145332
+      ],
+      "strict_threshold": 6.5484618759809905
+    },
+    {
+      "contained": [
+        1,
+        4,
+        5,
+        6
+      ],
+      "net": [
+        0,
+        3
+      ],
+      "normal": [
+        0.242535625036333,
+        0.970142500145332
+      ],
+      "strict_threshold": 6.5484618759809905
+    },
+    {
+      "contained": [
+        2,
+        3,
+        7,
+        8
+      ],
+      "net": [
+        0,
+        4
+      ],
+      "normal": [
+        -0.447213595499958,
+        -0.894427190999916
+      ],
+      "strict_threshold": -6.70820393249937
+    },
+    {
+      "contained": [
+        1,
+        3,
+        4,
+        7
+      ],
+      "net": [
+        0,
+        5
+      ],
+      "normal": [
+        -0.928476690885259,
+        -0.371390676354104
+      ],
+      "strict_threshold": -7.056422850727972
+    },
+    {
+      "contained": [
+        1,
+        4,
+        5,
+        7
+      ],
+      "net": [
+        0,
+        6
+      ],
+      "normal": [
+        -0.78086880944303,
+        0.624695047554424
+      ],
+      "strict_threshold": -2.342606428329091
+    },
+    {
+      "contained": [
+        1,
+        4,
+        5,
+        6
+      ],
+      "net": [
+        0,
+        7
+      ],
+      "normal": [
+        0.242535625036333,
+        0.970142500145332
+      ],
+      "strict_threshold": 6.5484618759809905
+    },
+    {
+      "contained": [
+        1,
+        4,
+        5,
+        6
+      ],
+      "net": [
+        0,
+        8
+      ],
+      "normal": [
+        0.242535625036333,
+        0.970142500145332
+      ],
+      "strict_threshold": 6.5484618759809905
+    },
+    {
+      "contained": [
+        0,
+        5,
+        6,
+        8
+      ],
+      "net": [
+        1,
+        2
+      ],
+      "normal": [
+        0.832050294337844,
+        0.554700196225229
+      ],
+      "strict_threshold": 7.488452649040596
+    },
+    {
+      "contained": [
+        0,
+        2,
+        6,
+        8
+      ],
+      "net": [
+        1,
+        3
+      ],
+      "normal": [
+        1.0,
+        0.0
+      ],
+      "strict_threshold": 5.0
+    },
+    {
+      "contained": [
+        0,
+        2,
+        6,
+        8
+      ],
+      "net": [
+        1,
+        4
+      ],
+      "normal": [
+        1.0,
+        0.0
+      ],
+      "strict_threshold": 5.0
+    },
+    {
+      "contained": [
+        0,
+        2,
+        6,
+        8
+      ],
+      "net": [
+        1,
+        5
+      ],
+      "normal": [
+        1.0,
+        0.0
+      ],
+      "strict_threshold": 5.0
+    },
+    {
+      "contained": [
+        3,
+        4,
+        5,
+        7
+      ],
+      "net": [
+        1,
+        6
+      ],
+      "normal": [
+        -0.992277876713668,
+        -0.124034734589209
+      ],
+      "strict_threshold": -5.705597791103594
+    },
+    {
+      "contained": [
+        0,
+        2,
+        6,
+        8
+      ],
+      "net": [
+        1,
+        7
+      ],
+      "normal": [
+        1.0,
+        0.0
+      ],
+      "strict_threshold": 5.0
+    },
+    {
+      "contained": [
+        3,
+        4,
+        5,
+        7
+      ],
+      "net": [
+        1,
+        8
+      ],
+      "normal": [
+        -0.992277876713668,
+        -0.124034734589209
+      ],
+      "strict_threshold": -5.705597791103594
+    },
+    {
+      "contained": [
+        0,
+        5,
+        6,
+        8
+      ],
+      "net": [
+        2,
+        3
+      ],
+      "normal": [
+        0.832050294337844,
+        0.554700196225229
+      ],
+      "strict_threshold": 7.488452649040596
+    },
+    {
+      "contained": [
+        0,
+        5,
+        6,
+        8
+      ],
+      "net": [
+        2,
+        4
+      ],
+      "normal": [
+        0.832050294337844,
+        0.554700196225229
+      ],
+      "strict_threshold": 7.488452649040596
+    },
+    {
+      "contained": [
+        1,
+        3,
+        4,
+        7
+      ],
+      "net": [
+        2,
+        5
+      ],
+      "normal": [
+        -0.928476690885259,
+        -0.371390676354104
+      ],
+      "strict_threshold": -7.056422850727972
+    },
+    {
+      "contained": [
+        0,
+        1,
+        4,
+        5
+      ],
+      "net": [
+        2,
+        6
+      ],
+      "normal": [
+        -0.554700196225229,
+        0.832050294337844
+      ],
+      "strict_threshold": 2.6645352591003757e-15
+    },
+    {
+      "contained": [
+        0,
+        5,
+        6,
+        8
+      ],
+      "net": [
+        2,
+        7
+      ],
+      "normal": [
+        0.832050294337844,
+        0.554700196225229
+      ],
+      "strict_threshold": 7.488452649040596
+    },
+    {
+      "contained": [
+        0,
+        1,
+        5,
+        6
+      ],
+      "net": [
+        2,
+        8
+      ],
+      "normal": [
+        0.658504607868518,
+        0.752576694706878
+      ],
+      "strict_threshold": 7.525766947068778
+    },
+    {
+      "contained": [
+        0,
+        2,
+        6,
+        8
+      ],
+      "net": [
+        3,
+        4
+      ],
+      "normal": [
+        1.0,
+        0.0
+      ],
+      "strict_threshold": 5.0
+    },
+    {
+      "contained": [
+        0,
+        2,
+        6,
+        8
+      ],
+      "net": [
+        3,
+        5
+      ],
+      "normal": [
+        1.0,
+        0.0
+      ],
+      "strict_threshold": 5.0
+    },
+    {
+      "contained": [
+        0,
+        1,
+        4,
+        5
+      ],
+      "net": [
+        3,
+        6
+      ],
+      "normal": [
+        -0.554700196225229,
+        0.832050294337844
+      ],
+      "strict_threshold": 2.6645352591003757e-15
+    },
+    {
+      "contained": [
+        0,
+        2,
+        6,
+        8
+      ],
+      "net": [
+        3,
+        7
+      ],
+      "normal": [
+        1.0,
+        0.0
+      ],
+      "strict_threshold": 5.0
+    },
+    {
+      "contained": [
+        0,
+        1,
+        5,
+        6
+      ],
+      "net": [
+        3,
+        8
+      ],
+      "normal": [
+        0.658504607868518,
+        0.752576694706878
+      ],
+      "strict_threshold": 7.525766947068778
+    },
+    {
+      "contained": [
+        0,
+        1,
+        2,
+        3,
+        6,
+        8
+      ],
+      "net": [
+        4,
+        5
+      ],
+      "normal": [
+        1.0,
+        0.0
+      ],
+      "strict_threshold": 4.0
+    },
+    {
+      "contained": [
+        2,
+        3,
+        7,
+        8
+      ],
+      "net": [
+        4,
+        6
+      ],
+      "normal": [
+        -0.447213595499958,
+        -0.894427190999916
+      ],
+      "strict_threshold": -6.70820393249937
+    },
+    {
+      "contained": [
+        0,
+        1,
+        2,
+        3,
+        5,
+        6,
+        8
+      ],
+      "net": [
+        4,
+        7
+      ],
+      "normal": [
+        1.0,
+        0.0
+      ],
+      "strict_threshold": 2.0
+    },
+    {
+      "contained": [
+        0,
+        1,
+        5,
+        6
+      ],
+      "net": [
+        4,
+        8
+      ],
+      "normal": [
+        0.658504607868518,
+        0.752576694706878
+      ],
+      "strict_threshold": 7.525766947068778
+    },
+    {
+      "contained": [
+        1,
+        3,
+        4,
+        7
+      ],
+      "net": [
+        5,
+        6
+      ],
+      "normal": [
+        -0.928476690885259,
+        -0.371390676354104
+      ],
+      "strict_threshold": -7.056422850727972
+    },
+    {
+      "contained": [
+        0,
+        1,
+        2,
+        3,
+        6,
+        8
+      ],
+      "net": [
+        5,
+        7
+      ],
+      "normal": [
+        1.0,
+        0.0
+      ],
+      "strict_threshold": 4.0
+    },
+    {
+      "contained": [
+        1,
+        3,
+        4,
+        7
+      ],
+      "net": [
+        5,
+        8
+      ],
+      "normal": [
+        -0.928476690885259,
+        -0.371390676354104
+      ],
+      "strict_threshold": -7.056422850727972
+    },
+    {
+      "contained": [
+        0,
+        1,
+        4,
+        5
+      ],
+      "net": [
+        6,
+        7
+      ],
+      "normal": [
+        -0.554700196225229,
+        0.832050294337844
+      ],
+      "strict_threshold": 2.6645352591003757e-15
+    },
+    {
+      "contained": [
+        0,
+        1,
+        4,
+        5
+      ],
+      "net": [
+        6,
+        8
+      ],
+      "normal": [
+        -0.554700196225229,
+        0.832050294337844
+      ],
+      "strict_threshold": 2.6645352591003757e-15
+    },
+    {
+      "contained": [
+        0,
+        1,
+        5,
+        6
+      ],
+      "net": [
+        7,
+        8
+      ],
+      "normal": [
+        0.658504607868518,
+        0.752576694706878
+      ],
+      "strict_threshold": 7.525766947068778
+    }
+  ]
+}
