@@ -23,4 +23,5 @@ for ROOT in "$@"; do
   python3 -m multilevel.cli summary --root "$ROOT" --out "$SUMMARY"
   python3 -m multilevel.cli report --summary "$SUMMARY" --out-dir "$REPORT_DIR"
   python3 -m multilevel.cli audit --summary "$SUMMARY" --out "$AUDIT_DIR/audit.json" --csv "$AUDIT_DIR/audit.csv"
+  python3 scripts/extract_learning_curves.py "$ROOT" --out "$REPORT_DIR/learning_curves.csv"
 done
