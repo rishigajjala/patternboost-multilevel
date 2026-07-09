@@ -10,933 +10,352 @@
 \usepackage{tabularx}
 \usepackage[hidelinks]{hyperref}
 
-\graphicspath{{../assets/study_assets/}}
+\graphicspath{{../assets/final_submission_20260708_131302/figures/}{../assets/study_assets/}}
 
+\newcommand{\code}[1]{\texttt{#1}}
 \newcommand{\Rcal}{\mathcal{R}}
 \newcommand{\Scal}{\mathcal{S}}
-\newcommand{\Lcal}{\mathcal{L}}
 \newcommand{\score}{\operatorname{score}}
 \newcommand{\save}{\operatorname{save}}
 \newcommand{\lp}{\operatorname{lp}}
-\newcommand{\code}[1]{\texttt{#1}}
 \newcommand{\config}[3]{\begin{tabular}[t]{@{}l@{}}\code{#1}\\\code{#2}\\\code{#3}\end{tabular}}
+\newcommand{\artifact}[1]{{\footnotesize\url{#1}}}
 
 \setlength{\parskip}{0.45em}
 \setlength{\parindent}{0pt}
-\setlength{\emergencystretch}{2em}
+\setlength{\emergencystretch}{3em}
 \renewcommand{\arraystretch}{1.12}
 
-\title{PatternBoost Three-Problem Experiment Report}
-\author{Clean experiment report for the multi-level PatternBoost repository}
-\date{Updated July 4, 2026}
+\title{Final PatternBoost Experiment Report}
+\author{Multi-level PatternBoost repository}
+\date{Final submission run audited July 9, 2026}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-This report summarizes the current state of the PatternBoost geometric
-extremal-search experiments.  The active scope is restricted to three
-problems: maximum independent set of rectangles (MISR) LP-gap search,
-unit-square line-stabbing LP-gap search, and recursive guillotine hardness.
-The report also records a separate exploratory appendix run for
-\code{epsilon\_net} and \code{graph\_separation}.  The current best audited
-main-track values are $1.4$ for MISR, $1.5000000000000004$ for unit-square
-stabbing, and $0.3$ for guillotine hardness.  The exploratory run reached
-$1.4545454545454546$ for \code{epsilon\_net} and no exact positive
-\code{graph\_separation} witness.  These values should be interpreted as the
-present state of a structured computational search, not as final
-publication-quality theorems.  All reported scores must be recomputed by exact
-verifiers from standalone certificates before they are used in a manuscript.
+This report records the final audited computational evidence currently stored
+in the multi-level PatternBoost repository for three geometric extremal-search
+targets: maximum independent set of rectangles (MISR) LP gaps, unit-square
+line-stabbing LP gaps, and recursive guillotine hardness.  The final
+submission run used deployed commit
+\code{8dd31ca1c8888dff0f1975ccbd38963d73b78b38} on NYUAD Jubail and completed
+all scheduled Slurm rows without stderr or non-OK Slurm states.  The fresh
+final run certifies score $1.5$ for MISR, score $1.5$ for unit-square
+stabbing, and score $0.25$ for guillotine hardness.  A previously discovered
+guillotine certificate with score $0.3$ is also preserved and reverified under
+the final deployed code; it is reported separately because the fresh final
+record array did not rediscover it.  All values in the tables below are tied to
+standalone certificate JSON files and exact verifiers.
 \end{abstract}
 
+\begingroup
+\small
+\setlength{\parskip}{0.15em}
 \tableofcontents
+\endgroup
 \clearpage
 
-\section{Scope and evidence boundaries}
+\section{Evidence Boundary}
 
-The main paper track currently studies three extremal-search problems:
+The main manuscript track is restricted to:
 \begin{enumerate}
-\item \textbf{MISR LP gap:} find axis-parallel rectangle families with large
-LP relaxation gap for maximum independent set of rectangles.
-\item \textbf{Unit-square stabbing:} find unit-square families with large
-integer/LP gap for stabbing by horizontal and vertical lines.
-\item \textbf{Guillotine hardness:} find disjoint rectangle packings for which
-every recursive guillotine strategy destroys a large fraction of rectangles.
+\item \code{misr}: LP-gap search for maximum independent set of rectangles;
+\item \code{unit\_square}: LP-gap search for stabbing unit squares with
+horizontal and vertical lines;
+\item \code{guillotine}: hardness for recursive guillotine cutting of
+disjoint rectangle packings.
 \end{enumerate}
 
-Two additional tasks, \code{epsilon\_net} and \code{graph\_separation}, are
-implemented as exploratory appendix tasks and should not be mixed with the main
-three-problem table.  All evidence from the discarded
-\code{square-stabbing-14-9} package is excluded.  In particular, the old
-$14/9$ and $20/13$ square-stabbing values should not be quoted as current
-evidence unless they are reimplemented and audited inside the allowed code
-path.
+The exploratory \code{epsilon\_net} and \code{graph\_separation} tasks are
+implemented in the repository, but they are appendix material and are not part
+of the three-problem table in this report.  The discarded
+\code{square-stabbing-14-9} package is excluded from current evidence.
+
+The final run artifacts are preserved in:
+\begin{quote}
+\artifact{docs/assets/final_submission_20260708_131302/}
+\end{quote}
+This directory contains summaries, audits, best certificate JSON files,
+renderings, final score tables, and compact learning-curve data.
+
+\section{Run Provenance and Audit}
 
 \begin{table}[htbp]
 \centering
-\caption{Evidence categories used in this report.}
-\begin{tabularx}{\textwidth}{p{0.26\textwidth}p{0.24\textwidth}X}
+\caption{Final submission run inventory.}
+\begin{tabularx}{\textwidth}{p{0.18\textwidth}p{0.18\textwidth}p{0.18\textwidth}X}
 \toprule
-Evidence type & Status & Interpretation \\
+Stage & Slurm job & Rows & Status \\
 \midrule
-Current-code audited summaries & Primary evidence & Safest values to cite
-for the current repository state. \\
-Previous-best warm-start runs & Primary follow-up evidence & Useful for
-record recovery and focused continuation, but not a neutral ablation. \\
-Broad 81-row matrix & Diagnostic evidence & A component sweep over all
-three problems; useful for comparisons, but incomplete for guillotine because
-some rows timed out. \\
-Exploratory appendix run & Separate appendix evidence & Covers
-\code{epsilon\_net} and \code{graph\_separation}; do not mix with the
-three-problem table. \\
-Allowed imported unit-square code & Allowed comparison evidence & May be used
-when the exact IP/LP result and certificate hash are recorded. \\
-Discarded \code{square-stabbing-14-9} code & Excluded & Do not use its
-$14/9$, $20/13$, or related figures as current evidence. \\
-Historical claims without recovered certificates & Targets only & Must be
-recovered and audited before citation. \\
+Smoke & \code{16566068} & 3 & Completed cleanly; used only to release dependencies. \\
+Main matrix & \code{16566072} & 81 & Completed cleanly; 81 summaries, zero stderr. \\
+Controls & \code{16566073} & 9 & Completed cleanly; 9 summaries, zero stderr. \\
+Record follow-up & \code{16566074} & 12 & Completed cleanly; 12 summaries, zero stderr. \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-The current experiment matrix has no repeated seed axis.  Each row is a
-separate component configuration, and randomness is recorded for
-reproducibility.  The current results are therefore best viewed as a
-deterministic discovery sweep and a set of focused record-recovery runs, not as
-a statistical estimate over repeated independent trials.
-
-\section{Executive summary}
+The deployed code directory on Jubail was:
+\begin{quote}
+\artifact{/home/sg9396/patternboost/multi-level-8dd31ca1c888}
+\end{quote}
+The run root was:
+\begin{quote}
+\artifact{/home/sg9396/patternboost/multi-level-8dd31ca1c888/runs/final_submission_20260708_131302}
+\end{quote}
 
 \begin{table}[htbp]
 \centering
-\caption{Best current values by problem.}
-\begin{tabularx}{\textwidth}{p{0.20\textwidth}p{0.16\textwidth}p{0.28\textwidth}X}
+\caption{Certificate audit results.}
+\begin{tabularx}{\textwidth}{p{0.22\textwidth}rrrrX}
 \toprule
-Problem & Best audited value & Main source & Certificate scale and status \\
+Stage & Rows & Passed & Failed & Learning rows & Interpretation \\
 \midrule
-MISR LP gap & $1.4$ & Previous-best warm-start & 14 rectangles in the
-warm-start row; archived visual certificate has 34 rectangles and exact
-LP/ILP components. \\
-Unit-square stabbing & $1.5$ & Broad 81-row run and
-warm-start & 20--23 squares in current-code rows; allowed imported artifact
-also records exact $3/2$. \\
-Guillotine hardness & $0.3$ & Previous-best warm-start and exact $n=40$
-audit artifact & 10 rectangles in warm-start row; exact $n=40$ artifact
-destroys 12 of 40 rectangles. \\
+Main matrix & 81 & 76 & 5 & 490897 & The five failures are guillotine rows with no
+\code{best\_certificate\_path}; no claimed certificate failed verification. \\
+Controls & 9 & 9 & 0 & 53035 & All control certificates verified. \\
+Record follow-up & 12 & 11 & 1 & 144365 & The one failure is the guillotine
+rect-direct packing/k-subset row with no best certificate. \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-The main scientific lesson is that generic coordinate mutation is not enough.
-The useful progress comes when the representation and surrogate are shaped
-like the certificate being sought:
-\begin{enumerate}
-\item MISR improves when the search directly optimizes exact LP-gap pressure
-and uses sparse or triangle-free conflict structure as a prior.
-\item Unit-square stabbing improves when the search works with line-square
-incidence and exact set-cover scoring, not only raw square coordinates.
-\item Guillotine improves when the search targets recursive nonseparability
-and exact saved-set witnesses, not only first-cut obstruction.
-\end{enumerate}
+The audit rule is simple: a row is manuscript-usable only when the summary has
+a certificate path and the certificate recomputes to the summary score under
+the exact problem-specific verifier.  Rows with no best certificate are
+reported as failed audit rows and are not used as evidence.
 
-The current values are real but modest.  More wall time and more epochs alone
-are unlikely to cross the main barriers unless the construction families and
-verifier feedback loops are improved.
+\section{Final Certified Values}
+
+\begin{table}[htbp]
+\centering
+\caption{Fresh final submission results.}
+\footnotesize
+\begin{tabularx}{\textwidth}{p{0.14\textwidth}p{0.10\textwidth}p{0.18\textwidth}p{0.28\textwidth}X}
+\toprule
+Problem & Score & Stage & Configuration & Certificate details \\
+\midrule
+\code{misr} & $1.5$ & Main & \config{triangle\_free\_rect}{program\_coeff\_pivot}{triangle\_free\_exact\_gap\_pressure}
+& $n=12$, $\alpha^*=6$, $\alpha=4$. \\
+\code{unit\_square} & $1.5$ & Main & \config{line\_square\_incidence}{primal\_dual\_lines}{exact\_stab\_gap\_pressure}
+& 23 squares, $\tau=4$, $\tau^*=8/3$. \\
+\code{guillotine} & $0.25$ & Main & \config{rect\_direct\_disjoint}{recursive\_gadget\_assembly}{depth\_limited\_dp}
+& $n=8$, saved 6, destroyed 2. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Record follow-up results.}
+\footnotesize
+\begin{tabularx}{\textwidth}{p{0.14\textwidth}p{0.10\textwidth}p{0.38\textwidth}X}
+\toprule
+Problem & Score & Configuration & Certificate details \\
+\midrule
+\code{misr} & $1.5$ &
+\config{triangle\_free\_rect}{lp\_dual\_pivot}{triangle\_free\_exact\_gap\_pressure}
+& $n=12$, $\alpha^*=6$, $\alpha=4$. \\
+\code{unit\_square} & $1.5$ &
+\config{line\_square\_incidence}{coord\_mutation}{exact\_stab\_gap\_pressure}
+& 20 squares, $\tau=4$, $\tau^*=8/3$. \\
+\code{guillotine} & $0.25$ &
+\config{recursive\_obstruction\_grammar}{recursive\_gadget\_assembly}{depth\_limited\_dp}
+& $n=8$, saved 6, destroyed 2. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Controls.}
+\footnotesize
+\begin{tabularx}{\textwidth}{p{0.14\textwidth}p{0.10\textwidth}p{0.38\textwidth}X}
+\toprule
+Problem & Score & Configuration & Certificate details \\
+\midrule
+\code{misr} & $1.3333333333$ &
+\config{quadratic\_program\_rectangles}{program\_coeff\_pivot}{triangle\_free\_exact\_gap\_pressure}
+& $n=8$. \\
+\code{unit\_square} & $1.4285714286$ &
+\config{sqstab\_exact\_grid}{sqstab\_local\_hillclimb}{exact\_stab\_gap\_pressure}
+& 16 squares, $\tau=4$. \\
+\code{guillotine} & $0.25$ &
+\config{recursive\_obstruction\_grammar}{witness\_breaking}{k\_subset\_nonseparability}
+& $n=8$, saved 6, destroyed 2. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Reverified Previous-Best Guillotine Certificate}
+
+The fresh final arrays did not rediscover the earlier guillotine score $0.3$.
+However, the earlier certificate is preserved and was recomputed under the
+final deployed code.  It verifies with:
+\[
+        n=10,\qquad \save=7,\qquad \text{destroyed}=3,\qquad \score=3/10=0.3.
+\]
+
+The reverified artifact is:
+\begin{quote}
+\artifact{docs/assets/final_submission_20260708_131302/reverified_previous_best/guillotine_0p30_reverification.json}
+\end{quote}
+For manuscript use, this certificate should be described as a reverified
+previous-best certificate, not as a discovery made by the fresh final record
+array.
+
+\section{Learning Curves}
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.92\textwidth]{fig_contact_sheet.png}
-\caption{Contact sheet of the current curated construction figures.  These
-renderings are diagnostic illustrations; the certificate JSON files and exact
-verifiers are the evidence.}
-\label{fig:contact}
+\includegraphics[width=0.95\textwidth]{fig_learning_curves.png}
+\caption{Best certified score over PatternBoost generations for the final
+submission run.  MISR and unit-square stabbing reach score $1.5$ in both the
+main or record stages.  Guillotine remains at $0.25$ in the fresh final run.}
+\label{fig:learning-curves}
 \end{figure}
 
+The compact source table for Figure~\ref{fig:learning-curves} is:
+\begin{quote}
+\artifact{docs/assets/final_submission_20260708_131302/plots/learning_curves_by_problem.csv}
+\end{quote}
+The full event streams remain on HPC and are not committed to the repository.
+
 \clearpage
-\section{Run inventory}
+\section{Construction Gallery}
 
-\subsection{Previous-best warm-start run}
-
-The most useful focused run is the previous-best warm-start run:
-\begin{itemize}
-\item Slurm job: \code{16493282}.
-\item Run root: \code{runs/hpc\_prevbest\_12\_4h\_min8\_resume\_20260703\_111657}.
-\item Status: 12 of 12 rows completed.
-\item Stderr: zero nonempty stderr files.
-\item Stop reason: all rows ended by \code{budget\_exhausted}.
-\item Resume status: all rows had \code{resumed\_from\_checkpoint=True}.
-\item Elapsed time: about 14402--14412 seconds per row.
-\end{itemize}
-
-\begin{table}[htbp]
+\begin{figure}[htbp]
 \centering
-\caption{Best row per problem in the previous-best warm-start run.}
-\footnotesize
-\begin{tabularx}{\textwidth}{p{0.13\textwidth}p{0.10\textwidth}p{0.10\textwidth}p{0.35\textwidth}X}
-\toprule
-Problem & Score & Iter. & Configuration & Details \\
-\midrule
-\code{misr} & $1.4$ & 7924 &
-\config{triangle\_free\_rect}{lp\_dual\_pivot}{exact\_lp\_gap\_pressure}
-& 14 rectangles \\
-\code{unit\_square} & $1.5$ & 6687 &
-\config{line\_square\_incidence}{coord\_mutation}{exact\_stab\_gap\_pressure}
-& 23 squares, $\tau=4$ \\
-\code{guillotine} & $0.3$ & 14556 &
-\config{rect\_direct\_disjoint}{packing\_resize}{k\_subset\_nonseparability}
-& 10 rectangles, 3 destroyed \\
-\bottomrule
-\end{tabularx}
-\end{table}
+\includegraphics[width=0.82\textwidth]{fig_final_misr_1p5.png}
+\caption{Final MISR certificate from the main matrix.  The exact verifier
+computes $\alpha^*=6$ and $\alpha=4$, giving score $1.5$.}
+\label{fig:misr-final}
+\end{figure}
 
-\footnotesize
-\begin{longtable}{@{}p{0.12\textwidth}p{0.10\textwidth}p{0.08\textwidth}p{0.36\textwidth}p{0.22\textwidth}@{}}
-\caption{All rows in the previous-best warm-start audit.}
-\label{tab:warm-start-full}\\
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.82\textwidth]{fig_final_unit_square_1p5.png}
+\caption{Final unit-square stabbing certificate from the main matrix.  The
+exact set-cover verifier computes $\tau=4$ and $\tau^*=8/3$, giving score
+$1.5$.}
+\label{fig:unit-square-final}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{fig_final_guillotine_0p25.png}
+\caption{Fresh final guillotine certificate, score $0.25$.}
+\label{fig:guillotine-final}
+\end{minipage}\hfill
+\begin{minipage}{0.48\textwidth}
+\centering
+\includegraphics[width=\textwidth]{fig_reverified_guillotine_0p30.png}
+\caption{Reverified previous-best guillotine certificate, score $0.3$.}
+\label{fig:guillotine-prevbest}
+\end{minipage}
+\end{figure}
+
+\section{Methodology by Problem}
+
+\subsection{MISR}
+
+For a rectangle family $\Rcal$, the reported score is
+\[
+        \score_{\rm MISR}(\Rcal)=\alpha^*(\Rcal)/\alpha(\Rcal),
+\]
+where $\alpha^*$ is the clique-LP optimum and $\alpha$ is the exact maximum
+independent set.  The verifier recomputes the rectangle intersection graph,
+LP value, integer optimum, maximal clique constraints, and certificate hash.
+
+The final run confirms that the strongest current fresh certificates come from
+structured sparse-conflict search.  The main winning row uses
+\code{triangle\_free\_rect} with \code{program\_coeff\_pivot}; the record
+follow-up ties it with \code{lp\_dual\_pivot}.  Both certify score $1.5$ on
+12 rectangles.  This is stronger than the current controls, which stop at
+$4/3$.
+
+\subsection{Unit-Square Stabbing}
+
+For a unit-square family $\Scal$, the reported score is
+\[
+        \score_{\rm stab}(\Scal)=\tau(\Scal)/\tau^*(\Scal),
+\]
+where $\tau$ is the exact minimum number of horizontal and vertical stabbing
+lines and $\tau^*$ is the finite set-cover LP optimum over critical lines.
+
+The final run certifies score $1.5$.  The main matrix reaches it with the
+line-square incidence representation and the primal-dual line move; the record
+follow-up ties it with line-square incidence plus coordinate mutation.  The
+line-incidence representation is the useful ingredient: it exposes the
+set-cover structure directly instead of relying only on raw coordinate
+mutation.
+
+\subsection{Guillotine}
+
+For a disjoint rectangle packing, the exact verifier computes the maximum
+number of rectangles that can be saved by a recursive guillotine cutting
+strategy.  The reported score is
+\[
+        \score_{\rm guillotine}=1-\save/n
+        =\text{destroyed}/n.
+\]
+
+The fresh final run certifies score $0.25$ in both main and record stages.
+The stronger previous-best score $0.3$ is available only as a reverified
+historical certificate in this repository snapshot.  The final record row that
+matched the old $0.3$ configuration,
+\[
+\code{rect\_direct\_disjoint/packing\_resize/k\_subset\_nonseparability},
+\]
+ended with no best certificate under the final run.  In the older 36-hour run,
+the $0.3$ certificate appeared late, after about 18 hours.  This suggests that
+the construction family is viable but sparse under fresh stochastic search.
+
+\section{Manuscript-Use Recommendations}
+
+\begin{enumerate}
+\item Use the fresh final run as the main reproducible experiment table:
+MISR $1.5$, unit-square $1.5$, guillotine $0.25$.
+\item If the manuscript wants the strongest available guillotine certificate,
+quote $0.3$ only with the explicit provenance that it is a reverified
+previous-best certificate, not rediscovered by the final fresh array.
+\item Do not quote rows that failed audit because they lack
+\code{best\_certificate\_path}.
+\item Use Figure~\ref{fig:learning-curves} for training-progress charts and
+Figures~\ref{fig:misr-final}--\ref{fig:guillotine-prevbest} for construction
+illustrations.
+\item Keep exploratory \code{epsilon\_net} and \code{graph\_separation}
+results in an appendix or separate section.
+\end{enumerate}
+
+\section{Artifact Index}
+
+\begin{longtable}{@{}p{0.30\textwidth}p{0.62\textwidth}@{}}
+\caption{Repository artifacts for the final report.}\\
 \toprule
-Problem & Score & Iter. & Configuration & Note \\
+Artifact & Path \\
 \midrule
 \endfirsthead
 \toprule
-Problem & Score & Iter. & Configuration & Note \\
+Artifact & Path \\
 \midrule
 \endhead
 \bottomrule
 \endfoot
-\code{misr} & $1.4$ & 7924 &
-\config{triangle\_free\_rect}{lp\_dual\_pivot}{exact\_lp\_gap\_pressure}
-& best MISR row \\
-\code{misr} & $1.375$ & 8049 &
-\config{triangle\_free\_rect}{lp\_dual\_pivot}{triangle\_free\_exact\_gap\_pressure}
-& near-best \\
-\code{misr} & $1.375$ & 6286 &
-\config{triangle\_free\_rect}{program\_coeff\_pivot}{exact\_lp\_gap\_pressure}
-& near-best \\
-\code{misr} & $1.375$ & 5426 &
-\config{triangle\_free\_rect}{sequence\_pair\_pivot}{triangle\_free\_exact\_gap\_pressure}
-& near-best \\
-\code{unit\_square} & $1.5$ & 6687 &
-\config{line\_square\_incidence}{coord\_mutation}{exact\_stab\_gap\_pressure}
-& size 23, $\tau=4$ \\
-\code{unit\_square} & $1.5$ & 8679 &
-\config{square\_direct}{coord\_mutation}{exact\_stab\_gap\_pressure}
-& size 22, $\tau=4$ \\
-\code{unit\_square} & $1.428571$ & 5118 &
-\config{sqstab\_exact\_grid}{coord\_mutation}{exact\_stab\_gap\_pressure}
-& size 12, $\tau=4$ \\
-\code{unit\_square} & $1.428571$ & 8483 &
-\config{square\_direct}{primal\_dual\_lines}{exact\_stab\_gap\_pressure}
-& size 30, $\tau=4$ \\
-\code{guillotine} & $0.3$ & 14556 &
-\config{rect\_direct\_disjoint}{packing\_resize}{k\_subset\_nonseparability}
-& size 10, 3 destroyed \\
-\code{guillotine} & $0.25$ & 1199 &
-\config{recursive\_obstruction\_grammar}{recursive\_gadget\_assembly}{depth\_limited\_dp}
-& size 8, 2 destroyed \\
-\code{guillotine} & $0.25$ & 2768 &
-\config{recursive\_obstruction\_grammar}{recursive\_gadget\_assembly}{first\_cut\_obstruction}
-& size 8, 2 destroyed \\
-\code{guillotine} & $0.25$ & 508 &
-\config{recursive\_obstruction\_grammar}{recursive\_gadget\_assembly}{k\_subset\_nonseparability}
-& size 8, 2 destroyed \\
+Main summary & \artifact{docs/assets/final_submission_20260708_131302/main_results/summary.csv} \\
+Main audit & \artifact{docs/assets/final_submission_20260708_131302/main_results/audit/audit.json} \\
+Controls summary & \artifact{docs/assets/final_submission_20260708_131302/control_results/summary.csv} \\
+Controls audit & \artifact{docs/assets/final_submission_20260708_131302/control_results/audit/audit.json} \\
+Record summary & \artifact{docs/assets/final_submission_20260708_131302/record_results/summary.csv} \\
+Record audit & \artifact{docs/assets/final_submission_20260708_131302/record_results/audit/audit.json} \\
+Final score table & \artifact{docs/assets/final_submission_20260708_131302/final_score_table.csv} \\
+Learning curves & \artifact{docs/assets/final_submission_20260708_131302/plots/learning_curves_by_problem.csv} \\
+Best certificates & \artifact{docs/assets/final_submission_20260708_131302/certificates/} \\
+Best renderings & \artifact{docs/assets/final_submission_20260708_131302/renderings/} \\
+Reverified guillotine $0.3$ & \artifact{docs/assets/final_submission_20260708_131302/reverified_previous_best/} \\
 \end{longtable}
-\normalsize
-
-\subsection{Broad 81-row run}
-
-The broad run tested the full no-repeated-seed component matrix:
-\[
-        3\ \text{problems}\times
-        3\ \text{representations}\times
-        3\ \text{local searches}\times
-        3\ \text{surrogates}=81\ \text{rows}.
-\]
-
-The run details were:
-\begin{itemize}
-\item Slurm job: \code{16492548}.
-\item Run root: \code{runs/hpc\_81\_4h\_min8\_train7\_n12\_venv\_20260703\_101409}.
-\item Completed rows: 71 of 81.
-\item Timeout rows: 10, all in \code{guillotine}.
-\item Checkpoints: all 81 rows had checkpoints.
-\item Stderr: the nonempty stderr files contained Slurm time-limit messages
-only, not Python tracebacks.
-\end{itemize}
-
-\begin{table}[htbp]
-\centering
-\caption{Best broad-run value per problem.}
-\footnotesize
-\begin{tabularx}{\textwidth}{p{0.15\textwidth}p{0.12\textwidth}p{0.40\textwidth}X}
-\toprule
-Problem & Best score & Configuration & Details \\
-\midrule
-\code{misr} & $1.3333$ &
-\config{triangle\_free\_rect}{sequence\_pair\_pivot}{exact\_lp\_gap\_pressure}
-& size 16 \\
-\code{unit\_square} & $1.5$ &
-\config{line\_square\_incidence}{coord\_mutation}{exact\_stab\_gap\_pressure}
-& size 20, $\tau=4$ \\
-\code{guillotine} & $0.1667$ &
-\config{rect\_direct\_disjoint}{recursive\_gadget\_assembly}{first\_cut\_obstruction}
-& size 12, destroyed 2 \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-The broad run is useful for component comparison.  It should not be treated as
-a complete publication table until the timed-out guillotine rows are resumed
-or explicitly removed from the comparison.  Importantly, the timed-out
-guillotine checkpoint values were weaker than the warm-start score of $0.3$.
-
-\subsection{Exploratory appendix run}
-
-The exploratory appendix tasks were run separately from the main three-problem
-matrix:
-\begin{itemize}
-\item Slurm job: \code{16501338}.
-\item Run root: \code{runs/explore\_overnight\_20260704\_051618}.
-\item Preserved repository snapshot:
-\code{docs/assets/exploratory\_overnight\_20260704\_051618/}.
-\item Scope: \code{epsilon\_net} and \code{graph\_separation}.
-\item Status: 12 of 12 rows completed with exit code \code{0:0}.
-\item Stderr: zero nonempty stderr files.
-\item Matrix: 12 rows, 12 unique fresh seeds, no old fixed-seed hits.
-\item Validation: every best certificate verified against its summary.
-\end{itemize}
-
-\begin{table}[htbp]
-\centering
-\caption{Best values in the exploratory appendix run.}
-\begin{tabularx}{\textwidth}{p{0.22\textwidth}p{0.16\textwidth}p{0.24\textwidth}X}
-\toprule
-Task & Best exact value & Row & Interpretation \\
-\midrule
-\code{epsilon\_net} & $1.4545454545454546$ & \code{eps\_n11\_t4\_k3}
-& Nontrivial small exact witness recovered. \\
-\code{graph\_separation} & $0.0$ & \code{graph\_g3\_n5\_dense}
-& No bounded-grid mixed square/segment separation witness certified. \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-The best graph-separation pressure score was $1.3845054945054946$ from
-\code{graph\_g3\_n7\_motif}, but the exact score remained $0.0$.  This means
-the current stress objective can produce difficult-looking rectangle graphs,
-but the bounded mixed-representation verifier did not certify a separation.
-The next useful improvement is a stronger non-representability verifier or a
-more structured graph family, not simply a longer run of the same search.
-
-\clearpage
-\section{Problem 1: MISR LP-gap search}
-
-\subsection{Objective and exact verifier}
-
-For a finite family $\Rcal$ of axis-parallel rectangles, the score is
-\[
-        \score_{\rm MISR}(\Rcal)=
-        \frac{\alpha^*(\Rcal)}{\alpha(\Rcal)}.
-\]
-Here $\alpha(\Rcal)$ is the maximum number of pairwise-disjoint rectangles and
-$\alpha^*(\Rcal)$ is the standard clique LP optimum.  The exact verifier must
-construct the intersection graph, enumerate the clique or point constraints
-needed for the LP, solve the LP and integral problem to optimality, and save
-the objective components.
-
-\subsection{Current best result}
-
-The best current-code warm-start row has score $1.4$ with:
-\[
-\code{triangle\_free\_rect}
-\quad
-\code{lp\_dual\_pivot}
-\quad
-\code{exact\_lp\_gap\_pressure}.
-\]
-
-The archived visual certificate shown in Figure~\ref{fig:misr-best} records a
-related old-framework MISR best with exact components:
-\begin{itemize}
-\item $n=34$ rectangles,
-\item $\alpha^*=4.200000000000002$,
-\item $\alpha=3$,
-\item $\alpha^*/\alpha=1.4000000000000006$,
-\item certificate hash stored in
-\code{docs/assets/study\_assets/misr\_old\_best\_1p4.json}.
-\end{itemize}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.82\textwidth]{fig_misr_old_best_1p4.png}
-\caption{MISR construction associated with the archived $1.4$ certificate.
-The exact LP/ILP certificate, not the rendering, is the proof object.}
-\label{fig:misr-best}
-\end{figure}
-
-\subsection{Strategies tested}
-
-\begin{table}[htbp]
-\centering
-\caption{MISR strategy summary.}
-\begin{tabularx}{\textwidth}{p{0.28\textwidth}X}
-\toprule
-Strategy & Observation \\
-\midrule
-Endpoint or sequence-pair geometry & Encodes endpoint order rather than raw
-coordinates.  This is structurally promising because swaps and block moves act
-on combinatorial geometry, but the current best recovered row is still tied to
-the \code{triangle\_free\_rect} path. \\
-\code{triangle\_free\_rect} representation & Biases candidates toward sparse
-or triangle-free conflict structure.  The strongest warm-start MISR rows used
-this representation. \\
-\code{lp\_dual\_pivot} local search & Uses LP pressure and tight constraints
-to decide which rectangles to perturb.  It aligns better with the objective
-than unguided coordinate mutation. \\
-\code{exact\_lp\_gap\_pressure} surrogate & Expensive but directly relevant.
-The top current MISR row uses this surrogate. \\
-\code{graph\_conflict\_proxy} surrogate & Useful for speed, but less reliable
-for final quality because graph statistics can miss the LP/integral imbalance. \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-\subsection{Interpretation}
-
-The gap depends on two quantities at once: the LP value must remain high while
-the exact independent-set optimum remains small.  The current best examples
-live in a small-denominator regime with $\alpha$ around 3, where every
-fractional LP improvement is amplified.
-
-The search has not yet shown a robust way to scale the $1.4$ phenomenon into a
-larger family.  It can recover finite certificates and nearby variants, but it
-does not yet reliably compose them while preserving the LP/integral imbalance.
-
-The imported triangle-free local/program track has a lower exact score
-$1.1851851851851851$ on 64 rectangles, but it is structurally important because
-it enforces a sparse-conflict condition.  The best use of that track is not to
-replace the unrestricted record search, but to split MISR into two explicit
-tracks: unrestricted LP-gap records and triangle-free or sparse-conflict
-records.
-
-\subsection{Recommended next MISR changes}
-
-\begin{enumerate}
-\item Keep separate tables for unrestricted MISR and triangle-free/sparse MISR.
-\item Add exact LP-dual features to triangle-free mutation; triangle-free
-feasibility alone is not enough.
-\item Mine motifs from the $1.4$ certificate and use them as optional mutation
-templates, while keeping neutral matrix rows randomly generated.
-\item Add a composition audit: after duplicating or lifting a motif, verify
-whether $\alpha^*$ grows faster than $\alpha$.
-\item Recover and audit any historical $1.5$ MISR example before it is cited.
-\end{enumerate}
-
-\clearpage
-\section{Problem 2: unit-square stabbing}
-
-\subsection{Objective and exact verifier}
-
-For a finite family $\Scal$ of unit squares, the score is
-\[
-        \score_{\rm stab}(\Scal)=
-        \frac{\tau(\Scal)}{\tau^*(\Scal)}.
-\]
-Here $\tau(\Scal)$ is the minimum number of horizontal and vertical lines
-needed to stab all squares, and $\tau^*(\Scal)$ is the LP optimum of the same
-set-cover formulation over the compressed critical-line universe.  The
-verifier must save the square coordinates, critical lines, incidence matrix,
-integer stabbing set, LP witnesses when available, solver status, and
-certificate hash.
-
-\subsection{Current best result}
-
-The best current-code value is
-\[
-        1.5000000000000004.
-\]
-The strongest rows use exact stabbing pressure:
-\[
-\code{line\_square\_incidence / coord\_mutation / exact\_stab\_gap\_pressure}
-\]
-and
-\[
-\code{square\_direct / coord\_mutation / exact\_stab\_gap\_pressure}.
-\]
-
-The allowed imported unit-square artifact also records exact value $3/2$:
-\begin{itemize}
-\item exact IP value 3,
-\item exact LP value 2,
-\item gap $3/2$,
-\item hash \code{8e867b64bde38625}.
-\end{itemize}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.70\textwidth]{fig_unit_square_allowed_1p5.png}
-\caption{Allowed unit-square $3/2$ construction.  This result comes from the
-allowed square-stabbing code path, not from the discarded
-\code{square-stabbing-14-9} package.}
-\label{fig:uss-allowed}
-\end{figure}
-
-For comparison, an older generic-framework example reached $4/3$ with exact
-components $\tau=4$ and $\tau^*=3$.
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.70\textwidth]{fig_unit_square_old_4_3.png}
-\caption{Old generic-framework unit-square $4/3$ example.  It is useful as a
-diagnostic baseline but is weaker than the current allowed $3/2$ result.}
-\label{fig:uss-old}
-\end{figure}
-
-\clearpage
-\subsection{Strategies tested}
-
-\begin{table}[htbp]
-\centering
-\caption{Unit-square strategy summary.}
-\begin{tabularx}{\textwidth}{p{0.28\textwidth}X}
-\toprule
-Strategy & Observation \\
-\midrule
-\code{square\_direct} & Directly mutates square coordinates.  It can recover
-$1.5$ when paired with exact stabbing pressure, but it is a weak way to search
-for larger structured gaps. \\
-\code{line\_square\_incidence} & Represents the incidence relation between
-critical lines and squares.  The best broad-run unit-square row used this
-representation. \\
-\code{sqstab\_exact\_grid} & Searches more directly in a grid/incidence
-model.  It reached $1.4285714285714288$ in the warm-start rows. \\
-\code{coord\_mutation} & Moves square positions across critical thresholds.
-The strongest current rows use it because exact scoring quickly filters bad
-perturbations. \\
-\code{primal\_dual\_lines} & Uses line-cover information to guide local
-moves.  It is conceptually promising but was not the top current row. \\
-\code{exact\_stab\_gap\_pressure} & Directly targets the IP/LP gap and
-dominates the best current unit-square rows. \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-\subsection{Interpretation}
-
-Unit-square stabbing is essentially a set-cover integrality-gap problem with a
-geometric realization constraint.  Raw coordinate mutation is weak because most
-coordinate moves do not preserve the incidence obstruction.  The better code
-paths work because they search and score in terms of the critical
-line-square incidence matrix.
-
-The current value $1.5$ is meaningful, but it is also a plateau.  The search is
-rediscovering compact $3/2$ behavior.  To beat it, the allowed code path needs
-structured generators: staircase, ladder, cyclic threshold, or other
-incidence-preserving families.  The discarded package should remain excluded,
-but its mathematical lesson is clear: stronger gaps are unlikely to appear
-from isolated local coordinate moves.
-
-\subsection{Recommended next unit-square changes}
-
-\begin{enumerate}
-\item Keep \code{square-stabbing-14-9} excluded.
-\item Reimplement only legitimate mathematical ideas inside the allowed code
-path: staircase-like families, ladder families, cyclic threshold patterns, and
-incidence-preserving generators.
-\item Add richer certificate export: square coordinates, critical lines,
-integer stabbing set, LP primal/dual witnesses, hash, and rendering.
-\item Add mutations that preserve high-value incidence structure.  For example,
-move a square only when it remains incident to multiple active critical lines.
-\item Treat $1.5$ as the immediate barrier.  The next goal is a verified value
-strictly above $3/2$ inside the allowed code path.
-\end{enumerate}
-
-\clearpage
-\section{Problem 3: recursive guillotine hardness}
-
-\subsection{Objective and exact verifier}
-
-For a pairwise-disjoint family $\Rcal$ of axis-parallel rectangles inside a
-bounding box, the score is
-\[
-        \score_{\rm guill}(\Rcal)
-        =
-        1-\frac{\save(\Rcal)}{|\Rcal|}.
-\]
-Here $\save(\Rcal)$ is the maximum number of rectangles that can be preserved
-by an optimal recursive guillotine-cut strategy.  A cut destroys every
-rectangle it crosses and then recurses on the rectangles strictly on each side.
-
-The exact verifier is a recursive dynamic program over coordinate-induced
-subwindows.  It must save the DP value, the chosen cut tree, the number of DP
-states, the saved count, the destroyed count, and the exact destroyed fraction.
-
-\subsection{Current best result}
-
-The best current score is
-\[
-        0.3.
-\]
-The warm-start row reached this value with:
-\[
-\code{rect\_direct\_disjoint / packing\_resize / k\_subset\_nonseparability}.
-\]
-That row had 10 rectangles and destroyed 3.
-
-The exact $n=40$ audit artifact gives the same destroyed fraction at larger
-scale:
-\begin{itemize}
-\item $n=40$,
-\item exact maximum saved: 28,
-\item exact minimum destroyed: 12,
-\item exact destroyed fraction: $12/40=0.30000000000000004$,
-\item DP states: 2478,
-\item target half-destruction condition: not met.
-\end{itemize}
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.78\textwidth]{fig_guillotine_n40_0p30.png}
-\caption{Exact $n=40$ guillotine audit artifact with destroyed fraction $0.3$.
-The sampled obstruction looked strong, but exact DP still saved 28 rectangles.}
-\label{fig:guillotine-n40}
-\end{figure}
-
-For comparison, the older small example had exact score $2/7$.
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=0.78\textwidth]{fig_guillotine_old_2_7.png}
-\caption{Older guillotine construction with exact score $2/7$.}
-\label{fig:guillotine-old}
-\end{figure}
-
-\clearpage
-\subsection{Strategies tested}
-
-\begin{table}[htbp]
-\centering
-\caption{Guillotine strategy summary.}
-\begin{tabularx}{\textwidth}{p{0.30\textwidth}X}
-\toprule
-Strategy & Observation \\
-\midrule
-\code{rect\_direct\_disjoint} & Directly mutates disjoint rectangles.  The
-best warm-start row used this representation. \\
-\code{sequence\_pair\_packing} & Generates disjoint packings by construction.
-It helps feasibility, but is not currently the best row. \\
-\begin{tabular}[t]{@{}l@{}}\code{recursive\_obstruction}\\\code{\_grammar}\end{tabular}
-& Assembles hard subblocks and
-obstruction motifs.  It reliably produces $0.25$ examples but needs stronger
-witness feedback. \\
-\code{packing\_resize} & Moves and resizes rectangles while preserving
-disjointness.  The best current row uses it. \\
-\code{recursive\_gadget\_assembly} & Builds larger layouts from obstruction
-blocks.  It creates meaningful examples, but many remain recursively
-separable. \\
-\code{k\_subset\_nonseparability} & Pressures candidates by large
-nonseparable subsets.  The best current row uses it, but sampled success is
-not a proof of exact recursive hardness. \\
-\code{depth\_limited\_dp} & More aligned than first-cut-only scoring, but
-slower.  It is useful as an elite filter. \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-\subsection{Interpretation}
-
-Guillotine is the most deceptive of the three problems.  A construction can
-block many first cuts and still be easy after recursion.  Likewise, many
-random large subsets can be nonseparable while exact DP still finds a large
-saved subset.
-
-The $n=40$ artifact is the clearest example.  The sampled obstruction signal
-was strong, but the exact audit found \(\save=28\).  Therefore the exact score
-was only $12/40=0.3$.  The missing ingredient is not just larger layouts.  The
-search must use the exact saved set and cut tree as feedback, then add blockers
-against the actual recursive escape routes.
-
-\subsection{Recommended next guillotine changes}
-
-\begin{enumerate}
-\item Extract the exact saved set and cut tree from every high-scoring
-candidate.
-\item Convert saved-set witnesses into mutation targets: add blockers across
-the exact split lines and move rectangles that enable easy recursive
-separation.
-\item Penalize candidates by attack-found or exact \(\save(\Rcal)\), not only
-by sampled nonseparable subset fraction.
-\item Build recursively interlocked cores so that every large subwindow
-inherits a hard obstruction.
-\item Use exact DP earlier on medium-size candidates to avoid optimizing a
-misleading first-cut or sampled-subset proxy for hours.
-\item Treat $0.33+$ as the next practical target before attempting a
-half-destruction result.
-\end{enumerate}
-
-\clearpage
-\section{Why the current values are stuck}
-
-The bottleneck is not simply the number of epochs.  PatternBoost can train a
-model over the current elite distribution, but the model cannot repair a
-misaligned representation or a misleading surrogate.  The current plateaus are:
-
-\begin{table}[htbp]
-\centering
-\caption{Current plateaus and likely causes.}
-\begin{tabularx}{\textwidth}{p{0.19\textwidth}p{0.16\textwidth}X}
-\toprule
-Problem & Plateau & Likely cause \\
-\midrule
-MISR & $1.4$ & The search can recover finite certificates but does not yet
-compose them while preserving the LP/integral imbalance. \\
-Unit-square & $1.5$ & The search repeatedly finds compact $3/2$ set-cover
-behavior; stronger allowed structured generators are not yet implemented. \\
-Guillotine & $0.3$ & Local or sampled hardness overestimates exact recursive
-hardness, and exact saved-set witnesses are not yet driving mutation. \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-The next meaningful improvements are likely to come from construction-family
-engineering and verifier feedback, not from simply increasing the number of
-random runs.
-
-\section{Audit rules for reporting}
-
-Before any value is quoted in a paper table, all of the following should hold:
-\begin{enumerate}
-\item The candidate appears in a completed \code{summary.json} row, not only in
-a checkpoint.
-\item The row has \code{return\_code = 0} or a clean and explained termination
-status.
-\item The stop reason is recorded.
-\item The certificate path exists.
-\item \code{multilevel verify} or \code{multilevel audit} recomputes the same
-value.
-\item The objective components are saved: \(\alpha^*,\alpha\) for MISR;
-\(\tau,\tau^*\) for unit-square stabbing; \(n,\save,n-\save\) for guillotine.
-\item Wall-time-killed rows are used only for debugging unless resumed and
-audited.
-\item Figures are treated as illustrations, not proof objects.
-\item Excluded packages remain excluded, and exploratory tasks remain separate
-from the main three-problem table.
-\end{enumerate}
-
-\section{Recommended next experiments}
-
-\subsection{Short term}
-
-\begin{enumerate}
-\item Run focused 4--8 hour follow-ups for the current best rows:
-\begin{itemize}
-\item MISR: \config{triangle\_free\_rect}{lp\_dual\_pivot}{exact\_lp\_gap\_pressure}.
-\item Unit-square: \config{line\_square\_incidence}{coord\_mutation}{exact\_stab\_gap\_pressure}.
-\item Guillotine: \config{rect\_direct\_disjoint}{packing\_resize}{k\_subset\_nonseparability}.
-\end{itemize}
-\item Resume the 10 timed-out broad-run guillotine rows only if a complete
-component comparison is still required.
-\item Add richer certificate export for unit-square and guillotine.
-\item Mine motifs from current best certificates and expose them as optional
-mutation libraries, while keeping neutral matrix rows randomly generated.
-\end{enumerate}
-
-\subsection{Medium term}
-
-\begin{enumerate}
-\item Implement allowed unit-square structured generators.
-\item Add exact saved-set feedback to guillotine mutation.
-\item Add LP-dual-aware triangle-free MISR mutation.
-\item Build a complete per-row result table from the 81-row run after every
-row has clean status.
-\end{enumerate}
-
-\subsection{Publication readiness}
-
-A paper-ready table should include:
-\begin{enumerate}
-\item every completed row in the 81-row matrix;
-\item exact score, objective components, and certificate hash;
-\item time-to-best;
-\item exact scorer time;
-\item failure and timeout status;
-\item controls;
-\item either repeated runs or an explicit statement that the study is a
-deterministic discovery sweep rather than a repeated-run statistical study.
-\end{enumerate}
-
-\section{Reproduction commands}
-
-Generate the current 81-row matrix:
-\begin{verbatim}
-scripts/make_main_matrix.sh
-\end{verbatim}
-
-Run one local cell:
-\begin{verbatim}
-PYTHONPATH=src python3 -m multilevel.cli patternboost-cell \
-  --matrix runs/main_81_matrix.jsonl \
-  --index 0 \
-  --out-root runs/local_test \
-  --iterations 20 \
-  --population 16 \
-  --elite 4 \
-  --exact-every 5 \
-  --train-every 5 \
-  --model-samples 4 \
-  --model-kind ngram \
-  --checkpoint-every 1 \
-  --n 8 \
-  --grid 8
-\end{verbatim}
-
-Audit a run:
-\begin{verbatim}
-PYTHONPATH=src python3 -m multilevel.cli audit \
-  --root runs/local_test \
-  --out runs/local_test/audit/audit.json \
-  --csv runs/local_test/audit/audit.csv
-\end{verbatim}
-
-On NYUAD Jubail, use the workflow in \code{docs/HPC\_JUBAIL.md}.  Always run
-a small smoke or slice before submitting a full array.
-
-\appendix
-\clearpage
-\section{Current matrix registry}
-
-\subsection{MISR}
-
-\begin{verbatim}
-representations:
-  endpoint_sequence_pair
-  triangle_free_rect
-  quadratic_program_rectangles
-local_search:
-  sequence_pair_pivot
-  lp_dual_pivot
-  program_coeff_pivot
-surrogates:
-  exact_lp_gap_pressure
-  triangle_free_exact_gap_pressure
-  graph_conflict_proxy
-\end{verbatim}
-
-\subsection{Unit-square stabbing}
-
-\begin{verbatim}
-representations:
-  square_direct
-  line_square_incidence
-  sqstab_exact_grid
-local_search:
-  coord_mutation
-  primal_dual_lines
-  sqstab_local_hillclimb
-surrogates:
-  greedy_partial_lp_bitset
-  exact_stab_gap_pressure
-  incidence_statistics
-\end{verbatim}
-
-\subsection{Guillotine}
-
-\begin{verbatim}
-representations:
-  rect_direct_disjoint
-  sequence_pair_packing
-  recursive_obstruction_grammar
-local_search:
-  packing_resize
-  recursive_gadget_assembly
-  witness_breaking
-surrogates:
-  first_cut_obstruction
-  depth_limited_dp
-  k_subset_nonseparability
-\end{verbatim}
-
-\section{Minimal certificate fields}
-
-\subsection{MISR certificate}
-
-\begin{verbatim}
-{
-  "schema": "misr_certificate_v1",
-  "rectangles": [[x1,x2,y1,y2], ...],
-  "alpha_int": 0,
-  "alpha_lp": 0.0,
-  "score": 0.0,
-  "maximal_cliques": [[0,3,7], ...],
-  "integer_solution": [0,4,9],
-  "solver_status": "optimal",
-  "certificate_hash": "..."
-}
-\end{verbatim}
-
-\subsection{Unit-square certificate}
-
-\begin{verbatim}
-{
-  "schema": "unit_square_stab_certificate_v1",
-  "squares": [[x,y], ...],
-  "critical_lines": {"vertical": [x0,...], "horizontal": [y0,...]},
-  "tau_int": 0,
-  "tau_lp": 0.0,
-  "score": 0.0,
-  "integer_lines": ["v3", "h5"],
-  "solver_status": "optimal",
-  "certificate_hash": "..."
-}
-\end{verbatim}
-
-\subsection{Guillotine certificate}
-
-\begin{verbatim}
-{
-  "schema": "guillotine_certificate_v1",
-  "rectangles": [[x1,x2,y1,y2], ...],
-  "n": 0,
-  "saved": 0,
-  "destroyed": 0,
-  "score": 0.0,
-  "dp_states": 0,
-  "optimal_strategy": {...},
-  "solver_status": "optimal",
-  "certificate_hash": "..."
-}
-\end{verbatim}
-
-\section{Bottom line}
-
-The cleaned repository is ready for a student to run and audit the current
-three-problem experiments.  The present main-track best values are:
-\begin{center}
-\begin{tabular}{lr}
-\toprule
-Problem & Current best \\
-\midrule
-MISR & $1.4$ \\
-Unit-square stabbing & $1.5000000000000004$ \\
-Guillotine & $0.3$ \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-The audited exploratory appendix values are:
-\begin{center}
-\begin{tabular}{lr}
-\toprule
-Task & Current best \\
-\midrule
-\code{epsilon\_net} & $1.4545454545454546$ \\
-\code{graph\_separation} & $0.0$ exact; $1.3845054945054946$ pressure \\
-\bottomrule
-\end{tabular}
-\end{center}
-
-The most important next step is not a larger sweep.  It is to make each search
-more certificate-shaped: LP-dual and sparse-conflict feedback for MISR,
-incidence-preserving structured generators for unit-square stabbing, and
-exact saved-set feedback for guillotine hardness.
 
 \end{document}

@@ -1,0 +1,12 @@
+{
+  "certificate_hash": "41d13593422f226485956d109226be18e82c19a0cb520924c371ab44fe48386c",
+  "deployed_commit": "8dd31ca1c8888dff0f1975ccbd38963d73b78b38",
+  "note": "Reverified under the deployed final-submission code. This was not rediscovered by the fresh final record array.",
+  "recomputed_certificate_hash": "080c01f18dac7ae6765495f117258687e5096ad9cee655a59aa08c2000a49eb7",
+  "recomputed_destroyed": 3,
+  "recomputed_n": 10,
+  "recomputed_saved": 7,
+  "recomputed_score": 0.3,
+  "source_certificate": "/home/sg9396/patternboost/multi-level/runs/hpc_90_36h_20260630_235043/main_results/main/guillotine/rect_direct_disjoint/packing_resize/k_subset_nonseparability/certificates/best_iter006535_41d13593422f.json",
+  "verify_under_deployed_code": true
+}

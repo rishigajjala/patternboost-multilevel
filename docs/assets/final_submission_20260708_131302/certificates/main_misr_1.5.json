@@ -1,0 +1,324 @@
+{
+  "alpha_int": 4,
+  "alpha_lp": 6.0,
+  "candidate_id": "f03346d6099cbd46679119cc8c38cfae8c4cf4081d3f6a00d0c87089521beaca",
+  "certificate_hash": "309632efb0724c3f999a31de9fc616b92a22dfe3f80875767bcfb7990d2052f9",
+  "constraint_count": 20,
+  "constraints": {
+    "triangle_free": true
+  },
+  "control_mode": "patternboost",
+  "created_at": "2026-07-08T12:22:26.654499+00:00",
+  "dependency_versions": {
+    "numpy": "2.0.2",
+    "scipy": "1.13.1",
+    "torch": "2.8.0+cu128"
+  },
+  "exact_runtime_seconds": 0.001396968960762024,
+  "generation": 3615,
+  "git_commit": "",
+  "git_dirty": null,
+  "hardware": {
+    "platform": "Linux-4.18.0-193.6.3.el8_2.x86_64-x86_64-with-glibc2.28",
+    "python": "3.11.3"
+  },
+  "integer_solution": [
+    6,
+    8,
+    10,
+    11
+  ],
+  "intersection_edges": [
+    [
+      0,
+      6
+    ],
+    [
+      0,
+      7
+    ],
+    [
+      0,
+      8
+    ],
+    [
+      0,
+      9
+    ],
+    [
+      1,
+      8
+    ],
+    [
+      1,
+      10
+    ],
+    [
+      1,
+      11
+    ],
+    [
+      2,
+      5
+    ],
+    [
+      2,
+      6
+    ],
+    [
+      2,
+      11
+    ],
+    [
+      3,
+      4
+    ],
+    [
+      3,
+      6
+    ],
+    [
+      3,
+      9
+    ],
+    [
+      4,
+      7
+    ],
+    [
+      4,
+      8
+    ],
+    [
+      5,
+      8
+    ],
+    [
+      5,
+      9
+    ],
+    [
+      5,
+      10
+    ],
+    [
+      7,
+      10
+    ],
+    [
+      9,
+      11
+    ]
+  ],
+  "local_search": "program_coeff_pivot",
+  "lp_dual": {
+    "clique_0": 0.0,
+    "clique_1": 1.0,
+    "clique_10": 0.0,
+    "clique_11": 0.0,
+    "clique_12": 1.0,
+    "clique_13": 0.0,
+    "clique_14": 1.0,
+    "clique_15": 0.0,
+    "clique_16": 0.0,
+    "clique_17": 1.0,
+    "clique_18": 0.0,
+    "clique_19": 0.0,
+    "clique_2": 0.0,
+    "clique_3": 0.0,
+    "clique_4": 0.0,
+    "clique_5": 0.0,
+    "clique_6": 1.0,
+    "clique_7": 0.0,
+    "clique_8": 1.0,
+    "clique_9": 0.0
+  },
+  "lp_primal": {
+    "0": 0.5,
+    "1": 0.5,
+    "10": 0.5,
+    "11": 0.5,
+    "2": 0.5,
+    "3": 0.5,
+    "4": 0.5,
+    "5": 0.5,
+    "6": 0.5,
+    "7": 0.5,
+    "8": 0.5,
+    "9": 0.5
+  },
+  "max_clique_size": 2,
+  "maximal_cliques": [
+    [
+      0,
+      6
+    ],
+    [
+      0,
+      7
+    ],
+    [
+      0,
+      8
+    ],
+    [
+      0,
+      9
+    ],
+    [
+      1,
+      8
+    ],
+    [
+      1,
+      10
+    ],
+    [
+      1,
+      11
+    ],
+    [
+      2,
+      5
+    ],
+    [
+      2,
+      6
+    ],
+    [
+      2,
+      11
+    ],
+    [
+      3,
+      4
+    ],
+    [
+      3,
+      6
+    ],
+    [
+      3,
+      9
+    ],
+    [
+      4,
+      7
+    ],
+    [
+      4,
+      8
+    ],
+    [
+      5,
+      8
+    ],
+    [
+      5,
+      9
+    ],
+    [
+      5,
+      10
+    ],
+    [
+      7,
+      10
+    ],
+    [
+      9,
+      11
+    ]
+  ],
+  "n": 12,
+  "problem": "misr",
+  "rectangles": [
+    [
+      1,
+      10,
+      3,
+      4
+    ],
+    [
+      1,
+      5,
+      9,
+      10
+    ],
+    [
+      9,
+      10,
+      5,
+      9
+    ],
+    [
+      5,
+      9,
+      0,
+      2
+    ],
+    [
+      1,
+      6,
+      0,
+      2
+    ],
+    [
+      0,
+      9,
+      6,
+      8
+    ],
+    [
+      9,
+      10,
+      0,
+      5
+    ],
+    [
+      0,
+      1,
+      1,
+      5
+    ],
+    [
+      3,
+      4,
+      2,
+      9
+    ],
+    [
+      7,
+      8,
+      0,
+      9
+    ],
+    [
+      0,
+      1,
+      5,
+      10
+    ],
+    [
+      5,
+      10,
+      9,
+      10
+    ]
+  ],
+  "representation": "triangle_free_rect",
+  "schema": "misr_certificate_v1",
+  "score": 1.5,
+  "solver": {
+    "integer_solver": "branch_and_bound_maximum_independent_set",
+    "lp_method": "highs",
+    "lp_solver": "scipy.optimize.linprog",
+    "tolerance": 1e-08
+  },
+  "solver_status": "optimal",
+  "source_type": "local_mutation",
+  "surrogate": "triangle_free_exact_gap_pressure",
+  "tool_version": "0.1.0",
+  "triangle_free": true,
+  "triangle_witness": null
+}

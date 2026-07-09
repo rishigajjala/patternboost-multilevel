@@ -206,6 +206,30 @@ runs/main_81_hpc/audit/audit.csv
 
 A result is paper-usable only when the audit passes.
 
+For final submission runs, also extract compact learning-curve data for plots:
+
+```bash
+PYTHONPATH=src python3 scripts/extract_learning_curves.py \
+  runs/main_81_hpc \
+  --out runs/main_81_hpc/report/learning_curves.csv
+```
+
+The final July 2026 submission snapshot was collected from a commit-stamped
+deployment:
+
+```text
+/home/sg9396/patternboost/multi-level-8dd31ca1c888/runs/final_submission_20260708_131302
+```
+
+Its compact artifacts are committed under:
+
+```text
+docs/assets/final_submission_20260708_131302/
+```
+
+Use this committed artifact directory, not live checkpoint values, for
+manuscript tables.
+
 For exploratory runs, preserve only compact final artifacts in git:
 
 ```text

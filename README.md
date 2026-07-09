@@ -130,23 +130,33 @@ See [docs/HPC_JUBAIL.md](docs/HPC_JUBAIL.md) for the full step-by-step HPC
 workflow, including smoke tests, generated Slurm arrays, exploratory runs,
 resume commands, collection, and audit.
 
-## Current Best Known Values
+## Final Submission Evidence
 
-The most recent 4-hour previous-best warm-start run on Jubail produced:
+The final audited submission run completed on NYUAD Jubail on 2026-07-09 from
+deployed commit `8dd31ca1c8888dff0f1975ccbd38963d73b78b38`.
+
+Fresh final-array certified values:
 
 ```text
-misr         1.4
+misr         1.5
 unit_square 1.5000000000000004
-guillotine  0.3
+guillotine  0.25
 ```
 
-See [docs/PATTERNBOOST_EXPERIMENT_REPORT.md](docs/PATTERNBOOST_EXPERIMENT_REPORT.md)
-for the detailed study report, including methodology, figures, observations,
-and next steps. A formal LaTeX/PDF version is available at
+The repository also preserves a reverified previous-best guillotine certificate
+with score `0.3`; it is documented separately because it was not rediscovered
+by the fresh final record array.
+
+Compact final artifacts are preserved at
+[docs/assets/final_submission_20260708_131302](docs/assets/final_submission_20260708_131302),
+including summaries, audits, best certificates, construction figures, and
+learning-curve data. See [docs/RESULTS.md](docs/RESULTS.md) for the exact job
+and audit snapshot.
+
+The formal LaTeX/PDF report is available at
 [docs/manuscript/patternboost_experiment_report.tex](docs/manuscript/patternboost_experiment_report.tex)
 and
 [docs/manuscript/patternboost_experiment_report.pdf](docs/manuscript/patternboost_experiment_report.pdf).
-See [docs/RESULTS.md](docs/RESULTS.md) for the shorter job-ID snapshot.
 
 The separately audited exploratory run produced:
 

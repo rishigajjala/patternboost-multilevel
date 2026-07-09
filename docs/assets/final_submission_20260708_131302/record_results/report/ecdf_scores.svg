@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="460" viewBox="0 0 920 460">
+<title>ECDF of best verified scores</title>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<line x1="70" y1="390" x2="850" y2="390" stroke="#111827"/>
+<line x1="70" y1="70" x2="70" y2="390" stroke="#111827"/>
+<text x="460.0" y="34" text-anchor="middle" font-size="18" font-family="monospace">ECDF of best verified scores</text>
+<polyline points="70.00,283.33 95.16,176.67 95.16,70.00" fill="none" stroke="#dc2626" stroke-width="2.5"/>
+<circle cx="690" cy="92" r="5" fill="#dc2626"/><text x="702" y="96" font-size="12" font-family="monospace">guillotine n=3</text>
+<polyline points="699.03,310.00 774.52,230.00 774.52,150.00 850.00,70.00" fill="none" stroke="#2563eb" stroke-width="2.5"/>
+<circle cx="690" cy="114" r="5" fill="#2563eb"/><text x="702" y="118" font-size="12" font-family="monospace">misr n=4</text>
+<polyline points="796.72,310.00 850.00,230.00 850.00,150.00 850.00,70.00" fill="none" stroke="#059669" stroke-width="2.5"/>
+<circle cx="690" cy="136" r="5" fill="#059669"/><text x="702" y="140" font-size="12" font-family="monospace">unit_square n=4</text>
+</svg>

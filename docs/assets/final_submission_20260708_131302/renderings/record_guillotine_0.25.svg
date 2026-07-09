@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="640" viewBox="0 0 900 640">
+<title>Guillotine score=0.25 saved=6 n=8</title>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<rect x="95.979" y="515.804" width="78.671" height="55.944" fill="#38bdf8" fill-opacity="0.34" stroke="#075985" stroke-width="1.4"/>
+<text x="95.979" y="515.804" font-size="13" font-family="monospace" fill="#111827">0</text>
+<rect x="253.322" y="403.916" width="78.671" height="167.832" fill="#38bdf8" fill-opacity="0.34" stroke="#075985" stroke-width="1.4"/>
+<text x="253.322" y="403.916" font-size="13" font-family="monospace" fill="#111827">1</text>
+<rect x="253.322" y="236.084" width="236.014" height="111.888" fill="#38bdf8" fill-opacity="0.34" stroke="#075985" stroke-width="1.4"/>
+<text x="253.322" y="236.084" font-size="13" font-family="monospace" fill="#111827">2</text>
+<rect x="331.993" y="459.86" width="236.014" height="111.888" fill="#38bdf8" fill-opacity="0.34" stroke="#075985" stroke-width="1.4"/>
+<text x="331.993" y="459.86" font-size="13" font-family="monospace" fill="#111827">3</text>
+<rect x="410.664" y="68.252" width="236.014" height="55.944" fill="#38bdf8" fill-opacity="0.34" stroke="#075985" stroke-width="1.4"/>
+<text x="410.664" y="68.252" font-size="13" font-family="monospace" fill="#111827">4</text>
+<rect x="489.336" y="180.14" width="78.671" height="279.72" fill="#38bdf8" fill-opacity="0.34" stroke="#075985" stroke-width="1.4"/>
+<text x="489.336" y="180.14" font-size="13" font-family="monospace" fill="#111827">5</text>
+<rect x="568.007" y="292.028" width="236.014" height="111.888" fill="#38bdf8" fill-opacity="0.34" stroke="#075985" stroke-width="1.4"/>
+<text x="568.007" y="292.028" font-size="13" font-family="monospace" fill="#111827">6</text>
+<rect x="725.35" y="68.252" width="78.671" height="223.776" fill="#38bdf8" fill-opacity="0.34" stroke="#075985" stroke-width="1.4"/>
+<text x="725.35" y="68.252" font-size="13" font-family="monospace" fill="#111827">7</text>
+<line x1="174.65" y1="640" x2="174.65" y2="0" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="8 5"/>
+<line x1="331.993" y1="640" x2="331.993" y2="0" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="8 5"/>
+<line x1="568.007" y1="640" x2="568.007" y2="0" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="8 5"/>
+<line x1="331.993" y1="459.86" x2="568.007" y2="459.86" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="8 5"/>
+<line x1="568.007" y1="292.028" x2="900" y2="292.028" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="8 5"/>
+</svg>

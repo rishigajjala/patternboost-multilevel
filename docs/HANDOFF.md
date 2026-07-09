@@ -33,9 +33,9 @@ python3 -m pip install pytest
 Read these files in order:
 
 1. `docs/EXPERIMENT_MATRIX.md`
-2. `docs/PATTERNBOOST_EXPERIMENT_REPORT.md`
+2. `docs/RESULTS.md`
 3. `docs/manuscript/patternboost_experiment_report.pdf`
-4. `docs/RESULTS.md`
+4. `docs/PATTERNBOOST_EXPERIMENT_REPORT.md`
 5. `docs/EXPLORATORY_RESULTS.md`
 6. `docs/HPC_JUBAIL.md`
 7. `docs/archive/STRATEGY_STUDY_2026-06-30.md`
@@ -44,6 +44,19 @@ The main paper table scope is `misr`, `unit_square`, and `guillotine`.
 `epsilon_net` and `graph_separation` are implemented and have an audited
 exploratory snapshot, but keep them in a separate appendix/results section. Do
 not count discarded square-stabbing-14-9 evidence in current paper tables.
+
+The final submission artifacts are preserved at:
+
+```text
+docs/assets/final_submission_20260708_131302/
+```
+
+Use `docs/RESULTS.md` and
+`docs/manuscript/patternboost_experiment_report.pdf` as the authoritative
+snapshot for manuscript tables. The fresh final-array values are MISR `1.5`,
+unit_square `1.5`, and guillotine `0.25`. A reverified previous-best
+guillotine certificate with score `0.3` is preserved separately and must be
+cited with that provenance.
 
 ## 3. Run a Tiny Local Cell
 

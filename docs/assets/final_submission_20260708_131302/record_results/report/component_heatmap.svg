@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="482" height="568" viewBox="0 0 482 568">
+<title>Component heatmap of best verified scores</title>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="18" y="24" font-size="17" font-family="monospace" font-weight="700">guillotine</text>
+<text x="298.00" y="46" text-anchor="middle" font-size="10" font-family="monospace">depth_limited_dp</text>
+<text x="394.00" y="46" text-anchor="middle" font-size="10" font-family="monospace">k_subset_nonsepara</text>
+<text x="242" y="80.00" text-anchor="end" font-size="10" font-family="monospace">patternboost / recursive_obstructi</text>
+<text x="242" y="108.00" text-anchor="end" font-size="10" font-family="monospace">patternboost / recursive_obstructi</text>
+<text x="242" y="136.00" text-anchor="end" font-size="10" font-family="monospace">patternboost / sequence_pair_packi</text>
+<rect x="250" y="62" width="93" height="25" fill="#dc2626" fill-opacity="0.900" stroke="#ffffff"/>
+<text x="298.00" y="79.00" text-anchor="middle" font-size="10" font-family="monospace">0.25</text>
+<rect x="346" y="90" width="93" height="25" fill="#dc2626" fill-opacity="0.900" stroke="#ffffff"/>
+<text x="394.00" y="107.00" text-anchor="middle" font-size="10" font-family="monospace">0.25</text>
+<rect x="346" y="118" width="93" height="25" fill="#dc2626" fill-opacity="0.777" stroke="#ffffff"/>
+<text x="394.00" y="135.00" text-anchor="middle" font-size="10" font-family="monospace">0.208</text>
+<text x="18" y="194" font-size="17" font-family="monospace" font-weight="700">misr</text>
+<text x="298.00" y="216" text-anchor="middle" font-size="10" font-family="monospace">exact_lp_gap_press</text>
+<text x="394.00" y="216" text-anchor="middle" font-size="10" font-family="monospace">triangle_free_exac</text>
+<text x="242" y="250.00" text-anchor="end" font-size="10" font-family="monospace">patternboost / endpoint_sequence_p</text>
+<text x="242" y="278.00" text-anchor="end" font-size="10" font-family="monospace">patternboost / triangle_free_rect </text>
+<text x="242" y="306.00" text-anchor="end" font-size="10" font-family="monospace">patternboost / triangle_free_rect </text>
+<rect x="250" y="232" width="93" height="25" fill="#2563eb" fill-opacity="0.777" stroke="#ffffff"/>
+<text x="298.00" y="249.00" text-anchor="middle" font-size="10" font-family="monospace">1.25</text>
+<rect x="250" y="260" width="93" height="25" fill="#2563eb" fill-opacity="0.838" stroke="#ffffff"/>
+<text x="298.00" y="277.00" text-anchor="middle" font-size="10" font-family="monospace">1.38</text>
+<rect x="346" y="260" width="93" height="25" fill="#2563eb" fill-opacity="0.900" stroke="#ffffff"/>
+<text x="394.00" y="277.00" text-anchor="middle" font-size="10" font-family="monospace">1.5</text>
+<rect x="346" y="288" width="93" height="25" fill="#2563eb" fill-opacity="0.838" stroke="#ffffff"/>
+<text x="394.00" y="305.00" text-anchor="middle" font-size="10" font-family="monospace">1.38</text>
+<text x="18" y="364" font-size="17" font-family="monospace" font-weight="700">unit_square</text>
+<text x="298.00" y="386" text-anchor="middle" font-size="10" font-family="monospace">exact_stab_gap_pre</text>
+<text x="242" y="420.00" text-anchor="end" font-size="10" font-family="monospace">patternboost / line_square_inciden</text>
+<text x="242" y="448.00" text-anchor="end" font-size="10" font-family="monospace">patternboost / line_square_inciden</text>
+<text x="242" y="476.00" text-anchor="end" font-size="10" font-family="monospace">patternboost / sqstab_exact_grid /</text>
+<text x="242" y="504.00" text-anchor="end" font-size="10" font-family="monospace">patternboost / square_direct / coo</text>
+<rect x="250" y="402" width="93" height="25" fill="#059669" fill-opacity="0.900" stroke="#ffffff"/>
+<text x="298.00" y="419.00" text-anchor="middle" font-size="10" font-family="monospace">1.5</text>
+<rect x="250" y="430" width="93" height="25" fill="#059669" fill-opacity="0.900" stroke="#ffffff"/>
+<text x="298.00" y="447.00" text-anchor="middle" font-size="10" font-family="monospace">1.5</text>
+<rect x="250" y="458" width="93" height="25" fill="#059669" fill-opacity="0.900" stroke="#ffffff"/>
+<text x="298.00" y="475.00" text-anchor="middle" font-size="10" font-family="monospace">1.5</text>
+<rect x="250" y="486" width="93" height="25" fill="#059669" fill-opacity="0.856" stroke="#ffffff"/>
+<text x="298.00" y="503.00" text-anchor="middle" font-size="10" font-family="monospace">1.41</text>
+</svg>
