@@ -32,6 +32,8 @@ SUMMARY_FIELDS = [
     "num_model_train_calls",
     "num_model_samples",
     "num_model_samples_valid",
+    "fallback_floor_attempts",
+    "fallback_floor_used",
     "effective_train_every",
     "effective_model_samples",
     "effective_local_search",

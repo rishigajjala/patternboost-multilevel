@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from functools import lru_cache
 import math
 from statistics import mean, pstdev
 from typing import Any
@@ -235,11 +236,14 @@ def guillotine_surrogate(surrogate: str, instance: dict[str, Any]) -> dict[str, 
     x_span = _projection_span([(r[0], r[1]) for r in rectangles])
     y_span = _projection_span([(r[2], r[3]) for r in rectangles])
     entropy_hint = min(x_span, y_span) / max(x_span, y_span, 1e-9)
+    threshold: dict[str, Any] = {}
+    beam_saved = None
+    beam_destroyed_fraction = None
 
     if surrogate == "first_cut_obstruction":
-        score = min_crossed / max(1, n)
+        score = min_crossed / max(1, n) + 0.05 * (balanced_min / max(1, n)) + 0.01 * entropy_hint
     elif surrogate == "depth_limited_dp":
-        depth_saved = _depth_limited_guillotine_saved(rectangles, full_mask, x_cuts, y_cuts, depth=3)
+        depth_saved = _depth_limited_guillotine_saved(rectangles, full_mask, x_cuts, y_cuts, depth=4)
         depth_destroyed_fraction = 1.0 - depth_saved / max(1, n)
         score = depth_destroyed_fraction + 0.05 * (balanced_min / max(1, n)) + 0.02 * entropy_hint
     elif surrogate == "projection_overlap_entropy":
@@ -247,17 +251,21 @@ def guillotine_surrogate(surrogate: str, instance: dict[str, Any]) -> dict[str, 
     elif surrogate == "k_subset_nonseparability":
         threshold = guillotine._k_subset_nonseparability_summary(
             rectangles,
-            exact_max_n=16,
-            sample_limit=2048,
+            exact_max_n=14,
+            sample_limit=1024,
         )
-        depth_saved = None
-        depth_destroyed_fraction = None
+        depth_saved = _depth_limited_guillotine_saved(rectangles, full_mask, x_cuts, y_cuts, depth=4)
+        depth_destroyed_fraction = 1.0 - depth_saved / max(1, n)
+        beam_saved = _beam_guillotine_saved(rectangles, full_mask, x_cuts, y_cuts, beam_width=6)
+        beam_destroyed_fraction = 1.0 - beam_saved / max(1, n)
         score = (
             float(threshold["threshold_nonseparable_fraction"])
+            + 0.35 * depth_destroyed_fraction
+            + 0.18 * beam_destroyed_fraction
             + 0.10 * (balanced_min / max(1, n))
             + 0.02 * entropy_hint
             + 0.02 * (n / max(1, n + 10))
-            + (0.25 if threshold["threshold_target_met"] else 0.0)
+            + (0.35 if threshold["threshold_target_met"] else 0.0)
         )
     elif surrogate == "exact_recursive_dp":
         cert = guillotine.score_instance(instance)
@@ -278,6 +286,8 @@ def guillotine_surrogate(surrogate: str, instance: dict[str, Any]) -> dict[str, 
             "balanced_min_first_cut_crossed": balanced_min,
             "depth_limited_saved": depth_saved,
             "depth_limited_destroyed_fraction": depth_destroyed_fraction,
+            "beam_slicing_saved": beam_saved,
+            "beam_slicing_destroyed_fraction": beam_destroyed_fraction,
             "x_projection_span": x_span,
             "y_projection_span": y_span,
             "projection_entropy_hint": entropy_hint,
@@ -286,9 +296,35 @@ def guillotine_surrogate(surrogate: str, instance: dict[str, Any]) -> dict[str, 
     }
 
 
-def _depth_limited_guillotine_saved(rectangles, full_mask: int, x_cuts, y_cuts, *, depth: int) -> int:
-    from functools import lru_cache
+def _beam_guillotine_saved(rectangles, full_mask: int, x_cuts, y_cuts, *, beam_width: int) -> int:
+    @lru_cache(maxsize=None)
+    def solve(mask: int) -> int:
+        members = guillotine._popcount(mask)
+        if members <= 1:
+            return members
+        candidates = []
+        for axis, coords in (("x", x_cuts), ("y", y_cuts)):
+            for coord in coords:
+                low, high, crossed = guillotine._partition(rectangles, mask, axis, coord)
+                if crossed == 0 and (low == mask or high == mask):
+                    continue
+                if not low or not high or (low | high | crossed) != mask:
+                    continue
+                left = guillotine._popcount(low)
+                right = guillotine._popcount(high)
+                cut = guillotine._popcount(crossed)
+                candidates.append((left + right, -cut, -abs(left - right), low, high))
+        if not candidates:
+            return 1
+        best = 1
+        for _saved_order, _cut_order, _balance_order, low, high in sorted(candidates, reverse=True)[:beam_width]:
+            best = max(best, solve(low) + solve(high))
+        return best
 
+    return solve(full_mask)
+
+
+def _depth_limited_guillotine_saved(rectangles, full_mask: int, x_cuts, y_cuts, *, depth: int) -> int:
     @lru_cache(maxsize=None)
     def solve(mask: int, remaining_depth: int) -> int:
         members = guillotine._popcount(mask)

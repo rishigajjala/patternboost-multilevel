@@ -128,6 +128,8 @@ def run_patternboost(
     model_train_calls = 0
     num_model_samples = 0
     num_model_samples_valid = 0
+    fallback_floor_attempts = 0
+    fallback_floor_used = False
     latest_model_kind = None
     stop_reason = "completed"
     completed_iterations = generation_start
@@ -187,7 +189,13 @@ def run_patternboost(
         seen: set[str] = set()
         nontrivial_rejected_keys: set[str] = set()
 
-    def exact_audit(instance: dict[str, Any], generation: int, source: str) -> dict[str, Any] | None:
+    def exact_audit(
+        instance: dict[str, Any],
+        generation: int,
+        source: str,
+        *,
+        extra_metadata: dict[str, Any] | None = None,
+    ) -> dict[str, Any] | None:
         nonlocal best_cert, best_path, best_rendering_path, time_to_best, exact_calls, nontrivial_rejected
         clean_instance = decoded_geometry(instance)
         try:
@@ -202,6 +210,8 @@ def run_patternboost(
         cert["source_type"] = source
         cert["control_mode"] = control_mode
         cert["generation"] = generation
+        if extra_metadata:
+            cert.update(extra_metadata)
         cert = attach_runtime_provenance(cert, Path.cwd())
         cert = attach_certificate_hash(cert)
         ok, reason = _nontrivial_certificate_ok(problem, cert, constraints)
@@ -545,6 +555,84 @@ def run_patternboost(
         else:
             completed_iterations = iterations
 
+    def guillotine_floor_candidates():
+        if problem != "guillotine":
+            return
+        # First try the row's own representation. Pure random disjoint layouts
+        # are usually easy to slice, but this keeps the fallback honest.
+        for _attempt in range(8):
+            candidate = initial_instance_for_representation(
+                "guillotine",
+                representation,
+                rng,
+                n=search_n_min,
+                grid=grid,
+            )
+            candidate = repair_instance_for_representation(
+                "guillotine",
+                representation,
+                candidate,
+                grid=grid,
+                n_min=search_n_min,
+                n_max=search_n_max,
+            )
+            yield candidate, "fallback_floor_row_random", None
+
+        # If a row would otherwise export nothing, use the same randomized
+        # structural guillotine generator already present in the search space,
+        # then re-encode it through the row representation. This is labelled so
+        # downstream analysis can distinguish it from a row-discovered best.
+        for _attempt in range(4):
+            candidate = initial_instance_for_representation(
+                "guillotine",
+                "recursive_obstruction_grammar",
+                rng,
+                n=search_n_min,
+                grid=grid,
+            )
+            candidate = repair_instance_for_representation(
+                "guillotine",
+                representation,
+                candidate,
+                grid=grid,
+                n_min=search_n_min,
+                n_max=search_n_max,
+            )
+            yield candidate, "fallback_floor_structural_random", {
+                "fallback_floor": True,
+                "fallback_source_representation": "recursive_obstruction_grammar",
+                "fallback_row_representation": representation,
+            }
+
+    if best_cert is None and problem == "guillotine":
+        with event_path.open("a", encoding="utf-8") as events:
+            for candidate, source, metadata in guillotine_floor_candidates() or []:
+                fallback_floor_attempts += 1
+                cert = exact_audit(
+                    candidate,
+                    completed_iterations,
+                    source,
+                    extra_metadata=metadata,
+                )
+                events.write(json.dumps({
+                    "schema": "fallback_floor_event_v1",
+                    "time": datetime.now(timezone.utc).isoformat(),
+                    "run_id": run_id,
+                    "problem": problem,
+                    "representation": representation,
+                    "local_search": local_search,
+                    "surrogate": surrogate,
+                    "generation": completed_iterations,
+                    "source_type": source,
+                    "exact_status": None if cert is None else cert["solver_status"],
+                    "exact_score": None if cert is None else cert["score"],
+                    "best_exact_score": None if best_cert is None else best_cert["score"],
+                }, sort_keys=True) + "\n")
+                if best_cert is not None:
+                    fallback_floor_used = True
+                    write_checkpoint(completed_iterations)
+                    break
+
     summary = {
         "schema": "run_summary_v1",
         "run_id": run_id,
@@ -599,6 +687,8 @@ def run_patternboost(
         "num_model_train_calls": model_train_calls,
         "num_model_samples": num_model_samples,
         "num_model_samples_valid": num_model_samples_valid,
+        "fallback_floor_attempts": fallback_floor_attempts,
+        "fallback_floor_used": fallback_floor_used,
         "num_exports": len(list(cert_dir.glob("*.json"))),
         "event_stream": str(event_path),
         "elapsed_seconds": time.perf_counter() - start,

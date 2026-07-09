@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import copy
+import itertools
 import random
 from typing import Any
 
@@ -597,12 +598,14 @@ def mutate_guillotine(
     occupied = {(r[0], r[2]) for r in rects}
     side = _guillotine_dynamic_side(grid=grid, n=max(n_min, len(rects) + 1), rects=rects)
     moves = ["move", "resize", "add", "delete"]
-    if local_search == "weak_cut_blockers":
+    if local_search == "packing_resize":
+        moves += ["witness_gap", "bar_replace", "add"]
+    elif local_search == "weak_cut_blockers":
         moves += ["add", "move", "cut_blocker"]
     elif local_search == "recursive_gadget_assembly":
-        moves += ["add", "add", "motif_copy", "insert_obstruction", "recursive_tile"]
+        moves += ["add", "add", "bar_replace", "motif_copy", "insert_obstruction", "recursive_tile"]
     elif local_search == "witness_breaking":
-        moves += ["witness_bridge", "witness_bridge", "cut_blocker", "motif_copy"]
+        moves += ["witness_gap", "witness_gap", "witness_bridge", "bar_replace", "cut_blocker", "motif_copy"]
     if representation == "sequence_pair_packing":
         moves += ["swap_order"]
     elif representation == "recursive_obstruction_grammar":
@@ -611,11 +614,13 @@ def mutate_guillotine(
     if move == "delete" and len(rects) > n_min:
         del rects[rng.randrange(len(rects))]
     elif move == "add" and len(rects) < n_max:
-        for _ in range(20):
+        for _ in range(48):
             rect = _guillotine_random_rect(rng, side=side)
             if not _guillotine_overlaps_any(rect, rects):
                 rects.append(rect)
                 break
+    elif move == "bar_replace" and rects:
+        _guillotine_replace_with_random_bar(rects, rng, grid=grid)
     elif move == "cut_blocker" and len(rects) < n_max:
         axis = rng.choice(["x", "y"])
         coord = rng.randrange(max(1, grid))
@@ -638,8 +643,11 @@ def mutate_guillotine(
             if not _guillotine_overlaps_any(rect, next_rects):
                 next_rects.append(rect)
         rects[:] = next_rects
+    elif move == "witness_gap":
+        _guillotine_witness_gap_closure(rects, rng, grid=grid)
     elif move == "witness_bridge" and len(rects) < n_max:
-        _guillotine_witness_bridge(rects, rng, grid=grid)
+        if not _guillotine_witness_gap_closure(rects, rng, grid=grid):
+            _guillotine_witness_bridge(rects, rng, grid=grid)
     elif move == "recursive_tile" and len(rects) < n_max:
         target = min(n_max, len(rects) + rng.randrange(5, min(16, max(6, n_max - len(rects) + 1))))
         motif = _guillotine_obstruction_rectangles(rng, grid=grid, n=target)
@@ -685,7 +693,7 @@ def mutate_guillotine(
             if (nx, ny) not in occupied or (nx, ny) == (x, y):
                 rects[idx] = [nx, nx + width, ny, ny + height]
                 break
-    if local_search == "witness_breaking" or representation == "recursive_obstruction_grammar":
+    if local_search in {"packing_resize", "witness_breaking"} or representation == "recursive_obstruction_grammar":
         _guillotine_guided_nonseparability_step(child, rng, grid=grid, n_min=n_min, n_max=n_max)
     return child
 
@@ -698,17 +706,161 @@ def _guillotine_overlaps_any(rect: list[int], rects: list[list[int]]) -> bool:
     )
 
 
+def _guillotine_random_k_mask(n: int, k: int, rng: random.Random) -> int:
+    if k <= 0:
+        return 0
+    chosen = set(rng.sample(range(n), k=min(k, n)))
+    mask = 0
+    for idx in chosen:
+        mask |= 1 << idx
+    return mask
+
+
+def _guillotine_separable_witness_mask(
+    rects: list[list[int]],
+    rng: random.Random,
+    *,
+    exact_max_n: int = 12,
+    sample_limit: int = 256,
+) -> tuple[int, list[guillotine_scorer.Box]]:
+    rectangles = guillotine_scorer._validate_rectangles(rects)
+    n = len(rectangles)
+    if n <= 1:
+        return 0, rectangles
+    k = n // 2 + 1
+    if n <= exact_max_n:
+        masks = [guillotine_scorer._subset_mask(combo) for combo in itertools.combinations(range(n), k)]
+        rng.shuffle(masks)
+    else:
+        masks = []
+        seen: set[int] = set()
+        attempts = 0
+        while len(masks) < sample_limit and attempts < sample_limit * 4:
+            attempts += 1
+            mask = _guillotine_random_k_mask(n, k, rng)
+            if mask in seen:
+                continue
+            seen.add(mask)
+            masks.append(mask)
+    for mask in masks:
+        if guillotine_scorer._is_guillotine_separable_subset(rectangles, mask):
+            return mask, rectangles
+    return 0, rectangles
+
+
+def _open_axis_overlap(lo_a: int, hi_a: int, lo_b: int, hi_b: int) -> bool:
+    return max(lo_a, lo_b) < min(hi_a, hi_b)
+
+
+def _guillotine_try_close_projection_gap(
+    rects: list[list[int]],
+    first_idx: int,
+    second_idx: int,
+    *,
+    axis: str,
+    side: int,
+) -> bool:
+    if first_idx == second_idx:
+        return False
+    a = rects[first_idx]
+    b = rects[second_idx]
+    candidate = [list(rect) for rect in rects]
+    if axis == "x":
+        if _open_axis_overlap(a[2], a[3], b[2], b[3]):
+            return False
+        if a[1] <= b[0]:
+            candidate[first_idx][1] = min(side, max(a[1], b[0] + 1))
+        elif b[1] <= a[0]:
+            candidate[second_idx][1] = min(side, max(b[1], a[0] + 1))
+        else:
+            return False
+        changed_idx = first_idx if candidate[first_idx] != a else second_idx
+    else:
+        if _open_axis_overlap(a[0], a[1], b[0], b[1]):
+            return False
+        if a[3] <= b[2]:
+            candidate[first_idx][3] = min(side, max(a[3], b[2] + 1))
+        elif b[3] <= a[2]:
+            candidate[second_idx][3] = min(side, max(b[3], a[2] + 1))
+        else:
+            return False
+        changed_idx = first_idx if candidate[first_idx] != a else second_idx
+    changed = candidate[changed_idx]
+    if changed[0] >= changed[1] or changed[2] >= changed[3]:
+        return False
+    if _guillotine_overlaps_any(changed, candidate[:changed_idx] + candidate[changed_idx + 1 :]):
+        return False
+    rects[:] = candidate
+    return True
+
+
+def _guillotine_witness_gap_closure(rects: list[list[int]], rng: random.Random, *, grid: int) -> bool:
+    if len(rects) < 2:
+        return False
+    try:
+        witness, rectangles = _guillotine_separable_witness_mask(
+            rects,
+            rng,
+            exact_max_n=12,
+            sample_limit=256,
+        )
+    except Exception:
+        return False
+    if witness == 0:
+        return False
+    side = _guillotine_dynamic_side(grid=grid, n=len(rects) + 1, rects=rects)
+    axes = ["x", "y"]
+    rng.shuffle(axes)
+    for axis in axes:
+        components = guillotine_scorer._projection_components(rectangles, witness, axis)
+        if len(components) <= 1:
+            continue
+        rng.shuffle(components)
+        for left_pos, left_mask in enumerate(components):
+            for right_mask in components[left_pos + 1 :]:
+                left_members = list(guillotine_scorer._bits(left_mask))
+                right_members = list(guillotine_scorer._bits(right_mask))
+                rng.shuffle(left_members)
+                rng.shuffle(right_members)
+                for first_idx in left_members:
+                    for second_idx in right_members:
+                        if _guillotine_try_close_projection_gap(
+                            rects,
+                            first_idx,
+                            second_idx,
+                            axis=axis,
+                            side=side,
+                        ):
+                            return True
+    return False
+
+
+def _guillotine_replace_with_random_bar(rects: list[list[int]], rng: random.Random, *, grid: int) -> bool:
+    if not rects:
+        return False
+    idx = rng.randrange(len(rects))
+    old = list(rects[idx])
+    side = _guillotine_dynamic_side(grid=grid, n=len(rects), rects=rects)
+    others = rects[:idx] + rects[idx + 1 :]
+    for _ in range(96):
+        rect = _guillotine_random_rect(rng, side=side)
+        if not _guillotine_overlaps_any(rect, others):
+            rects[idx] = rect
+            return True
+    rects[idx] = old
+    return False
+
+
 def _guillotine_witness_bridge(rects: list[list[int]], rng: random.Random, *, grid: int) -> bool:
     if len(rects) < 2:
         return False
     try:
-        summary = guillotine_scorer.k_subset_nonseparability_summary(
-            {"rectangles": rects},
-            exact_max_n=10,
-            sample_limit=64,
+        witness, rectangles = _guillotine_separable_witness_mask(
+            rects,
+            rng,
+            exact_max_n=12,
+            sample_limit=256,
         )
-        witness = int(summary.get("threshold_witness_mask") or 0)
-        rectangles = guillotine_scorer._validate_rectangles(rects)
     except Exception:
         return False
     if witness == 0:
@@ -769,9 +921,12 @@ def _guillotine_guided_nonseparability_step(
     for _ in range(3):
         trial = [list(rect) for rect in best_rects]
         side = _guillotine_dynamic_side(grid=grid, n=max(n_min, len(trial) + 1), rects=trial)
-        move = rng.choice(["bridge", "bar_add", "replace", "resize"])
-        if move == "bridge" and len(trial) < n_max:
-            _guillotine_witness_bridge(trial, rng, grid=grid)
+        move = rng.choice(["gap", "bridge", "bar_add", "replace", "resize", "endpoint"])
+        if move == "gap":
+            _guillotine_witness_gap_closure(trial, rng, grid=grid)
+        elif move == "bridge" and len(trial) < n_max:
+            if not _guillotine_witness_gap_closure(trial, rng, grid=grid):
+                _guillotine_witness_bridge(trial, rng, grid=grid)
         elif move == "bar_add" and len(trial) < n_max:
             for _attempt in range(32):
                 rect = _guillotine_random_rect(rng, side=side)
@@ -779,12 +934,22 @@ def _guillotine_guided_nonseparability_step(
                     trial.append(rect)
                     break
         elif move == "replace" and len(trial) > n_min:
-            del trial[rng.randrange(len(trial))]
-            for _attempt in range(32):
-                rect = _guillotine_random_rect(rng, side=side)
-                if not _guillotine_overlaps_any(rect, trial):
-                    trial.append(rect)
-                    break
+            _guillotine_replace_with_random_bar(trial, rng, grid=grid)
+        elif move == "endpoint" and trial:
+            idx = rng.randrange(len(trial))
+            rect = list(trial[idx])
+            side_idx = rng.randrange(4)
+            delta = rng.choice([-2, -1, 1, 2])
+            if side_idx == 0:
+                rect[0] = max(0, min(rect[1] - 1, rect[0] + delta))
+            elif side_idx == 1:
+                rect[1] = max(rect[0] + 1, min(side, rect[1] + delta))
+            elif side_idx == 2:
+                rect[2] = max(0, min(rect[3] - 1, rect[2] + delta))
+            else:
+                rect[3] = max(rect[2] + 1, min(side, rect[3] + delta))
+            if not _guillotine_overlaps_any(rect, trial[:idx] + trial[idx + 1 :]):
+                trial[idx] = rect
         elif trial:
             idx = rng.randrange(len(trial))
             x1, x2, y1, y2 = trial[idx]
@@ -811,8 +976,8 @@ def _guillotine_nonseparability_key(rects: list[list[int]]) -> tuple[float, floa
         rectangles = guillotine_scorer._validate_rectangles(rects)
         threshold = guillotine_scorer._k_subset_nonseparability_summary(
             rectangles,
-            exact_max_n=10,
-            sample_limit=64,
+            exact_max_n=12,
+            sample_limit=256,
         )
     except Exception:
         return (-1.0, -1.0, -1, -1.0)

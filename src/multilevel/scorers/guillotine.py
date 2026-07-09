@@ -271,8 +271,8 @@ def score_instance(instance: dict[str, Any]) -> dict[str, Any]:
     saved, strategy = solve(full_mask)
     threshold_summary = _k_subset_nonseparability_summary(
         rectangles,
-        exact_max_n=14,
-        sample_limit=256,
+        exact_max_n=16,
+        sample_limit=1024,
     )
     first_cut_crossed = n
     for axis, coords in (("x", x_cuts), ("y", y_cuts)):
