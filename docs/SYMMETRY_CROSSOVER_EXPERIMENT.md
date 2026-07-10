@@ -8,8 +8,9 @@ search without loading any known construction or target answer.
 Each problem receives one fixed-cardinality, symmetry-canonical representation:
 
 - `misr/fixed_symmetry_rectangles`: random rectangle coordinates;
-- `unit_square/fixed_symmetry_grid`: distinct grid positions with one fixed side
-  length determined by grid resolution;
+- `unit_square/fixed_symmetry_grid`: distinct grid positions with fixed side
+  length `Q=2`, matching the imported encoding while allowing grid extent to
+  vary;
 - `guillotine/fixed_symmetry_packing`: random disjoint rectangles.
 
 Repair preserves the initial object count. Geometry is canonicalized under

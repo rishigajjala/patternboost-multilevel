@@ -62,6 +62,8 @@ def test_fixed_symmetry_representations_preserve_cardinality_and_score():
         )
         geometry = decoded_geometry(repaired)
         assert len(geometry[OBJECT_KEYS[problem]]) == 8
+        if problem == "unit_square":
+            assert geometry["side"] == 2
         certificate = SCORERS[problem].score_instance(geometry)
         assert certificate["solver_status"] == "optimal"
 

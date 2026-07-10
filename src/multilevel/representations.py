@@ -958,7 +958,7 @@ def _unit_square_instance(representation: str, rng: random.Random, *, n: int, gr
     if representation == "sqstab_exact_grid":
         return _unit_square_sqstab_exact_grid(rng, n=n, grid=grid)
     if representation == "fixed_symmetry_grid":
-        side = max(1, min(4, (grid + 2) // 4))
+        side = 2 if grid >= 2 else 1
         squares = _canonicalize_d4_squares(_random_unique_squares(rng, n=max(1, n), grid=grid))
         return _tag(
             {"schema": "unit_square_instance_v1", "squares": squares, "side": side},
@@ -967,6 +967,7 @@ def _unit_square_instance(representation: str, rng: random.Random, *, n: int, gr
                 "generator": "random_fixed_cardinality_grid",
                 "target_n": len(squares),
                 "side": side,
+                "side_rule": "fixed_Q2",
                 "symmetry_group": "D4_translation",
             },
         )
@@ -1102,6 +1103,7 @@ def _repair_unit_square(
                 "generator": "random_fixed_cardinality_grid",
                 "target_n": target_n,
                 "side": side,
+                "side_rule": "fixed_Q2",
                 "symmetry_group": "D4_translation",
             },
         )
