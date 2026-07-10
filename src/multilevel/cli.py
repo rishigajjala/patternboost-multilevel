@@ -457,6 +457,7 @@ def cmd_make_slurm(args: argparse.Namespace) -> int:
         mem=args.mem,
         runner=args.runner,
         conda_env=args.conda_env,
+        pythonpath_extra=args.pythonpath_extra,
     )
     print(f"wrote Slurm array script to {target}")
     return 0
@@ -664,6 +665,7 @@ def build_parser() -> argparse.ArgumentParser:
     slurm.add_argument("--mem", default="8G")
     slurm.add_argument("--runner", choices=["patternboost", "search", "baseline", "explore"], default="patternboost")
     slurm.add_argument("--conda-env", default=None)
+    slurm.add_argument("--pythonpath-extra", default=None)
     slurm.set_defaults(func=cmd_make_slurm)
 
     return parser

@@ -36,6 +36,7 @@ def write_slurm_array(
     mem: str,
     runner: str = "patternboost",
     conda_env: str | None = None,
+    pythonpath_extra: str | None = None,
 ) -> Path:
     rows = read_matrix(matrix_path)
     if not rows:
@@ -51,6 +52,7 @@ def write_slurm_array(
         if conda_env
         else "  # conda environment not configured"
     )
+    pythonpath = "src" if not pythonpath_extra else f"src:{pythonpath_extra}"
     if runner == "patternboost":
         command = "patternboost-cell"
         extra = (
@@ -115,7 +117,7 @@ else
 fi
 set -u
 
-export PYTHONPATH=src
+export PYTHONPATH={shlex.quote(pythonpath)}
 export OMP_NUM_THREADS="${{SLURM_CPUS_PER_TASK:-{cpus_per_task}}}"
 export OPENBLAS_NUM_THREADS="${{SLURM_CPUS_PER_TASK:-{cpus_per_task}}}"
 export MKL_NUM_THREADS="${{SLURM_CPUS_PER_TASK:-{cpus_per_task}}}"
