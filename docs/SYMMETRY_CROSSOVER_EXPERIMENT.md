@@ -18,8 +18,10 @@ objective-preserving transformations for all three problems.
 
 ## New local-search axis
 
-`symmetry_crossover_hillclimb` performs 25 exact-scored proposals and retains a
-proposal whenever its exact score does not decrease. Proposal probabilities are:
+`symmetry_crossover_hillclimb` performs 25 exact-scored proposals. Exact
+admissibility under the shared nontriviality constraints is ranked first, then
+the objective score; a proposal is retained whenever that lexicographic key
+does not decrease. Proposal probabilities are:
 
 - 55%: shift one object by one grid step;
 - 25%: move one object to a random location;

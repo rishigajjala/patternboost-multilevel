@@ -8,7 +8,7 @@ from multilevel.components import (
     SYMMETRY_CROSSOVER_REPRESENTATIONS,
     build_symmetry_crossover_matrix,
 )
-from multilevel.mutations import mutate_instance
+from multilevel.mutations import _exact_hillclimb_key, mutate_instance
 from multilevel.representations import (
     decoded_geometry,
     initial_instance_for_representation,
@@ -95,3 +95,21 @@ def test_symmetry_crossover_hillclimb_is_exact_nonworsening():
             "crossover": 0.10,
             "symmetry": 0.10,
         }
+
+
+def test_exact_hillclimb_prioritizes_admissible_square_instances():
+    admissible = {
+        "schema": "unit_square_instance_v1",
+        "squares": [[3 * idx, 3 * idx] for idx in range(8)],
+        "side": 1,
+    }
+    high_ratio_but_small_cover = {
+        "schema": "unit_square_instance_v1",
+        "squares": [[0, 1], [1, 0], [1, 3], [3, 1]],
+        "side": 2,
+    }
+    admissible_key = _exact_hillclimb_key("unit_square", admissible)
+    small_cover_key = _exact_hillclimb_key("unit_square", high_ratio_but_small_cover)
+    assert admissible_key[0] == 1.0
+    assert small_cover_key[0] == 0.0
+    assert admissible_key > small_cover_key

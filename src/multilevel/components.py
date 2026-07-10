@@ -57,6 +57,13 @@ DEFAULT_STAGE_BUDGETS = {
 }
 
 
+LARGE_EXAMPLE_CONSTRAINTS: dict[str, dict[str, int]] = {
+    "misr": {"min_items": 8},
+    "unit_square": {"min_items": 8, "min_tau_int": 4},
+    "guillotine": {"min_items": 8, "min_destroyed": 2},
+}
+
+
 CONTROL_MODES = (
     "local_only",
     "model_only_weak_local",

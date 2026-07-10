@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from multilevel.canonical import attach_certificate_hash, sha256_obj, write_json
+from multilevel.components import LARGE_EXAMPLE_CONSTRAINTS
 from multilevel.modeling import save_model_artifacts, sample_model, train_model
 from multilevel.mutations import mutate_instance
 from multilevel.provenance import attach_runtime_provenance
@@ -29,13 +30,6 @@ SCORERS = {
     "unit_square": unit_square,
     "guillotine": guillotine,
 }
-
-LARGE_EXAMPLE_CONSTRAINTS: dict[str, dict[str, int]] = {
-    "misr": {"min_items": 8},
-    "unit_square": {"min_items": 8, "min_tau_int": 4},
-    "guillotine": {"min_items": 8, "min_destroyed": 2},
-}
-
 
 def _model_artifact_keep() -> int:
     raw = os.environ.get("PATTERNBOOST_MODEL_ARTIFACT_KEEP", "1")

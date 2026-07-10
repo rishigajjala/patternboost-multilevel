@@ -6,6 +6,7 @@ import random
 from typing import Any
 
 from multilevel import misr_sequences
+from multilevel.components import LARGE_EXAMPLE_CONSTRAINTS
 from multilevel.random_instances import GENERATORS
 from multilevel.scorers import guillotine as guillotine_scorer
 from multilevel.scorers import misr as misr_scorer
@@ -117,7 +118,7 @@ def _symmetry_crossover_hillclimb(
     return best
 
 
-def _exact_hillclimb_key(problem: str, instance: dict[str, Any]) -> tuple[float, float, float]:
+def _exact_hillclimb_key(problem: str, instance: dict[str, Any]) -> tuple[float, float, float, float]:
     geometry = {key: value for key, value in instance.items() if not key.startswith("_")}
     scorer = {
         "misr": misr_scorer,
@@ -127,10 +128,14 @@ def _exact_hillclimb_key(problem: str, instance: dict[str, Any]) -> tuple[float,
     cert = scorer.score_instance(geometry)
     score = float(cert["score"])
     if problem == "misr":
-        return (score, float(cert.get("alpha_lp", 0.0)), -float(cert.get("alpha_int", 0.0)))
+        return (1.0, score, float(cert.get("alpha_lp", 0.0)), -float(cert.get("alpha_int", 0.0)))
     if problem == "unit_square":
-        return (score, float(cert.get("tau_int", 0.0)), -float(cert.get("tau_lp", 0.0)))
-    return (score, float(cert.get("destroyed", 0.0)), -float(cert.get("saved", 0.0)))
+        tau_int = float(cert.get("tau_int", 0.0))
+        min_tau = float(LARGE_EXAMPLE_CONSTRAINTS[problem]["min_tau_int"])
+        return (float(tau_int >= min_tau), score, tau_int, -float(cert.get("tau_lp", 0.0)))
+    destroyed = float(cert.get("destroyed", 0.0))
+    min_destroyed = float(LARGE_EXAMPLE_CONSTRAINTS[problem]["min_destroyed"])
+    return (float(destroyed >= min_destroyed), score, destroyed, -float(cert.get("saved", 0.0)))
 
 
 def _portfolio_move(rng: random.Random) -> str:
