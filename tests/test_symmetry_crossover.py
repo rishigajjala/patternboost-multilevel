@@ -68,6 +68,32 @@ def test_fixed_symmetry_representations_preserve_cardinality_and_score():
         assert certificate["solver_status"] == "optimal"
 
 
+def test_fixed_symmetry_grid_repair_restores_fixed_common_side():
+    representation = SYMMETRY_CROSSOVER_REPRESENTATIONS["unit_square"]
+    instance = initial_instance_for_representation(
+        "unit_square",
+        representation,
+        random.Random(9150),
+        n=8,
+        grid=8,
+    )
+    instance["side"] = 4
+    instance["_representation_payload"]["side"] = 4
+
+    repaired = repair_instance_for_representation(
+        "unit_square",
+        representation,
+        instance,
+        grid=8,
+        n_min=8,
+        n_max=24,
+    )
+
+    assert repaired["side"] == 2
+    assert repaired["_representation_payload"]["side"] == 2
+    assert repaired["_representation_payload"]["side_rule"] == "fixed_Q2"
+
+
 def test_symmetry_crossover_hillclimb_is_exact_nonworsening():
     cases = (
         ("misr", "triangle_free_rect"),

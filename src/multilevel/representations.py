@@ -958,7 +958,7 @@ def _unit_square_instance(representation: str, rng: random.Random, *, n: int, gr
     if representation == "sqstab_exact_grid":
         return _unit_square_sqstab_exact_grid(rng, n=n, grid=grid)
     if representation == "fixed_symmetry_grid":
-        side = 2 if grid >= 2 else 1
+        side = _fixed_symmetry_grid_side(grid)
         squares = _canonicalize_d4_squares(_random_unique_squares(rng, n=max(1, n), grid=grid))
         return _tag(
             {"schema": "unit_square_instance_v1", "squares": squares, "side": side},
@@ -977,6 +977,10 @@ def _unit_square_instance(representation: str, rng: random.Random, *, n: int, gr
 def _unit_square_side(instance: dict[str, Any], *, grid: int) -> int:
     raw = instance.get("side", 1)
     return max(1, min(max(1, grid + 2), _to_int(raw, 1)))
+
+
+def _fixed_symmetry_grid_side(grid: int) -> int:
+    return 2 if grid >= 2 else 1
 
 
 def _normalize_square_coordinates(squares: list[list[int]]) -> list[list[int]]:
@@ -1078,6 +1082,7 @@ def _repair_unit_square(
 ) -> dict[str, Any]:
     side = _unit_square_side(instance, grid=grid)
     if representation == "fixed_symmetry_grid":
+        side = _fixed_symmetry_grid_side(grid)
         target_n = _fixed_representation_target(instance, n_min=n_min, n_max=n_max)
         capacity = (grid + 1) ** 2
         if target_n > capacity:
