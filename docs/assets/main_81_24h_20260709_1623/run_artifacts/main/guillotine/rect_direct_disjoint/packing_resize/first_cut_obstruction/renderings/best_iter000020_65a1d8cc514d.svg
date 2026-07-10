@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="640" viewBox="0 0 900 640">
+<title>Guillotine score=0.125 saved=14 n=16</title>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<rect x="79.799" y="370.847" width="41.133" height="203.39" fill="#38bdf8" fill-opacity="0.34" stroke="#075985" stroke-width="1.4"/>
+<text x="79.799" y="370.847" font-size="13" font-family="monospace" fill="#111827">0</text>
+<rect x="79.799" y="99.661" width="82.267" height="203.39" fill="#38bdf8" fill-opacity="0.34" stroke="#075985" stroke-width="1.4"/>
+<text x="79.799" y="99.661" font-size="13" font-family="monospace" fill="#111827">1</text>
+<rect x="120.932" y="438.644" width="41.133" height="101.695" fill="#38bdf8" fill-opacity="0.34" stroke="#075985" stroke-width="1.4"/>
+<text x="120.932" y="438.644" font-size="13" font-family="monospace" fill="#111827">2</text>
+<rect x="120.932" y="404.746" width="82.267" height="33.898" fill="#38bdf8" fill-opacity="0.34" stroke="#075985" stroke-width="1.4"/>
+<text x="120.932" y="404.746" font-size="13" font-family="monospace" fill="#111827">3</text>
+<rect x="162.066" y="540.339" width="575.868" height="33.898" fill="#38bdf8" fill-opacity="0.34" stroke="#075985" stroke-width="1.4"/>
+<text x="162.066" y="540.339" font-size="13" font-family="monospace" fill="#111827">4</text>
+<rect x="162.066" y="99.661" width="82.267" height="305.085" fill="#38bdf8" fill-opacity="0.34" stroke="#075985" stroke-width="1.4"/>
+<text x="162.066" y="99.661" font-size="13" font-family="monospace" fill="#111827">5</text>
+<rect x="203.199" y="472.542" width="123.4" height="33.898" fill="#38bdf8" fill-opacity="0.34" stroke="#075985" stroke-width="1.4"/>
+<text x="203.199" y="472.542" font-size="13" font-family="monospace" fill="#111827">6</text>
+<rect x="244.333" y="133.559" width="82.267" height="33.898" fill="#38bdf8" fill-opacity="0.34" stroke="#075985" stroke-width="1.4"/>
+<text x="244.333" y="133.559" font-size="13" font-family="monospace" fill="#111827">7</text>
+<rect x="285.466" y="506.441" width="123.4" height="33.898" fill="#38bdf8" fill-opacity="0.34" stroke="#075985" stroke-width="1.4"/>
+<text x="285.466" y="506.441" font-size="13" font-family="monospace" fill="#111827">8</text>
+<rect x="285.466" y="303.051" width="41.133" height="169.492" fill="#38bdf8" fill-opacity="0.34" stroke="#075985" stroke-width="1.4"/>
+<text x="285.466" y="303.051" font-size="13" font-family="monospace" fill="#111827">9</text>
+<rect x="367.733" y="201.356" width="82.267" height="67.797" fill="#38bdf8" fill-opacity="0.34" stroke="#075985" stroke-width="1.4"/>
+<text x="367.733" y="201.356" font-size="13" font-family="monospace" fill="#111827">10</text>
+<rect x="408.867" y="133.559" width="205.667" height="33.898" fill="#38bdf8" fill-opacity="0.34" stroke="#075985" stroke-width="1.4"/>
+<text x="408.867" y="133.559" font-size="13" font-family="monospace" fill="#111827">11</text>
+<rect x="491.133" y="235.254" width="41.133" height="305.085" fill="#38bdf8" fill-opacity="0.34" stroke="#075985" stroke-width="1.4"/>
+<text x="491.133" y="235.254" font-size="13" font-family="monospace" fill="#111827">12</text>
+<rect x="573.4" y="65.763" width="82.267" height="67.797" fill="#38bdf8" fill-opacity="0.34" stroke="#075985" stroke-width="1.4"/>
+<text x="573.4" y="65.763" font-size="13" font-family="monospace" fill="#111827">13</text>
+<rect x="696.801" y="99.661" width="41.133" height="33.898" fill="#38bdf8" fill-opacity="0.34" stroke="#075985" stroke-width="1.4"/>
+<text x="696.801" y="99.661" font-size="13" font-family="monospace" fill="#111827">14</text>
+<rect x="779.068" y="167.458" width="41.133" height="169.492" fill="#38bdf8" fill-opacity="0.34" stroke="#075985" stroke-width="1.4"/>
+<text x="779.068" y="167.458" font-size="13" font-family="monospace" fill="#111827">15</text>
+<line x1="120.932" y1="640" x2="120.932" y2="0" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="8 5"/>
+<line x1="737.934" y1="640" x2="737.934" y2="0" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="8 5"/>
+<line x1="120.932" y1="540.339" x2="737.934" y2="540.339" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="8 5"/>
+<line x1="203.199" y1="540.339" x2="203.199" y2="0" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="8 5"/>
+<line x1="120.932" y1="438.644" x2="203.199" y2="438.644" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="8 5"/>
+<line x1="655.667" y1="540.339" x2="655.667" y2="0" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="8 5"/>
+<line x1="203.199" y1="201.356" x2="655.667" y2="201.356" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="8 5"/>
+<line x1="450" y1="540.339" x2="450" y2="201.356" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="8 5"/>
+<line x1="203.199" y1="506.441" x2="450" y2="506.441" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="8 5"/>
+<line x1="326.6" y1="506.441" x2="326.6" y2="201.356" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="8 5"/>
+<line x1="203.199" y1="472.542" x2="326.6" y2="472.542" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="8 5"/>
+<line x1="326.6" y1="201.356" x2="326.6" y2="0" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="8 5"/>
+<line x1="326.6" y1="133.559" x2="655.667" y2="133.559" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="8 5"/>
+</svg>

@@ -13,6 +13,10 @@ Two exploratory appendix tasks are also implemented and audited separately:
 - `epsilon_net`: finite halfplane epsilon-net lower-bound rediscovery
 - `graph_separation`: rectangle graphs versus bounded mixed square/segment representations
 
+The repository also contains `formulaboost`, a separate finite-to-family
+discovery prototype. It is documented in [docs/FORMULABOOST.md](docs/FORMULABOOST.md)
+and does not contribute evidence to the three-problem PatternBoost matrix.
+
 The code generates random search instances, scores every reported candidate
 with an exact problem-specific verifier, writes certificate JSON files, and
 keeps checkpointable PatternBoost runs for local or NYUAD Jubail HPC execution.
@@ -22,6 +26,8 @@ keeps checkpointable PatternBoost runs for local or NYUAD Jubail HPC execution.
 ```text
 src/multilevel/          Python package and CLI
 src/multilevel/scorers/  exact scorers and certificate verifiers
+src/formulaboost/        finite-to-family FormulaBoost prototype
+configs/                 FormulaBoost and experiment configuration files
 examples/               tiny explicit examples for smoke tests only
 scripts/                local, HPC, collection, and monitoring helpers
 tests/                  pytest regression tests
@@ -130,33 +136,33 @@ See [docs/HPC_JUBAIL.md](docs/HPC_JUBAIL.md) for the full step-by-step HPC
 workflow, including smoke tests, generated Slurm arrays, exploratory runs,
 resume commands, collection, and audit.
 
-## Final Submission Evidence
+## Final 81-Cell Evidence
 
-The final audited submission run completed on NYUAD Jubail on 2026-07-09 from
-deployed commit `8dd31ca1c8888dff0f1975ccbd38963d73b78b38`.
+The final audited 81-cell matrix completed on NYUAD Jubail on 2026-07-09 from
+commit `20750a588a5b5d8e744689b9efa7538b5eaab26b`. It has one independently
+generated run for each of the $3 \times 3 \times 3$ component combinations per
+problem and no repeated-seed axis.
 
-Fresh final-array certified values:
+The best exact audited values in this matrix are:
 
 ```text
 misr         1.5
 unit_square 1.5000000000000004
-guillotine  0.25
+guillotine  0.3333333333333333
 ```
 
-The repository also preserves a reverified previous-best guillotine certificate
-with score `0.3`; it is documented separately because it was not rediscovered
-by the fresh final record array.
+All 81 saved certificates pass the post-run exact audit. The complete evidence
+bundle, including compact learning curves, all saved certificates, construction
+renderings, figures, and generated tables, is stored in
+[docs/assets/main_81_24h_20260709_1623](docs/assets/main_81_24h_20260709_1623).
 
-Compact final artifacts are preserved at
-[docs/assets/final_submission_20260708_131302](docs/assets/final_submission_20260708_131302),
-including summaries, audits, best certificates, construction figures, and
-learning-curve data. See [docs/RESULTS.md](docs/RESULTS.md) for the exact job
-and audit snapshot.
-
-The formal LaTeX/PDF report is available at
-[docs/manuscript/patternboost_experiment_report.tex](docs/manuscript/patternboost_experiment_report.tex)
-and
-[docs/manuscript/patternboost_experiment_report.pdf](docs/manuscript/patternboost_experiment_report.pdf).
+The full 81-cell report is available as
+[PDF](docs/manuscript/patternboost_81_run_analysis.pdf) and
+[TeX source](docs/manuscript/patternboost_81_run_analysis.tex). It includes
+27 configuration trajectories for each problem, component analyses, exact
+construction figures, and a detailed limitations study. See
+[docs/FINAL_81_ANALYSIS.md](docs/FINAL_81_ANALYSIS.md) for an artifact map and
+rebuild commands.
 
 The separately audited exploratory run produced:
 

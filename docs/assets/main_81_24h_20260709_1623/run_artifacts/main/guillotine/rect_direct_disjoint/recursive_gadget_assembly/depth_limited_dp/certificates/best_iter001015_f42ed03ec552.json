@@ -1,0 +1,387 @@
+{
+  "candidate_id": "d6bcce58f727d391b3ac15f3ed8f36aa475ffa147abb65b7c872da22aca767bc",
+  "certificate_hash": "f42ed03ec552b82dd78dc7c66f81b21d3965f403d0c1bf17507453ef16ab8a76",
+  "control_mode": "patternboost",
+  "created_at": "2026-07-09T15:19:16.516850+00:00",
+  "dependency_versions": {
+    "numpy": "2.0.2",
+    "scipy": "1.13.1",
+    "torch": "2.8.0+cu128"
+  },
+  "destroyed": 3,
+  "dp_states": 552,
+  "exact_runtime_seconds": 1.0991412699222565,
+  "first_cut_destroyed_fraction": 0.0,
+  "generation": 1015,
+  "git_commit": "",
+  "git_dirty": null,
+  "hardware": {
+    "platform": "Linux-4.18.0-193.6.3.el8_2.x86_64-x86_64-with-glibc2.28",
+    "python": "3.11.3"
+  },
+  "local_search": "recursive_gadget_assembly",
+  "n": 20,
+  "optimal_strategy": {
+    "axis": "vertical",
+    "coordinate": "1",
+    "destroyed": [
+      0
+    ],
+    "high": {
+      "axis": "vertical",
+      "coordinate": "5",
+      "destroyed": [],
+      "high": {
+        "axis": "vertical",
+        "coordinate": "6",
+        "destroyed": [],
+        "high": {
+          "axis": "vertical",
+          "coordinate": "7",
+          "destroyed": [],
+          "high": {
+            "axis": "vertical",
+            "coordinate": "8",
+            "destroyed": [],
+            "high": {
+              "axis": "vertical",
+              "coordinate": "9",
+              "destroyed": [
+                13
+              ],
+              "high": {
+                "axis": "vertical",
+                "coordinate": "14",
+                "destroyed": [
+                  18
+                ],
+                "high": {
+                  "rectangles": [
+                    19
+                  ],
+                  "type": "leaf"
+                },
+                "low": {
+                  "axis": "horizontal",
+                  "coordinate": "8",
+                  "destroyed": [],
+                  "high": {
+                    "axis": "horizontal",
+                    "coordinate": "9",
+                    "destroyed": [],
+                    "high": {
+                      "axis": "vertical",
+                      "coordinate": "10",
+                      "destroyed": [],
+                      "high": {
+                        "rectangles": [
+                          17
+                        ],
+                        "type": "leaf"
+                      },
+                      "low": {
+                        "rectangles": [
+                          15
+                        ],
+                        "type": "leaf"
+                      },
+                      "type": "cut"
+                    },
+                    "low": {
+                      "rectangles": [
+                        14
+                      ],
+                      "type": "leaf"
+                    },
+                    "type": "cut"
+                  },
+                  "low": {
+                    "rectangles": [
+                      16
+                    ],
+                    "type": "leaf"
+                  },
+                  "type": "cut"
+                },
+                "type": "cut"
+              },
+              "low": {
+                "rectangles": [
+                  12
+                ],
+                "type": "leaf"
+              },
+              "type": "cut"
+            },
+            "low": {
+              "rectangles": [
+                11
+              ],
+              "type": "leaf"
+            },
+            "type": "cut"
+          },
+          "low": {
+            "rectangles": [
+              10
+            ],
+            "type": "leaf"
+          },
+          "type": "cut"
+        },
+        "low": {
+          "axis": "horizontal",
+          "coordinate": "1",
+          "destroyed": [],
+          "high": {
+            "axis": "horizontal",
+            "coordinate": "2",
+            "destroyed": [],
+            "high": {
+              "rectangles": [
+                9
+              ],
+              "type": "leaf"
+            },
+            "low": {
+              "rectangles": [
+                8
+              ],
+              "type": "leaf"
+            },
+            "type": "cut"
+          },
+          "low": {
+            "rectangles": [
+              7
+            ],
+            "type": "leaf"
+          },
+          "type": "cut"
+        },
+        "type": "cut"
+      },
+      "low": {
+        "axis": "horizontal",
+        "coordinate": "4",
+        "destroyed": [],
+        "high": {
+          "axis": "horizontal",
+          "coordinate": "5",
+          "destroyed": [],
+          "high": {
+            "rectangles": [
+              6
+            ],
+            "type": "leaf"
+          },
+          "low": {
+            "rectangles": [
+              2
+            ],
+            "type": "leaf"
+          },
+          "type": "cut"
+        },
+        "low": {
+          "axis": "vertical",
+          "coordinate": "3",
+          "destroyed": [],
+          "high": {
+            "axis": "vertical",
+            "coordinate": "4",
+            "destroyed": [],
+            "high": {
+              "rectangles": [
+                5
+              ],
+              "type": "leaf"
+            },
+            "low": {
+              "rectangles": [
+                4
+              ],
+              "type": "leaf"
+            },
+            "type": "cut"
+          },
+          "low": {
+            "rectangles": [
+              3
+            ],
+            "type": "leaf"
+          },
+          "type": "cut"
+        },
+        "type": "cut"
+      },
+      "type": "cut"
+    },
+    "low": {
+      "rectangles": [
+        1
+      ],
+      "type": "leaf"
+    },
+    "type": "cut"
+  },
+  "problem": "guillotine",
+  "rectangles": [
+    [
+      0,
+      3,
+      0,
+      1
+    ],
+    [
+      0,
+      1,
+      2,
+      6
+    ],
+    [
+      1,
+      5,
+      4,
+      5
+    ],
+    [
+      2,
+      3,
+      2,
+      3
+    ],
+    [
+      3,
+      4,
+      0,
+      4
+    ],
+    [
+      4,
+      5,
+      0,
+      1
+    ],
+    [
+      4,
+      5,
+      7,
+      8
+    ],
+    [
+      5,
+      6,
+      0,
+      1
+    ],
+    [
+      5,
+      6,
+      1,
+      2
+    ],
+    [
+      5,
+      6,
+      5,
+      6
+    ],
+    [
+      6,
+      7,
+      0,
+      1
+    ],
+    [
+      7,
+      8,
+      1,
+      8
+    ],
+    [
+      8,
+      9,
+      8,
+      11
+    ],
+    [
+      8,
+      10,
+      11,
+      12
+    ],
+    [
+      9,
+      14,
+      8,
+      9
+    ],
+    [
+      9,
+      10,
+      9,
+      10
+    ],
+    [
+      10,
+      12,
+      2,
+      8
+    ],
+    [
+      11,
+      13,
+      9,
+      12
+    ],
+    [
+      12,
+      16,
+      2,
+      4
+    ],
+    [
+      15,
+      16,
+      7,
+      10
+    ]
+  ],
+  "representation": "rect_direct_disjoint",
+  "saved": 17,
+  "schema": "guillotine_certificate_v1",
+  "score": 0.15,
+  "solver": {
+    "cache": "functools.lru_cache",
+    "cut_coordinates": "rectangle_boundaries_and_open_interval_midpoints",
+    "solver": "exact_recursive_guillotine_dynamic_program",
+    "state_key": "rectangle_subset_bitmask",
+    "tolerance": 0.0
+  },
+  "solver_status": "optimal",
+  "source_type": "local_mutation",
+  "surrogate": "depth_limited_dp",
+  "threshold_exact": false,
+  "threshold_k": 11,
+  "threshold_nonseparable_fraction": 0.939453125,
+  "threshold_separable_count": 62,
+  "threshold_target_met": false,
+  "threshold_total_checked": 1024,
+  "threshold_total_k_subsets": 1024,
+  "threshold_witness_indices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ],
+  "threshold_witness_mask": 4094,
+  "tool_version": "0.1.0"
+}

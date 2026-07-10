@@ -1,0 +1,229 @@
+{
+  "candidate_id": "0eda2a3a9ae30016656175768ee638e009f4bc6311edfb5f4f2985afe9a50013",
+  "certificate_hash": "257e8c909d28868a75c70fe99b9a0fd185ab22f20ac49ac7f5f4c2a62c3509c3",
+  "control_mode": "patternboost",
+  "created_at": "2026-07-10T06:01:26.452768+00:00",
+  "dependency_versions": {
+    "numpy": "2.0.2",
+    "scipy": "1.13.1",
+    "torch": "2.8.0+cu128"
+  },
+  "destroyed": 3,
+  "dp_states": 117,
+  "exact_runtime_seconds": 0.10325488448143005,
+  "first_cut_destroyed_fraction": 0.09090909090909091,
+  "generation": 5215,
+  "git_commit": "",
+  "git_dirty": null,
+  "hardware": {
+    "platform": "Linux-4.18.0-193.6.3.el8_2.x86_64-x86_64-with-glibc2.28",
+    "python": "3.11.3"
+  },
+  "local_search": "packing_resize",
+  "n": 11,
+  "optimal_strategy": {
+    "axis": "vertical",
+    "coordinate": "1/2",
+    "destroyed": [
+      0,
+      1
+    ],
+    "high": {
+      "axis": "vertical",
+      "coordinate": "2",
+      "destroyed": [],
+      "high": {
+        "axis": "horizontal",
+        "coordinate": "7",
+        "destroyed": [
+          9
+        ],
+        "high": {
+          "axis": "vertical",
+          "coordinate": "7",
+          "destroyed": [],
+          "high": {
+            "rectangles": [
+              8
+            ],
+            "type": "leaf"
+          },
+          "low": {
+            "rectangles": [
+              6
+            ],
+            "type": "leaf"
+          },
+          "type": "cut"
+        },
+        "low": {
+          "axis": "vertical",
+          "coordinate": "9",
+          "destroyed": [],
+          "high": {
+            "rectangles": [
+              10
+            ],
+            "type": "leaf"
+          },
+          "low": {
+            "axis": "horizontal",
+            "coordinate": "1",
+            "destroyed": [],
+            "high": {
+              "axis": "vertical",
+              "coordinate": "6",
+              "destroyed": [],
+              "high": {
+                "rectangles": [
+                  7
+                ],
+                "type": "leaf"
+              },
+              "low": {
+                "axis": "horizontal",
+                "coordinate": "5",
+                "destroyed": [],
+                "high": {
+                  "rectangles": [
+                    4
+                  ],
+                  "type": "leaf"
+                },
+                "low": {
+                  "rectangles": [
+                    5
+                  ],
+                  "type": "leaf"
+                },
+                "type": "cut"
+              },
+              "type": "cut"
+            },
+            "low": {
+              "rectangles": [
+                3
+              ],
+              "type": "leaf"
+            },
+            "type": "cut"
+          },
+          "type": "cut"
+        },
+        "type": "cut"
+      },
+      "low": {
+        "rectangles": [
+          2
+        ],
+        "type": "leaf"
+      },
+      "type": "cut"
+    },
+    "low": {
+      "rectangles": [],
+      "type": "leaf"
+    },
+    "type": "cut"
+  },
+  "problem": "guillotine",
+  "rectangles": [
+    [
+      0,
+      4,
+      2,
+      3
+    ],
+    [
+      0,
+      3,
+      3,
+      9
+    ],
+    [
+      1,
+      2,
+      0,
+      2
+    ],
+    [
+      2,
+      9,
+      0,
+      1
+    ],
+    [
+      3,
+      6,
+      5,
+      6
+    ],
+    [
+      4,
+      5,
+      1,
+      5
+    ],
+    [
+      5,
+      7,
+      8,
+      10
+    ],
+    [
+      6,
+      8,
+      1,
+      7
+    ],
+    [
+      7,
+      10,
+      9,
+      10
+    ],
+    [
+      8,
+      10,
+      4,
+      9
+    ],
+    [
+      9,
+      10,
+      0,
+      4
+    ]
+  ],
+  "representation": "sequence_pair_packing",
+  "saved": 8,
+  "schema": "guillotine_certificate_v1",
+  "score": 0.2727272727272727,
+  "solver": {
+    "cache": "functools.lru_cache",
+    "cut_coordinates": "rectangle_boundaries_and_open_interval_midpoints",
+    "solver": "exact_recursive_guillotine_dynamic_program",
+    "state_key": "rectangle_subset_bitmask",
+    "tolerance": 0.0
+  },
+  "solver_status": "optimal",
+  "source_type": "local_mutation",
+  "surrogate": "depth_limited_dp",
+  "threshold_exact": true,
+  "threshold_k": 6,
+  "threshold_nonseparable_fraction": 0.3311688311688312,
+  "threshold_separable_count": 309,
+  "threshold_target_met": false,
+  "threshold_total_checked": 462,
+  "threshold_total_k_subsets": 462,
+  "threshold_witness_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    6
+  ],
+  "threshold_witness_mask": 95,
+  "tool_version": "0.1.0"
+}

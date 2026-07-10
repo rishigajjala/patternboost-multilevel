@@ -1,0 +1,444 @@
+{
+  "candidate_id": "6ad11a7c1bb65f576f3bc2c5b797da23d2c910aa148ef348a6f48b7a9f3eedd4",
+  "certificate_hash": "e4f9fff0c2fdb32db9a57336ace41fc1263fee335d16f8215db34b880bda7712",
+  "control_mode": "patternboost",
+  "created_at": "2026-07-09T12:37:13.273973+00:00",
+  "critical_lines": [
+    {
+      "axis": "vertical",
+      "coordinate": 1,
+      "id": "v0"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 3,
+      "id": "v1"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 6,
+      "id": "v2"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 7,
+      "id": "v3"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": "15/2",
+      "id": "v4"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 8,
+      "id": "v5"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": "17/2",
+      "id": "v6"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 2,
+      "id": "h0"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 3,
+      "id": "h1"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "7/2",
+      "id": "h2"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 4,
+      "id": "h3"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "9/2",
+      "id": "h4"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 5,
+      "id": "h5"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "11/2",
+      "id": "h6"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 6,
+      "id": "h7"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "13/2",
+      "id": "h8"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 7,
+      "id": "h9"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "15/2",
+      "id": "h10"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 8,
+      "id": "h11"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "17/2",
+      "id": "h12"
+    }
+  ],
+  "dependency_versions": {
+    "numpy": "2.0.2",
+    "scipy": "1.13.1",
+    "torch": "2.8.0+cu128"
+  },
+  "exact_runtime_seconds": 0.0030047540203668177,
+  "generation": 235,
+  "git_commit": "",
+  "git_dirty": null,
+  "hardware": {
+    "platform": "Linux-4.18.0-193.6.3.el8_2.x86_64-x86_64-with-glibc2.28",
+    "python": "3.11.3"
+  },
+  "incidence": [
+    [
+      "v0",
+      "h5",
+      "h6",
+      "h7"
+    ],
+    [
+      "v1",
+      "h9",
+      "h10",
+      "h11"
+    ],
+    [
+      "v5",
+      "v6",
+      "h3",
+      "h4",
+      "h5"
+    ],
+    [
+      "v5",
+      "v6",
+      "h9",
+      "h10",
+      "h11"
+    ],
+    [
+      "v5",
+      "v6",
+      "h0",
+      "h1"
+    ],
+    [
+      "v5",
+      "v6",
+      "h7",
+      "h8",
+      "h9"
+    ],
+    [
+      "v5",
+      "v6",
+      "h5",
+      "h6",
+      "h7"
+    ],
+    [
+      "v5",
+      "v6",
+      "h0",
+      "h1"
+    ],
+    [
+      "v5",
+      "v6",
+      "h7",
+      "h8",
+      "h9"
+    ],
+    [
+      "v2",
+      "v3",
+      "h1",
+      "h2",
+      "h3"
+    ],
+    [
+      "v5",
+      "v6",
+      "h0",
+      "h1"
+    ],
+    [
+      "v5",
+      "v6",
+      "h7",
+      "h8",
+      "h9"
+    ],
+    [
+      "v5",
+      "v6",
+      "h0",
+      "h1"
+    ],
+    [
+      "v5",
+      "v6",
+      "h7",
+      "h8",
+      "h9"
+    ],
+    [
+      "v3",
+      "v4",
+      "v5",
+      "h11",
+      "h12"
+    ],
+    [
+      "v5",
+      "v6",
+      "h0",
+      "h1"
+    ],
+    [
+      "v3",
+      "v4",
+      "v5",
+      "h3",
+      "h4",
+      "h5"
+    ],
+    [
+      "v5",
+      "v6",
+      "h5",
+      "h6",
+      "h7"
+    ],
+    [
+      "v5",
+      "v6",
+      "h1",
+      "h2",
+      "h3"
+    ],
+    [
+      "v5",
+      "v6",
+      "h3",
+      "h4",
+      "h5"
+    ],
+    [
+      "v3",
+      "v4",
+      "v5",
+      "h11",
+      "h12"
+    ],
+    [
+      "v3",
+      "v4",
+      "v5",
+      "h0",
+      "h1"
+    ],
+    [
+      "v5",
+      "v6",
+      "h3",
+      "h4",
+      "h5"
+    ],
+    [
+      "v3",
+      "v4",
+      "v5",
+      "h3",
+      "h4",
+      "h5"
+    ]
+  ],
+  "integer_lines": [
+    "v0",
+    "v1",
+    "v2",
+    "v5"
+  ],
+  "line_count": 20,
+  "local_search": "coord_mutation",
+  "lp_dual": {
+    "square_0": 0.75,
+    "square_1": 0.75,
+    "square_10": 0.0,
+    "square_11": 0.0,
+    "square_12": 0.0,
+    "square_13": 0.0,
+    "square_14": 0.25,
+    "square_15": 0.0,
+    "square_16": 0.0,
+    "square_17": 0.0,
+    "square_18": 0.0,
+    "square_19": 0.0,
+    "square_2": 0.25,
+    "square_20": 0.0,
+    "square_21": 0.0,
+    "square_22": 0.0,
+    "square_23": 0.0,
+    "square_3": 0.0,
+    "square_4": 0.25,
+    "square_5": 0.25,
+    "square_6": 0.0,
+    "square_7": 0.0,
+    "square_8": 0.0,
+    "square_9": 0.75
+  },
+  "lp_primal": {
+    "h1": 0.75,
+    "h11": 0.5,
+    "h5": 0.75,
+    "h7": 0.25,
+    "h9": 0.5,
+    "v3": 0.25,
+    "v5": 0.25
+  },
+  "problem": "unit_square",
+  "representation": "line_square_incidence",
+  "schema": "unit_square_stab_certificate_v1",
+  "score": 1.2307692307692308,
+  "side": 1,
+  "solver": {
+    "integer_solver": "exact_branch_and_bound_set_cover",
+    "lp_method": "highs",
+    "lp_solver": "scipy.optimize.linprog",
+    "tolerance": 1e-08
+  },
+  "solver_status": "optimal",
+  "source_type": "local_mutation",
+  "squares": [
+    [
+      1,
+      5
+    ],
+    [
+      3,
+      7
+    ],
+    [
+      8,
+      4
+    ],
+    [
+      8,
+      7
+    ],
+    [
+      8,
+      2
+    ],
+    [
+      8,
+      6
+    ],
+    [
+      8,
+      5
+    ],
+    [
+      8,
+      2
+    ],
+    [
+      8,
+      6
+    ],
+    [
+      6,
+      3
+    ],
+    [
+      8,
+      2
+    ],
+    [
+      8,
+      6
+    ],
+    [
+      8,
+      2
+    ],
+    [
+      8,
+      6
+    ],
+    [
+      7,
+      8
+    ],
+    [
+      8,
+      2
+    ],
+    [
+      7,
+      4
+    ],
+    [
+      8,
+      5
+    ],
+    [
+      8,
+      3
+    ],
+    [
+      8,
+      4
+    ],
+    [
+      7,
+      8
+    ],
+    [
+      7,
+      2
+    ],
+    [
+      8,
+      4
+    ],
+    [
+      7,
+      4
+    ]
+  ],
+  "surrogate": "greedy_partial_lp_bitset",
+  "tau_int": 4,
+  "tau_lp": 3.25,
+  "tool_version": "0.1.0"
+}

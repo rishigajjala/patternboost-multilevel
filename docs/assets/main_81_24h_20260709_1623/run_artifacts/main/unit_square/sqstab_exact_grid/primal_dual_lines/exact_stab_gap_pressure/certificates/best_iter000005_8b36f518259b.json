@@ -1,0 +1,318 @@
+{
+  "candidate_id": "c4ad8cd2c22356e312e5dcf6cb0f2125eb8c6e039a024c01fe9dc1047afe90c2",
+  "certificate_hash": "8b36f518259b353ee7d51b3ac3d94017ee8c04585cccc71dce1a6b93a79ee408",
+  "control_mode": "patternboost",
+  "created_at": "2026-07-09T12:27:59.355612+00:00",
+  "critical_lines": [
+    {
+      "axis": "vertical",
+      "coordinate": 0,
+      "id": "v0"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 1,
+      "id": "v1"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": "3/2",
+      "id": "v2"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 2,
+      "id": "v3"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": "5/2",
+      "id": "v4"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 3,
+      "id": "v5"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": "7/2",
+      "id": "v6"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 4,
+      "id": "v7"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": "9/2",
+      "id": "v8"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 5,
+      "id": "v9"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": "11/2",
+      "id": "v10"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 6,
+      "id": "v11"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": "13/2",
+      "id": "v12"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 0,
+      "id": "h0"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 1,
+      "id": "h1"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "3/2",
+      "id": "h2"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 2,
+      "id": "h3"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "5/2",
+      "id": "h4"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 3,
+      "id": "h5"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "7/2",
+      "id": "h6"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 4,
+      "id": "h7"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "9/2",
+      "id": "h8"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 5,
+      "id": "h9"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "11/2",
+      "id": "h10"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 6,
+      "id": "h11"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "13/2",
+      "id": "h12"
+    }
+  ],
+  "dependency_versions": {
+    "numpy": "2.0.2",
+    "scipy": "1.13.1",
+    "torch": "2.8.0+cu128"
+  },
+  "exact_runtime_seconds": 0.0020257383584976196,
+  "generation": 5,
+  "git_commit": "",
+  "git_dirty": null,
+  "hardware": {
+    "platform": "Linux-4.18.0-193.6.3.el8_2.x86_64-x86_64-with-glibc2.28",
+    "python": "3.11.3"
+  },
+  "incidence": [
+    [
+      "v0",
+      "v1",
+      "h9",
+      "h10",
+      "h11"
+    ],
+    [
+      "v1",
+      "v2",
+      "v3",
+      "h0",
+      "h1"
+    ],
+    [
+      "v3",
+      "v4",
+      "v5",
+      "h11",
+      "h12"
+    ],
+    [
+      "v5",
+      "v6",
+      "v7",
+      "h5",
+      "h6",
+      "h7"
+    ],
+    [
+      "v5",
+      "v6",
+      "v7",
+      "h9",
+      "h10",
+      "h11"
+    ],
+    [
+      "v7",
+      "v8",
+      "v9",
+      "h1",
+      "h2",
+      "h3"
+    ],
+    [
+      "v7",
+      "v8",
+      "v9",
+      "h3",
+      "h4",
+      "h5"
+    ],
+    [
+      "v7",
+      "v8",
+      "v9",
+      "h7",
+      "h8",
+      "h9"
+    ],
+    [
+      "v9",
+      "v10",
+      "v11",
+      "h5",
+      "h6",
+      "h7"
+    ],
+    [
+      "v11",
+      "v12",
+      "h9",
+      "h10",
+      "h11"
+    ]
+  ],
+  "integer_lines": [
+    "v1",
+    "v7",
+    "v9",
+    "h11"
+  ],
+  "line_count": 26,
+  "local_search": "primal_dual_lines",
+  "lp_dual": {
+    "square_0": 0.19999999999999996,
+    "square_1": 0.8,
+    "square_2": 0.2,
+    "square_3": 0.4,
+    "square_4": 0.0,
+    "square_5": 0.2,
+    "square_6": 0.2,
+    "square_7": 0.2,
+    "square_8": 0.39999999999999997,
+    "square_9": 0.6000000000000001
+  },
+  "lp_primal": {
+    "h1": 0.6000000000000001,
+    "h11": 0.6000000000000001,
+    "h5": 0.6000000000000001,
+    "h7": 0.2,
+    "h9": 0.3999999999999999,
+    "v3": 0.3999999999999999,
+    "v7": 0.2,
+    "v9": 0.19999999999999996
+  },
+  "problem": "unit_square",
+  "representation": "sqstab_exact_grid",
+  "schema": "unit_square_stab_certificate_v1",
+  "score": 1.25,
+  "side": 1,
+  "solver": {
+    "integer_solver": "exact_branch_and_bound_set_cover",
+    "lp_method": "highs",
+    "lp_solver": "scipy.optimize.linprog",
+    "tolerance": 1e-08
+  },
+  "solver_status": "optimal",
+  "source_type": "local_mutation",
+  "squares": [
+    [
+      0,
+      5
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      2,
+      6
+    ],
+    [
+      3,
+      3
+    ],
+    [
+      3,
+      5
+    ],
+    [
+      4,
+      1
+    ],
+    [
+      4,
+      2
+    ],
+    [
+      4,
+      4
+    ],
+    [
+      5,
+      3
+    ],
+    [
+      6,
+      5
+    ]
+  ],
+  "surrogate": "exact_stab_gap_pressure",
+  "tau_int": 4,
+  "tau_lp": 3.2,
+  "tool_version": "0.1.0"
+}

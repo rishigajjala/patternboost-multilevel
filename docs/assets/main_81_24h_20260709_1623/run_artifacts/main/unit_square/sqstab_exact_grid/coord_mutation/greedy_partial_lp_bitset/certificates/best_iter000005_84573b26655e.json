@@ -1,0 +1,469 @@
+{
+  "candidate_id": "18dc8c7a790557ee006d77116418020ac38bb882e9832a4a90ccfa2e5d50407e",
+  "certificate_hash": "84573b26655e5fee475eb3e7ddc0a63054ee430010ca020642fae9230d883038",
+  "control_mode": "patternboost",
+  "created_at": "2026-07-09T12:27:59.989393+00:00",
+  "critical_lines": [
+    {
+      "axis": "vertical",
+      "coordinate": 0,
+      "id": "v0"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 2,
+      "id": "v1"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 3,
+      "id": "v2"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": "7/2",
+      "id": "v3"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 4,
+      "id": "v4"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": "9/2",
+      "id": "v5"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 5,
+      "id": "v6"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": "11/2",
+      "id": "v7"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 6,
+      "id": "v8"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": "13/2",
+      "id": "v9"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 7,
+      "id": "v10"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": "15/2",
+      "id": "v11"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 8,
+      "id": "v12"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": "17/2",
+      "id": "v13"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 0,
+      "id": "h0"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 1,
+      "id": "h1"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "3/2",
+      "id": "h2"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 2,
+      "id": "h3"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "5/2",
+      "id": "h4"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 3,
+      "id": "h5"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "7/2",
+      "id": "h6"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 4,
+      "id": "h7"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "9/2",
+      "id": "h8"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 5,
+      "id": "h9"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "11/2",
+      "id": "h10"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 6,
+      "id": "h11"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "13/2",
+      "id": "h12"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 7,
+      "id": "h13"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "15/2",
+      "id": "h14"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 8,
+      "id": "h15"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "17/2",
+      "id": "h16"
+    }
+  ],
+  "dependency_versions": {
+    "numpy": "2.0.2",
+    "scipy": "1.13.1",
+    "torch": "2.8.0+cu128"
+  },
+  "exact_runtime_seconds": 0.003942781942896545,
+  "generation": 5,
+  "git_commit": "",
+  "git_dirty": null,
+  "hardware": {
+    "platform": "Linux-4.18.0-193.6.3.el8_2.x86_64-x86_64-with-glibc2.28",
+    "python": "3.11.3"
+  },
+  "incidence": [
+    [
+      "v0",
+      "h9",
+      "h10",
+      "h11"
+    ],
+    [
+      "v1",
+      "v2",
+      "h5",
+      "h6",
+      "h7"
+    ],
+    [
+      "v1",
+      "v2",
+      "h7",
+      "h8",
+      "h9"
+    ],
+    [
+      "v1",
+      "v2",
+      "h15",
+      "h16"
+    ],
+    [
+      "v2",
+      "v3",
+      "v4",
+      "h0",
+      "h1"
+    ],
+    [
+      "v2",
+      "v3",
+      "v4",
+      "h5",
+      "h6",
+      "h7"
+    ],
+    [
+      "v2",
+      "v3",
+      "v4",
+      "h7",
+      "h8",
+      "h9"
+    ],
+    [
+      "v2",
+      "v3",
+      "v4",
+      "h11",
+      "h12",
+      "h13"
+    ],
+    [
+      "v4",
+      "v5",
+      "v6",
+      "h0",
+      "h1"
+    ],
+    [
+      "v4",
+      "v5",
+      "v6",
+      "h1",
+      "h2",
+      "h3"
+    ],
+    [
+      "v4",
+      "v5",
+      "v6",
+      "h3",
+      "h4",
+      "h5"
+    ],
+    [
+      "v4",
+      "v5",
+      "v6",
+      "h9",
+      "h10",
+      "h11"
+    ],
+    [
+      "v4",
+      "v5",
+      "v6",
+      "h13",
+      "h14",
+      "h15"
+    ],
+    [
+      "v6",
+      "v7",
+      "v8",
+      "h9",
+      "h10",
+      "h11"
+    ],
+    [
+      "v8",
+      "v9",
+      "v10",
+      "h0",
+      "h1"
+    ],
+    [
+      "v8",
+      "v9",
+      "v10",
+      "h1",
+      "h2",
+      "h3"
+    ],
+    [
+      "v8",
+      "v9",
+      "v10",
+      "h7",
+      "h8",
+      "h9"
+    ],
+    [
+      "v8",
+      "v9",
+      "v10",
+      "h13",
+      "h14",
+      "h15"
+    ],
+    [
+      "v10",
+      "v11",
+      "v12",
+      "h13",
+      "h14",
+      "h15"
+    ],
+    [
+      "v12",
+      "v13",
+      "h5",
+      "h6",
+      "h7"
+    ]
+  ],
+  "integer_lines": [
+    "v0",
+    "v1",
+    "v4",
+    "v8",
+    "v12"
+  ],
+  "line_count": 31,
+  "local_search": "coord_mutation",
+  "lp_dual": {
+    "square_0": 0.75,
+    "square_1": 0.0,
+    "square_10": 0.25,
+    "square_11": 0.0,
+    "square_12": 0.5,
+    "square_13": 0.0,
+    "square_14": 1.0,
+    "square_15": 0.0,
+    "square_16": 0.0,
+    "square_17": 0.0,
+    "square_18": 0.0,
+    "square_19": 0.75,
+    "square_2": 0.25,
+    "square_3": 0.5,
+    "square_4": 0.0,
+    "square_5": 0.0,
+    "square_6": 0.0,
+    "square_7": 0.25,
+    "square_8": 0.0,
+    "square_9": 0.0
+  },
+  "lp_primal": {
+    "h1": 0.75,
+    "h11": 0.5,
+    "h15": 0.75,
+    "h5": 0.75,
+    "h7": 0.25,
+    "h9": 0.5,
+    "v10": 0.25,
+    "v2": 0.25,
+    "v4": 0.25
+  },
+  "problem": "unit_square",
+  "representation": "sqstab_exact_grid",
+  "schema": "unit_square_stab_certificate_v1",
+  "score": 1.1764705882352942,
+  "side": 1,
+  "solver": {
+    "integer_solver": "exact_branch_and_bound_set_cover",
+    "lp_method": "highs",
+    "lp_solver": "scipy.optimize.linprog",
+    "tolerance": 1e-08
+  },
+  "solver_status": "optimal",
+  "source_type": "local_mutation",
+  "squares": [
+    [
+      0,
+      5
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      2,
+      4
+    ],
+    [
+      2,
+      8
+    ],
+    [
+      3,
+      0
+    ],
+    [
+      3,
+      3
+    ],
+    [
+      3,
+      4
+    ],
+    [
+      3,
+      6
+    ],
+    [
+      4,
+      0
+    ],
+    [
+      4,
+      1
+    ],
+    [
+      4,
+      2
+    ],
+    [
+      4,
+      5
+    ],
+    [
+      4,
+      7
+    ],
+    [
+      5,
+      5
+    ],
+    [
+      6,
+      0
+    ],
+    [
+      6,
+      1
+    ],
+    [
+      6,
+      4
+    ],
+    [
+      6,
+      7
+    ],
+    [
+      7,
+      7
+    ],
+    [
+      8,
+      3
+    ]
+  ],
+  "surrogate": "greedy_partial_lp_bitset",
+  "tau_int": 5,
+  "tau_lp": 4.25,
+  "tool_version": "0.1.0"
+}

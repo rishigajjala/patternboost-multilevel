@@ -1,0 +1,236 @@
+{
+  "candidate_id": "d7e49eb04eca942151d61c565ebd26ae091aba7e93c8069428730677499bd051",
+  "certificate_hash": "7646260fc8dc7ef13471f25683a92642bb2eb855576b60dc8036ab7f1664c9e5",
+  "control_mode": "patternboost",
+  "created_at": "2026-07-09T12:27:58.133347+00:00",
+  "critical_lines": [
+    {
+      "axis": "vertical",
+      "coordinate": 0,
+      "id": "v0"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 1,
+      "id": "v1"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": "3/2",
+      "id": "v2"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 2,
+      "id": "v3"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": "5/2",
+      "id": "v4"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 5,
+      "id": "v5"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 6,
+      "id": "v6"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": "13/2",
+      "id": "v7"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 8,
+      "id": "v8"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 1,
+      "id": "h0"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 3,
+      "id": "h1"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 4,
+      "id": "h2"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "9/2",
+      "id": "h3"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 5,
+      "id": "h4"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "11/2",
+      "id": "h5"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 7,
+      "id": "h6"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 8,
+      "id": "h7"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "17/2",
+      "id": "h8"
+    }
+  ],
+  "dependency_versions": {
+    "numpy": "2.0.2",
+    "scipy": "1.13.1",
+    "torch": "2.8.0+cu128"
+  },
+  "exact_runtime_seconds": 0.0018955020350404084,
+  "generation": 0,
+  "git_commit": "",
+  "git_dirty": null,
+  "hardware": {
+    "platform": "Linux-4.18.0-193.6.3.el8_2.x86_64-x86_64-with-glibc2.28",
+    "python": "3.11.3"
+  },
+  "incidence": [
+    [
+      "v0",
+      "v1",
+      "h7",
+      "h8"
+    ],
+    [
+      "v1",
+      "v2",
+      "v3",
+      "h7",
+      "h8"
+    ],
+    [
+      "v5",
+      "v6",
+      "h4",
+      "h5"
+    ],
+    [
+      "v5",
+      "v6",
+      "h1",
+      "h2"
+    ],
+    [
+      "v8",
+      "h7",
+      "h8"
+    ],
+    [
+      "v8",
+      "h0"
+    ],
+    [
+      "v6",
+      "v7",
+      "h6",
+      "h7"
+    ],
+    [
+      "v3",
+      "v4",
+      "h2",
+      "h3",
+      "h4"
+    ]
+  ],
+  "integer_lines": [
+    "v3",
+    "v5",
+    "v8",
+    "h7"
+  ],
+  "line_count": 18,
+  "local_search": "primal_dual_lines",
+  "lp_dual": {
+    "square_0": 1.0,
+    "square_1": 0.0,
+    "square_2": 0.5,
+    "square_3": 0.5,
+    "square_4": 0.0,
+    "square_5": 1.0,
+    "square_6": 0.0,
+    "square_7": 0.5
+  },
+  "lp_primal": {
+    "h2": 0.5,
+    "h4": 0.5,
+    "h7": 1.0,
+    "v5": 0.5,
+    "v8": 1.0
+  },
+  "problem": "unit_square",
+  "representation": "line_square_incidence",
+  "schema": "unit_square_stab_certificate_v1",
+  "score": 1.1428571428571428,
+  "side": 1,
+  "solver": {
+    "integer_solver": "exact_branch_and_bound_set_cover",
+    "lp_method": "highs",
+    "lp_solver": "scipy.optimize.linprog",
+    "tolerance": 1e-08
+  },
+  "solver_status": "optimal",
+  "source_type": "initial_or_local",
+  "squares": [
+    [
+      0,
+      8
+    ],
+    [
+      1,
+      8
+    ],
+    [
+      5,
+      5
+    ],
+    [
+      5,
+      3
+    ],
+    [
+      8,
+      8
+    ],
+    [
+      8,
+      1
+    ],
+    [
+      6,
+      7
+    ],
+    [
+      2,
+      4
+    ]
+  ],
+  "surrogate": "incidence_statistics",
+  "tau_int": 4,
+  "tau_lp": 3.5,
+  "tool_version": "0.1.0"
+}

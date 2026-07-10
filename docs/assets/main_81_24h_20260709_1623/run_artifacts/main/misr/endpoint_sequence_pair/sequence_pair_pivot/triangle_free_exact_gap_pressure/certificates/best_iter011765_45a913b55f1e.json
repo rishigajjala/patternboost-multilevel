@@ -1,0 +1,285 @@
+{
+  "alpha_int": 2,
+  "alpha_lp": 2.6666666666666674,
+  "candidate_id": "fa702c9acb7a26feaa119c9b6109f2d63cf018648f7f931271ade79bdd7090e9",
+  "certificate_hash": "45a913b55f1e569569a8ac9504c521eb1f642ca1203ab72da51671fad1e3a190",
+  "constraint_count": 10,
+  "constraints": {},
+  "control_mode": "patternboost",
+  "created_at": "2026-07-10T03:25:46.250164+00:00",
+  "dependency_versions": {
+    "numpy": "2.0.2",
+    "scipy": "1.13.1",
+    "torch": "2.8.0+cu128"
+  },
+  "exact_runtime_seconds": 0.0016070818528532982,
+  "generation": 11765,
+  "git_commit": "",
+  "git_dirty": null,
+  "hardware": {
+    "platform": "Linux-4.18.0-193.6.3.el8_2.x86_64-x86_64-with-glibc2.28",
+    "python": "3.11.3"
+  },
+  "integer_solution": [
+    5,
+    8
+  ],
+  "intersection_edges": [
+    [
+      0,
+      1
+    ],
+    [
+      0,
+      2
+    ],
+    [
+      0,
+      3
+    ],
+    [
+      0,
+      4
+    ],
+    [
+      0,
+      5
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      1,
+      4
+    ],
+    [
+      1,
+      7
+    ],
+    [
+      1,
+      8
+    ],
+    [
+      2,
+      4
+    ],
+    [
+      2,
+      5
+    ],
+    [
+      2,
+      6
+    ],
+    [
+      2,
+      7
+    ],
+    [
+      2,
+      8
+    ],
+    [
+      3,
+      5
+    ],
+    [
+      3,
+      6
+    ],
+    [
+      3,
+      8
+    ],
+    [
+      4,
+      5
+    ],
+    [
+      4,
+      6
+    ],
+    [
+      4,
+      7
+    ],
+    [
+      5,
+      6
+    ],
+    [
+      6,
+      7
+    ],
+    [
+      6,
+      8
+    ],
+    [
+      7,
+      8
+    ]
+  ],
+  "local_search": "sequence_pair_pivot",
+  "lp_dual": {
+    "clique_0": 0.3333333333333335,
+    "clique_1": 0.3333333333333333,
+    "clique_2": 0.0,
+    "clique_3": 0.3333333333333333,
+    "clique_4": 0.0,
+    "clique_5": 0.6666666666666667,
+    "clique_6": 0.0,
+    "clique_7": 0.3333333333333333,
+    "clique_8": 0.3333333333333334,
+    "clique_9": 0.3333333333333333
+  },
+  "lp_primal": {
+    "0": 0.33333333333333337,
+    "1": 0.3333333333333333,
+    "3": 0.33333333333333337,
+    "4": 0.33333333333333337,
+    "5": 0.33333333333333337,
+    "6": 0.33333333333333326,
+    "7": 0.33333333333333337,
+    "8": 0.33333333333333337
+  },
+  "max_clique_size": 4,
+  "maximal_cliques": [
+    [
+      0,
+      1,
+      2,
+      4
+    ],
+    [
+      0,
+      2,
+      4,
+      5
+    ],
+    [
+      2,
+      4,
+      5,
+      6
+    ],
+    [
+      2,
+      4,
+      6,
+      7
+    ],
+    [
+      1,
+      2,
+      4,
+      7
+    ],
+    [
+      1,
+      2,
+      7,
+      8
+    ],
+    [
+      2,
+      6,
+      7,
+      8
+    ],
+    [
+      0,
+      3,
+      5
+    ],
+    [
+      3,
+      5,
+      6
+    ],
+    [
+      3,
+      6,
+      8
+    ]
+  ],
+  "n": 9,
+  "problem": "misr",
+  "rectangles": [
+    [
+      0,
+      6,
+      1,
+      17
+    ],
+    [
+      1,
+      13,
+      11,
+      16
+    ],
+    [
+      2,
+      15,
+      8,
+      15
+    ],
+    [
+      3,
+      16,
+      4,
+      5
+    ],
+    [
+      4,
+      10,
+      6,
+      12
+    ],
+    [
+      5,
+      8,
+      3,
+      10
+    ],
+    [
+      7,
+      17,
+      0,
+      9
+    ],
+    [
+      9,
+      12,
+      7,
+      13
+    ],
+    [
+      11,
+      14,
+      2,
+      14
+    ]
+  ],
+  "representation": "endpoint_sequence_pair",
+  "schema": "misr_certificate_v1",
+  "score": 1.3333333333333337,
+  "solver": {
+    "integer_solver": "branch_and_bound_maximum_independent_set",
+    "lp_method": "highs",
+    "lp_solver": "scipy.optimize.linprog",
+    "tolerance": 1e-08
+  },
+  "solver_status": "optimal",
+  "source_type": "local_mutation",
+  "surrogate": "triangle_free_exact_gap_pressure",
+  "tool_version": "0.1.0",
+  "triangle_free": false,
+  "triangle_witness": [
+    0,
+    1,
+    2
+  ]
+}

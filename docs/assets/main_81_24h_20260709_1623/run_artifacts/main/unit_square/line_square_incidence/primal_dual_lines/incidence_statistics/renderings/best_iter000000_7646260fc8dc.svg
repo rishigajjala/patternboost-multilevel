@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="640" viewBox="0 0 900 640">
+<title>Unit-square score=1.1428571428571428 tau=4 tau_lp=3.5</title>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<rect x="95.979" y="74.789" width="78.671" height="61.303" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="95.979" y="74.789" font-size="13" font-family="monospace" fill="#111827">0</text>
+<rect x="174.65" y="74.789" width="78.671" height="61.303" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="174.65" y="74.789" font-size="13" font-family="monospace" fill="#111827">1</text>
+<rect x="489.336" y="258.697" width="78.671" height="61.303" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="489.336" y="258.697" font-size="13" font-family="monospace" fill="#111827">2</text>
+<rect x="489.336" y="381.303" width="78.671" height="61.303" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="489.336" y="381.303" font-size="13" font-family="monospace" fill="#111827">3</text>
+<rect x="725.35" y="74.789" width="78.671" height="61.303" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="725.35" y="74.789" font-size="13" font-family="monospace" fill="#111827">4</text>
+<rect x="725.35" y="503.908" width="78.671" height="61.303" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="725.35" y="503.908" font-size="13" font-family="monospace" fill="#111827">5</text>
+<rect x="568.007" y="136.092" width="78.671" height="61.303" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="568.007" y="136.092" font-size="13" font-family="monospace" fill="#111827">6</text>
+<rect x="253.322" y="320" width="78.671" height="61.303" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="253.322" y="320" font-size="13" font-family="monospace" fill="#111827">7</text>
+<line x1="253.322" y1="640" x2="253.322" y2="0" stroke="#dc2626" stroke-width="2.4"/>
+<line x1="489.336" y1="640" x2="489.336" y2="0" stroke="#dc2626" stroke-width="2.4"/>
+<line x1="725.35" y1="640" x2="725.35" y2="0" stroke="#dc2626" stroke-width="2.4"/>
+<line x1="0" y1="136.092" x2="900" y2="136.092" stroke="#dc2626" stroke-width="2.4"/>
+</svg>

@@ -1,0 +1,158 @@
+{
+  "alpha_int": 6,
+  "alpha_lp": 6.0,
+  "candidate_id": "bbcea5f5148d34bddb16819c5944d32e86c3a7d1875b8622cea38771e81b0b09",
+  "certificate_hash": "f35fac2221534849b5455622b39cbf2fbfefd3e7d21e7099ee5d533bceb2ff50",
+  "constraint_count": 6,
+  "constraints": {},
+  "control_mode": "patternboost",
+  "created_at": "2026-07-09T12:27:47.151452+00:00",
+  "dependency_versions": {
+    "numpy": "2.0.2",
+    "scipy": "1.13.1",
+    "torch": "2.8.0+cu128"
+  },
+  "exact_runtime_seconds": 0.0009768590098246932,
+  "generation": 0,
+  "git_commit": "",
+  "git_dirty": null,
+  "hardware": {
+    "platform": "Linux-4.18.0-193.6.3.el8_2.x86_64-x86_64-with-glibc2.28",
+    "python": "3.11.3"
+  },
+  "integer_solution": [
+    0,
+    2,
+    3,
+    5,
+    6,
+    7
+  ],
+  "intersection_edges": [
+    [
+      0,
+      4
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      3,
+      4
+    ],
+    [
+      4,
+      6
+    ]
+  ],
+  "local_search": "lp_dual_pivot",
+  "lp_dual": {
+    "clique_0": 1.0,
+    "clique_1": 1.0,
+    "clique_2": 1.0,
+    "clique_3": 1.0,
+    "clique_4": 1.0,
+    "clique_5": 1.0
+  },
+  "lp_primal": {
+    "0": 1.0,
+    "1": 1.0,
+    "3": 1.0,
+    "5": 1.0,
+    "6": 1.0,
+    "7": 1.0
+  },
+  "max_clique_size": 2,
+  "maximal_cliques": [
+    [
+      1,
+      2
+    ],
+    [
+      0,
+      4
+    ],
+    [
+      3,
+      4
+    ],
+    [
+      4,
+      6
+    ],
+    [
+      5
+    ],
+    [
+      7
+    ]
+  ],
+  "n": 8,
+  "problem": "misr",
+  "rectangles": [
+    [
+      0,
+      7,
+      11,
+      13
+    ],
+    [
+      1,
+      6,
+      1,
+      4
+    ],
+    [
+      2,
+      3,
+      2,
+      10
+    ],
+    [
+      4,
+      12,
+      7,
+      8
+    ],
+    [
+      5,
+      11,
+      6,
+      15
+    ],
+    [
+      8,
+      10,
+      3,
+      5
+    ],
+    [
+      9,
+      13,
+      12,
+      14
+    ],
+    [
+      14,
+      15,
+      0,
+      9
+    ]
+  ],
+  "representation": "endpoint_sequence_pair",
+  "schema": "misr_certificate_v1",
+  "score": 1.0,
+  "solver": {
+    "integer_solver": "branch_and_bound_maximum_independent_set",
+    "lp_method": "highs",
+    "lp_solver": "scipy.optimize.linprog",
+    "tolerance": 1e-08
+  },
+  "solver_status": "optimal",
+  "source_type": "initial_or_local",
+  "surrogate": "exact_lp_gap_pressure",
+  "tool_version": "0.1.0",
+  "triangle_free": true,
+  "triangle_witness": null
+}

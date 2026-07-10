@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="640" viewBox="0 0 900 640">
+<title>MISR score=1.25 alpha_lp=2.5 alpha=2</title>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<rect x="69.693" y="250.818" width="229.953" height="314.465" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="69.693" y="250.818" font-size="13" font-family="monospace" fill="#111827">0</text>
+<rect x="87.382" y="263.396" width="389.151" height="327.044" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="87.382" y="263.396" font-size="13" font-family="monospace" fill="#111827">1</text>
+<rect x="105.071" y="162.767" width="566.038" height="238.994" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="105.071" y="162.767" font-size="13" font-family="monospace" fill="#111827">2</text>
+<rect x="122.759" y="74.717" width="371.462" height="201.258" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="122.759" y="74.717" font-size="13" font-family="monospace" fill="#111827">3</text>
+<rect x="140.448" y="414.34" width="548.349" height="113.208" fill="#22c55e" fill-opacity="0.36" stroke="#166534" stroke-width="2.0"/>
+<text x="140.448" y="414.34" font-size="13" font-family="monospace" fill="#111827">4</text>
+<rect x="158.137" y="112.453" width="406.84" height="213.836" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="158.137" y="112.453" font-size="13" font-family="monospace" fill="#111827">5</text>
+<rect x="175.825" y="175.346" width="530.66" height="251.572" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="175.825" y="175.346" font-size="13" font-family="monospace" fill="#111827">6</text>
+<rect x="193.514" y="49.56" width="530.66" height="389.937" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="193.514" y="49.56" font-size="13" font-family="monospace" fill="#111827">7</text>
+<rect x="211.203" y="187.925" width="530.66" height="264.151" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="211.203" y="187.925" font-size="13" font-family="monospace" fill="#111827">8</text>
+<rect x="228.892" y="99.874" width="300.708" height="201.258" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="228.892" y="99.874" font-size="13" font-family="monospace" fill="#111827">9</text>
+<rect x="246.58" y="376.604" width="389.151" height="163.522" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="246.58" y="376.604" font-size="13" font-family="monospace" fill="#111827">10</text>
+<rect x="264.269" y="200.503" width="495.283" height="264.151" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="264.269" y="200.503" font-size="13" font-family="monospace" fill="#111827">11</text>
+<rect x="281.958" y="87.296" width="229.953" height="201.258" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="281.958" y="87.296" font-size="13" font-family="monospace" fill="#111827">12</text>
+<rect x="317.335" y="313.711" width="229.953" height="264.151" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="317.335" y="313.711" font-size="13" font-family="monospace" fill="#111827">13</text>
+<rect x="335.024" y="338.868" width="247.642" height="213.836" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="335.024" y="338.868" font-size="13" font-family="monospace" fill="#111827">14</text>
+<rect x="352.712" y="125.031" width="247.642" height="226.415" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="352.712" y="125.031" font-size="13" font-family="monospace" fill="#111827">15</text>
+<rect x="370.401" y="137.61" width="247.642" height="226.415" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="370.401" y="137.61" font-size="13" font-family="monospace" fill="#111827">16</text>
+<rect x="388.09" y="150.189" width="265.33" height="238.994" fill="#22c55e" fill-opacity="0.36" stroke="#166534" stroke-width="2.0"/>
+<text x="388.09" y="150.189" font-size="13" font-family="monospace" fill="#111827">17</text>
+<rect x="405.778" y="62.138" width="371.462" height="415.094" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="405.778" y="62.138" font-size="13" font-family="monospace" fill="#111827">18</text>
+<rect x="423.467" y="213.082" width="371.462" height="276.73" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="423.467" y="213.082" font-size="13" font-family="monospace" fill="#111827">19</text>
+<rect x="441.156" y="225.66" width="371.462" height="276.73" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="441.156" y="225.66" font-size="13" font-family="monospace" fill="#111827">20</text>
+<rect x="458.844" y="238.239" width="371.462" height="276.73" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="458.844" y="238.239" font-size="13" font-family="monospace" fill="#111827">21</text>
+</svg>

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="640" viewBox="0 0 900 640">
+<title>Unit-square score=1.1428571428571428 tau=4 tau_lp=3.5</title>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<rect x="625.097" y="195.486" width="87.549" height="62.257" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="625.097" y="195.486" font-size="13" font-family="monospace" fill="#111827">0</text>
+<rect x="362.451" y="506.77" width="87.549" height="62.257" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="362.451" y="506.77" font-size="13" font-family="monospace" fill="#111827">1</text>
+<rect x="712.646" y="70.973" width="87.549" height="62.257" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="712.646" y="70.973" font-size="13" font-family="monospace" fill="#111827">2</text>
+<rect x="99.805" y="506.77" width="87.549" height="62.257" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="99.805" y="506.77" font-size="13" font-family="monospace" fill="#111827">3</text>
+<rect x="274.903" y="195.486" width="87.549" height="62.257" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="274.903" y="195.486" font-size="13" font-family="monospace" fill="#111827">4</text>
+<rect x="712.646" y="382.257" width="87.549" height="62.257" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="712.646" y="382.257" font-size="13" font-family="monospace" fill="#111827">5</text>
+<rect x="99.805" y="382.257" width="87.549" height="62.257" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="99.805" y="382.257" font-size="13" font-family="monospace" fill="#111827">6</text>
+<rect x="712.646" y="133.23" width="87.549" height="62.257" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="712.646" y="133.23" font-size="13" font-family="monospace" fill="#111827">7</text>
+<rect x="537.549" y="133.23" width="87.549" height="62.257" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="537.549" y="133.23" font-size="13" font-family="monospace" fill="#111827">8</text>
+<line x1="99.805" y1="640" x2="99.805" y2="0" stroke="#dc2626" stroke-width="2.4"/>
+<line x1="362.451" y1="640" x2="362.451" y2="0" stroke="#dc2626" stroke-width="2.4"/>
+<line x1="537.549" y1="640" x2="537.549" y2="0" stroke="#dc2626" stroke-width="2.4"/>
+<line x1="712.646" y1="640" x2="712.646" y2="0" stroke="#dc2626" stroke-width="2.4"/>
+</svg>

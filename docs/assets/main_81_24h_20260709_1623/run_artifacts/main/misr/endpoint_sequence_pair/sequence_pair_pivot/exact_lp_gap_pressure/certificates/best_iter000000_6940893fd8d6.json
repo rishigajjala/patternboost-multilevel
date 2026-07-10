@@ -1,0 +1,164 @@
+{
+  "alpha_int": 5,
+  "alpha_lp": 5.0,
+  "candidate_id": "459e7b9e86d73c6ceee82b2ea1d21fac571f01a6e0815b0f599e97c063a16fcc",
+  "certificate_hash": "6940893fd8d6bfc97a7dd8d3c31ced3826e5b502ef8b90cac688ab72540923ce",
+  "constraint_count": 6,
+  "constraints": {},
+  "control_mode": "patternboost",
+  "created_at": "2026-07-09T12:27:47.217784+00:00",
+  "dependency_versions": {
+    "numpy": "2.0.2",
+    "scipy": "1.13.1",
+    "torch": "2.8.0+cu128"
+  },
+  "exact_runtime_seconds": 0.0009875758551061153,
+  "generation": 0,
+  "git_commit": "",
+  "git_dirty": null,
+  "hardware": {
+    "platform": "Linux-4.18.0-193.6.3.el8_2.x86_64-x86_64-with-glibc2.28",
+    "python": "3.11.3"
+  },
+  "integer_solution": [
+    0,
+    1,
+    2,
+    6,
+    7
+  ],
+  "intersection_edges": [
+    [
+      3,
+      4
+    ],
+    [
+      3,
+      7
+    ],
+    [
+      4,
+      5
+    ],
+    [
+      4,
+      6
+    ],
+    [
+      5,
+      6
+    ]
+  ],
+  "local_search": "sequence_pair_pivot",
+  "lp_dual": {
+    "clique_0": 1.0,
+    "clique_1": 1.0,
+    "clique_2": 1.0,
+    "clique_3": 0.0,
+    "clique_4": 1.0,
+    "clique_5": 1.0
+  },
+  "lp_primal": {
+    "0": 1.0,
+    "1": 1.0,
+    "2": 1.0,
+    "5": 1.0,
+    "7": 1.0
+  },
+  "max_clique_size": 3,
+  "maximal_cliques": [
+    [
+      0
+    ],
+    [
+      1
+    ],
+    [
+      2
+    ],
+    [
+      3,
+      4
+    ],
+    [
+      4,
+      5,
+      6
+    ],
+    [
+      3,
+      7
+    ]
+  ],
+  "n": 8,
+  "problem": "misr",
+  "rectangles": [
+    [
+      0,
+      1,
+      11,
+      13
+    ],
+    [
+      2,
+      4,
+      5,
+      8
+    ],
+    [
+      3,
+      5,
+      10,
+      15
+    ],
+    [
+      6,
+      12,
+      6,
+      14
+    ],
+    [
+      7,
+      15,
+      1,
+      7
+    ],
+    [
+      8,
+      11,
+      2,
+      3
+    ],
+    [
+      9,
+      13,
+      0,
+      4
+    ],
+    [
+      10,
+      14,
+      9,
+      12
+    ]
+  ],
+  "representation": "endpoint_sequence_pair",
+  "schema": "misr_certificate_v1",
+  "score": 1.0,
+  "solver": {
+    "integer_solver": "branch_and_bound_maximum_independent_set",
+    "lp_method": "highs",
+    "lp_solver": "scipy.optimize.linprog",
+    "tolerance": 1e-08
+  },
+  "solver_status": "optimal",
+  "source_type": "initial_or_local",
+  "surrogate": "exact_lp_gap_pressure",
+  "tool_version": "0.1.0",
+  "triangle_free": false,
+  "triangle_witness": [
+    4,
+    5,
+    6
+  ]
+}

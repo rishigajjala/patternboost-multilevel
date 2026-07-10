@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="640" viewBox="0 0 900 640">
+<title>MISR score=1.1666666666666667 alpha_lp=3.5 alpha=3</title>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<rect x="78.906" y="250.556" width="468.75" height="55.556" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="78.906" y="250.556" font-size="13" font-family="monospace" fill="#111827">0</text>
+<rect x="117.969" y="222.778" width="664.062" height="111.111" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="117.969" y="222.778" font-size="13" font-family="monospace" fill="#111827">1</text>
+<rect x="157.031" y="56.111" width="664.062" height="55.556" fill="#22c55e" fill-opacity="0.36" stroke="#166534" stroke-width="2.0"/>
+<text x="157.031" y="56.111" font-size="13" font-family="monospace" fill="#111827">2</text>
+<rect x="196.094" y="472.778" width="429.688" height="55.556" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="196.094" y="472.778" font-size="13" font-family="monospace" fill="#111827">3</text>
+<rect x="235.156" y="195" width="507.812" height="166.667" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="235.156" y="195" font-size="13" font-family="monospace" fill="#111827">4</text>
+<rect x="274.219" y="139.444" width="312.5" height="416.667" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="274.219" y="139.444" font-size="13" font-family="monospace" fill="#111827">5</text>
+<rect x="313.281" y="83.889" width="156.25" height="361.111" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="313.281" y="83.889" font-size="13" font-family="monospace" fill="#111827">6</text>
+<rect x="352.344" y="167.222" width="39.062" height="333.333" fill="#22c55e" fill-opacity="0.36" stroke="#166534" stroke-width="2.0"/>
+<text x="352.344" y="167.222" font-size="13" font-family="monospace" fill="#111827">7</text>
+<rect x="430.469" y="389.444" width="273.438" height="194.444" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="430.469" y="389.444" font-size="13" font-family="monospace" fill="#111827">8</text>
+<rect x="508.594" y="278.333" width="156.25" height="138.889" fill="#22c55e" fill-opacity="0.36" stroke="#166534" stroke-width="2.0"/>
+<text x="508.594" y="278.333" font-size="13" font-family="monospace" fill="#111827">9</text>
+</svg>

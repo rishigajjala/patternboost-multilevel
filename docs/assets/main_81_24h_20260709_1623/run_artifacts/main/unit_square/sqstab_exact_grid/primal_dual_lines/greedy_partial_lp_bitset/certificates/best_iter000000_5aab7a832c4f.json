@@ -1,0 +1,245 @@
+{
+  "candidate_id": "a66347fd4a67bb444165e8d81bb7a93d68b82089468d9b2e6558918e9a469dd9",
+  "certificate_hash": "5aab7a832c4f8d27663e9dbbc22d2cf613f607913b9940c409ab5f76ba9e91a5",
+  "control_mode": "patternboost",
+  "created_at": "2026-07-09T12:27:48.861585+00:00",
+  "critical_lines": [
+    {
+      "axis": "vertical",
+      "coordinate": 0,
+      "id": "v0"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 1,
+      "id": "v1"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": "3/2",
+      "id": "v2"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 2,
+      "id": "v3"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": "5/2",
+      "id": "v4"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 3,
+      "id": "v5"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": "7/2",
+      "id": "v6"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 5,
+      "id": "v7"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 8,
+      "id": "v8"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 0,
+      "id": "h0"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 3,
+      "id": "h1"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 4,
+      "id": "h2"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "9/2",
+      "id": "h3"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 5,
+      "id": "h4"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "11/2",
+      "id": "h5"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 6,
+      "id": "h6"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "13/2",
+      "id": "h7"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 7,
+      "id": "h8"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "15/2",
+      "id": "h9"
+    }
+  ],
+  "dependency_versions": {
+    "numpy": "2.0.2",
+    "scipy": "1.13.1",
+    "torch": "2.8.0+cu128"
+  },
+  "exact_runtime_seconds": 0.002597220242023468,
+  "generation": 0,
+  "git_commit": "",
+  "git_dirty": null,
+  "hardware": {
+    "platform": "Linux-4.18.0-193.6.3.el8_2.x86_64-x86_64-with-glibc2.28",
+    "python": "3.11.3"
+  },
+  "incidence": [
+    [
+      "v0",
+      "v1",
+      "h2",
+      "h3",
+      "h4"
+    ],
+    [
+      "v0",
+      "v1",
+      "h6",
+      "h7",
+      "h8"
+    ],
+    [
+      "v0",
+      "v1",
+      "h8",
+      "h9"
+    ],
+    [
+      "v1",
+      "v2",
+      "v3",
+      "h4",
+      "h5",
+      "h6"
+    ],
+    [
+      "v3",
+      "v4",
+      "v5",
+      "h4",
+      "h5",
+      "h6"
+    ],
+    [
+      "v5",
+      "v6",
+      "h4",
+      "h5",
+      "h6"
+    ],
+    [
+      "v7",
+      "h0"
+    ],
+    [
+      "v8",
+      "h1",
+      "h2"
+    ]
+  ],
+  "integer_lines": [
+    "v1",
+    "v5",
+    "v7",
+    "v8"
+  ],
+  "line_count": 19,
+  "local_search": "primal_dual_lines",
+  "lp_dual": {
+    "square_0": 0.0,
+    "square_1": 0.0,
+    "square_2": 1.0,
+    "square_3": 0.0,
+    "square_4": 1.0,
+    "square_5": 0.0,
+    "square_6": 1.0,
+    "square_7": 1.0
+  },
+  "lp_primal": {
+    "h4": 1.0,
+    "v0": 1.0,
+    "v7": 1.0,
+    "v8": 1.0
+  },
+  "problem": "unit_square",
+  "representation": "sqstab_exact_grid",
+  "schema": "unit_square_stab_certificate_v1",
+  "score": 1.0,
+  "side": 1,
+  "solver": {
+    "integer_solver": "exact_branch_and_bound_set_cover",
+    "lp_method": "highs",
+    "lp_solver": "scipy.optimize.linprog",
+    "tolerance": 1e-08
+  },
+  "solver_status": "optimal",
+  "source_type": "initial_or_local",
+  "squares": [
+    [
+      0,
+      4
+    ],
+    [
+      0,
+      6
+    ],
+    [
+      0,
+      7
+    ],
+    [
+      1,
+      5
+    ],
+    [
+      2,
+      5
+    ],
+    [
+      3,
+      5
+    ],
+    [
+      5,
+      0
+    ],
+    [
+      8,
+      3
+    ]
+  ],
+  "surrogate": "greedy_partial_lp_bitset",
+  "tau_int": 4,
+  "tau_lp": 4.0,
+  "tool_version": "0.1.0"
+}

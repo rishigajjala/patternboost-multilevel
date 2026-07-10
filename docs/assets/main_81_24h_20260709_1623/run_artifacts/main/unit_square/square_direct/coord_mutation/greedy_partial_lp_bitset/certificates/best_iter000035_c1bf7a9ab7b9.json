@@ -1,0 +1,466 @@
+{
+  "candidate_id": "e701ec03c0af63fea8d361ace4dff8790be0c6c205570502e715fdeacbf638c3",
+  "certificate_hash": "c1bf7a9ab7b9a645be44003ea1ba09fb66d459147413bbc1530875dfc5489482",
+  "control_mode": "patternboost",
+  "created_at": "2026-07-09T12:29:23.479033+00:00",
+  "critical_lines": [
+    {
+      "axis": "vertical",
+      "coordinate": 0,
+      "id": "v0"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 1,
+      "id": "v1"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": "3/2",
+      "id": "v2"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 2,
+      "id": "v3"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": "5/2",
+      "id": "v4"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 3,
+      "id": "v5"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": "7/2",
+      "id": "v6"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 4,
+      "id": "v7"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": "9/2",
+      "id": "v8"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 5,
+      "id": "v9"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": "11/2",
+      "id": "v10"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 6,
+      "id": "v11"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": "13/2",
+      "id": "v12"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 8,
+      "id": "v13"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 0,
+      "id": "h0"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 2,
+      "id": "h1"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 4,
+      "id": "h2"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 6,
+      "id": "h3"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 7,
+      "id": "h4"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "15/2",
+      "id": "h5"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 8,
+      "id": "h6"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "17/2",
+      "id": "h7"
+    }
+  ],
+  "dependency_versions": {
+    "numpy": "2.0.2",
+    "scipy": "1.13.1",
+    "torch": "2.8.0+cu128"
+  },
+  "exact_runtime_seconds": 0.003622091840952635,
+  "generation": 35,
+  "git_commit": "",
+  "git_dirty": null,
+  "hardware": {
+    "platform": "Linux-4.18.0-193.6.3.el8_2.x86_64-x86_64-with-glibc2.28",
+    "python": "3.11.3"
+  },
+  "incidence": [
+    [
+      "v0",
+      "v1",
+      "h4",
+      "h5",
+      "h6"
+    ],
+    [
+      "v7",
+      "v8",
+      "v9",
+      "h4",
+      "h5",
+      "h6"
+    ],
+    [
+      "v13",
+      "h0"
+    ],
+    [
+      "v1",
+      "v2",
+      "v3",
+      "h2"
+    ],
+    [
+      "v3",
+      "v4",
+      "v5",
+      "h4",
+      "h5",
+      "h6"
+    ],
+    [
+      "v5",
+      "v6",
+      "v7",
+      "h4",
+      "h5",
+      "h6"
+    ],
+    [
+      "v5",
+      "v6",
+      "v7",
+      "h4",
+      "h5",
+      "h6"
+    ],
+    [
+      "v3",
+      "v4",
+      "v5",
+      "h3",
+      "h4"
+    ],
+    [
+      "v5",
+      "v6",
+      "v7",
+      "h6",
+      "h7"
+    ],
+    [
+      "v11",
+      "v12",
+      "h4",
+      "h5",
+      "h6"
+    ],
+    [
+      "v1",
+      "v2",
+      "v3",
+      "h3",
+      "h4"
+    ],
+    [
+      "v5",
+      "v6",
+      "v7",
+      "h4",
+      "h5",
+      "h6"
+    ],
+    [
+      "v3",
+      "v4",
+      "v5",
+      "h4",
+      "h5",
+      "h6"
+    ],
+    [
+      "v3",
+      "v4",
+      "v5",
+      "h3",
+      "h4"
+    ],
+    [
+      "v5",
+      "v6",
+      "v7",
+      "h4",
+      "h5",
+      "h6"
+    ],
+    [
+      "v9",
+      "v10",
+      "v11",
+      "h1"
+    ],
+    [
+      "v13",
+      "h3",
+      "h4"
+    ],
+    [
+      "v5",
+      "v6",
+      "v7",
+      "h3",
+      "h4"
+    ],
+    [
+      "v7",
+      "v8",
+      "v9",
+      "h4",
+      "h5",
+      "h6"
+    ],
+    [
+      "v5",
+      "v6",
+      "v7",
+      "h3",
+      "h4"
+    ],
+    [
+      "v3",
+      "v4",
+      "v5",
+      "h4",
+      "h5",
+      "h6"
+    ],
+    [
+      "v3",
+      "v4",
+      "v5",
+      "h4",
+      "h5",
+      "h6"
+    ],
+    [
+      "v7",
+      "v8",
+      "v9",
+      "h4",
+      "h5",
+      "h6"
+    ],
+    [
+      "v1",
+      "v2",
+      "v3",
+      "h3",
+      "h4"
+    ]
+  ],
+  "integer_lines": [
+    "v1",
+    "v5",
+    "v9",
+    "v13",
+    "h4"
+  ],
+  "line_count": 22,
+  "local_search": "coord_mutation",
+  "lp_dual": {
+    "square_0": 0.16666666666666663,
+    "square_1": 0.16666666666666669,
+    "square_10": 0.0,
+    "square_11": 0.0,
+    "square_12": 0.0,
+    "square_13": 0.0,
+    "square_14": 0.0,
+    "square_15": 0.8333333333333333,
+    "square_16": 0.0,
+    "square_17": 0.33333333333333337,
+    "square_18": 0.0,
+    "square_19": 0.0,
+    "square_2": 1.0,
+    "square_20": 0.0,
+    "square_21": 0.0,
+    "square_22": 0.0,
+    "square_23": 0.0,
+    "square_3": 0.8333333333333334,
+    "square_4": 0.0,
+    "square_5": 0.0,
+    "square_6": 0.0,
+    "square_7": 0.16666666666666663,
+    "square_8": 0.5,
+    "square_9": 0.16666666666666669
+  },
+  "lp_primal": {
+    "h4": 0.16666666666666669,
+    "h6": 0.16666666666666669,
+    "v1": 0.6666666666666665,
+    "v11": 0.6666666666666666,
+    "v13": 1.0,
+    "v3": 0.3333333333333335,
+    "v5": 0.5,
+    "v7": 0.3333333333333333,
+    "v9": 0.33333333333333337
+  },
+  "problem": "unit_square",
+  "representation": "square_direct",
+  "schema": "unit_square_stab_certificate_v1",
+  "score": 1.2000000000000002,
+  "side": 1,
+  "solver": {
+    "integer_solver": "exact_branch_and_bound_set_cover",
+    "lp_method": "highs",
+    "lp_solver": "scipy.optimize.linprog",
+    "tolerance": 1e-08
+  },
+  "solver_status": "optimal",
+  "source_type": "local_mutation",
+  "squares": [
+    [
+      0,
+      7
+    ],
+    [
+      4,
+      7
+    ],
+    [
+      8,
+      0
+    ],
+    [
+      1,
+      4
+    ],
+    [
+      2,
+      7
+    ],
+    [
+      3,
+      7
+    ],
+    [
+      3,
+      7
+    ],
+    [
+      2,
+      6
+    ],
+    [
+      3,
+      8
+    ],
+    [
+      6,
+      7
+    ],
+    [
+      1,
+      6
+    ],
+    [
+      3,
+      7
+    ],
+    [
+      2,
+      7
+    ],
+    [
+      2,
+      6
+    ],
+    [
+      3,
+      7
+    ],
+    [
+      5,
+      2
+    ],
+    [
+      8,
+      6
+    ],
+    [
+      3,
+      6
+    ],
+    [
+      4,
+      7
+    ],
+    [
+      3,
+      6
+    ],
+    [
+      2,
+      7
+    ],
+    [
+      2,
+      7
+    ],
+    [
+      4,
+      7
+    ],
+    [
+      1,
+      6
+    ]
+  ],
+  "surrogate": "greedy_partial_lp_bitset",
+  "tau_int": 5,
+  "tau_lp": 4.166666666666666,
+  "tool_version": "0.1.0"
+}

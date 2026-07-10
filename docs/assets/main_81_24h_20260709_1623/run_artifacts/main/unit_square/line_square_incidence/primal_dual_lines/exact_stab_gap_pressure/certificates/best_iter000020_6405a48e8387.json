@@ -1,0 +1,269 @@
+{
+  "candidate_id": "203470b8b4f2fea4f0745d44c6d1e8eb0f0ab581944d5b1e3f82daaba22f6b27",
+  "certificate_hash": "6405a48e8387892c616d40bdb22c22992e322858d8673feb1ae9e74611ee304c",
+  "control_mode": "patternboost",
+  "created_at": "2026-07-09T12:28:21.284986+00:00",
+  "critical_lines": [
+    {
+      "axis": "vertical",
+      "coordinate": 0,
+      "id": "v0"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 1,
+      "id": "v1"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": "3/2",
+      "id": "v2"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 2,
+      "id": "v3"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": "5/2",
+      "id": "v4"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 3,
+      "id": "v5"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": "7/2",
+      "id": "v6"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 4,
+      "id": "v7"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": "9/2",
+      "id": "v8"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 6,
+      "id": "v9"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 2,
+      "id": "h0"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 4,
+      "id": "h1"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 6,
+      "id": "h2"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 7,
+      "id": "h3"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "15/2",
+      "id": "h4"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 8,
+      "id": "h5"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "17/2",
+      "id": "h6"
+    }
+  ],
+  "dependency_versions": {
+    "numpy": "2.0.2",
+    "scipy": "1.13.1",
+    "torch": "2.8.0+cu128"
+  },
+  "exact_runtime_seconds": 0.001995611994061619,
+  "generation": 20,
+  "git_commit": "",
+  "git_dirty": null,
+  "hardware": {
+    "platform": "Linux-4.18.0-193.6.3.el8_2.x86_64-x86_64-with-glibc2.28",
+    "python": "3.11.3"
+  },
+  "incidence": [
+    [
+      "v1",
+      "v2",
+      "v3",
+      "h3",
+      "h4",
+      "h5"
+    ],
+    [
+      "v1",
+      "v2",
+      "v3",
+      "h1"
+    ],
+    [
+      "v9",
+      "h3",
+      "h4",
+      "h5"
+    ],
+    [
+      "v5",
+      "v6",
+      "v7",
+      "h1"
+    ],
+    [
+      "v3",
+      "v4",
+      "v5",
+      "h1"
+    ],
+    [
+      "v7",
+      "v8",
+      "h0"
+    ],
+    [
+      "v1",
+      "v2",
+      "v3",
+      "h5",
+      "h6"
+    ],
+    [
+      "v0",
+      "v1",
+      "h0"
+    ],
+    [
+      "v7",
+      "v8",
+      "h2",
+      "h3"
+    ],
+    [
+      "v9",
+      "h3",
+      "h4",
+      "h5"
+    ],
+    [
+      "v1",
+      "v2",
+      "v3",
+      "h2",
+      "h3"
+    ]
+  ],
+  "integer_lines": [
+    "v1",
+    "v3",
+    "v7",
+    "v9"
+  ],
+  "line_count": 17,
+  "local_search": "primal_dual_lines",
+  "lp_dual": {
+    "square_0": 0.0,
+    "square_1": 0.0,
+    "square_10": 0.0,
+    "square_2": 0.6666666666666667,
+    "square_3": 0.33333333333333326,
+    "square_4": 0.6666666666666667,
+    "square_5": 0.33333333333333337,
+    "square_6": 0.3333333333333333,
+    "square_7": 0.6666666666666666,
+    "square_8": 0.3333333333333333,
+    "square_9": 0.0
+  },
+  "lp_primal": {
+    "h0": 0.6666666666666666,
+    "h1": 0.6666666666666666,
+    "h3": 0.6666666666666666,
+    "h5": 0.33333333333333337,
+    "v1": 0.3333333333333333,
+    "v3": 0.33333333333333337,
+    "v7": 0.33333333333333337
+  },
+  "problem": "unit_square",
+  "representation": "line_square_incidence",
+  "schema": "unit_square_stab_certificate_v1",
+  "score": 1.2,
+  "side": 1,
+  "solver": {
+    "integer_solver": "exact_branch_and_bound_set_cover",
+    "lp_method": "highs",
+    "lp_solver": "scipy.optimize.linprog",
+    "tolerance": 1e-08
+  },
+  "solver_status": "optimal",
+  "source_type": "local_mutation",
+  "squares": [
+    [
+      1,
+      7
+    ],
+    [
+      1,
+      4
+    ],
+    [
+      6,
+      7
+    ],
+    [
+      3,
+      4
+    ],
+    [
+      2,
+      4
+    ],
+    [
+      4,
+      2
+    ],
+    [
+      1,
+      8
+    ],
+    [
+      0,
+      2
+    ],
+    [
+      4,
+      6
+    ],
+    [
+      6,
+      7
+    ],
+    [
+      1,
+      6
+    ]
+  ],
+  "surrogate": "exact_stab_gap_pressure",
+  "tau_int": 4,
+  "tau_lp": 3.3333333333333335,
+  "tool_version": "0.1.0"
+}

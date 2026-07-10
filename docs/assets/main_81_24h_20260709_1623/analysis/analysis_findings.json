@@ -1,0 +1,135 @@
+{
+  "caution": "The matrix has one fresh random run per configuration and no repeated-seed axis. All effects are descriptive, not sampling-based confidence statements.",
+  "problems": {
+    "guillotine": {
+      "best_descriptive_component_levels": {
+        "local_search": {
+          "level": "witness_breaking",
+          "maximum": 0.3333333333333333,
+          "mean": 0.2810057092665788,
+          "median": 0.2727272727272727
+        },
+        "representation": {
+          "level": "recursive_obstruction_grammar",
+          "maximum": 0.2727272727272727,
+          "mean": 0.25558483384570335,
+          "median": 0.25
+        },
+        "surrogate": {
+          "level": "depth_limited_dp",
+          "maximum": 0.3333333333333333,
+          "mean": 0.2559714795008912,
+          "median": 0.2666666666666666
+        }
+      },
+      "maximum_score": 0.3333333333333333,
+      "mean_score_gain": 0.07236825355609099,
+      "median_duplicates_per_generation": 7.254868218458473,
+      "median_model_train_calls": 749.0,
+      "median_model_valid_fraction": 0.9494577308120132,
+      "median_plateau_fraction": 0.8050285182167385,
+      "median_repairs_per_generation": 1.995018567158772,
+      "median_score": 0.25,
+      "minimum_score": 0.1538461538461538,
+      "model_improvement_fraction": 0.05405405405405406,
+      "problem": "guillotine",
+      "q1_score": 0.24264705882352938,
+      "q3_score": 0.2727272727272727,
+      "rank_correlation_at_25_percent_epochs": 0.9414659765498102,
+      "rows": 27,
+      "rows_at_maximum": 1,
+      "top_best_generation": 2030,
+      "top_best_model_epoch": 858,
+      "top_config_id": "guillotine/rect_direct_disjoint/witness_breaking/depth_limited_dp",
+      "top_n_items": 9,
+      "top_time_to_best_seconds": 20915.01611273736
+    },
+    "misr": {
+      "best_descriptive_component_levels": {
+        "local_search": {
+          "level": "program_coeff_pivot",
+          "maximum": 1.4,
+          "mean": 1.3268518518518517,
+          "median": 1.3333333333333333
+        },
+        "representation": {
+          "level": "triangle_free_rect",
+          "maximum": 1.5,
+          "mean": 1.3546296296296296,
+          "median": 1.375
+        },
+        "surrogate": {
+          "level": "exact_lp_gap_pressure",
+          "maximum": 1.5,
+          "mean": 1.3453703703703703,
+          "median": 1.3333333333333333
+        }
+      },
+      "maximum_score": 1.5,
+      "mean_score_gain": 0.30493827160493825,
+      "median_duplicates_per_generation": 17.156495694496442,
+      "median_model_train_calls": 2199.0,
+      "median_model_valid_fraction": 0.3924683132921677,
+      "median_plateau_fraction": 0.9751226826608506,
+      "median_repairs_per_generation": 0.871936868337256,
+      "median_score": 1.3333333333333333,
+      "minimum_score": 1.125,
+      "model_improvement_fraction": 0.0,
+      "problem": "misr",
+      "q1_score": 1.25,
+      "q3_score": 1.3333333333333335,
+      "rank_correlation_at_25_percent_epochs": 0.8339008052864129,
+      "rows": 27,
+      "rows_at_maximum": 1,
+      "top_best_generation": 4345,
+      "top_best_model_epoch": 1860,
+      "top_config_id": "misr/triangle_free_rect/sequence_pair_pivot/exact_lp_gap_pressure",
+      "top_n_items": 12,
+      "top_time_to_best_seconds": 11231.834610372083
+    },
+    "unit_square": {
+      "best_descriptive_component_levels": {
+        "local_search": {
+          "level": "sqstab_local_hillclimb",
+          "maximum": 1.5000000000000004,
+          "mean": 1.3969367424375916,
+          "median": 1.3636363636363635
+        },
+        "representation": {
+          "level": "sqstab_exact_grid",
+          "maximum": 1.5000000000000004,
+          "mean": 1.387161571372098,
+          "median": 1.3636363636363638
+        },
+        "surrogate": {
+          "level": "exact_stab_gap_pressure",
+          "maximum": 1.5000000000000004,
+          "mean": 1.462877624167947,
+          "median": 1.4516129032258065
+        }
+      },
+      "maximum_score": 1.5000000000000004,
+      "mean_score_gain": 0.30250472332805534,
+      "median_duplicates_per_generation": 9.462417488821066,
+      "median_model_train_calls": 2236.0,
+      "median_model_valid_fraction": 0.3875,
+      "median_plateau_fraction": 0.7435704617235674,
+      "median_repairs_per_generation": 1.1006191054793728,
+      "median_score": 1.3461538461538465,
+      "minimum_score": 1.2,
+      "model_improvement_fraction": 0.011904761904761904,
+      "problem": "unit_square",
+      "q1_score": 1.2828947368421053,
+      "q3_score": 1.4285714285714288,
+      "rank_correlation_at_25_percent_epochs": 0.9163572730638184,
+      "rows": 27,
+      "rows_at_maximum": 4,
+      "top_best_generation": 280,
+      "top_best_model_epoch": 117,
+      "top_config_id": "unit_square/sqstab_exact_grid/coord_mutation/exact_stab_gap_pressure",
+      "top_n_items": 14,
+      "top_time_to_best_seconds": 1248.4405882395804
+    }
+  },
+  "schema": "patternboost_descriptive_findings_v1"
+}

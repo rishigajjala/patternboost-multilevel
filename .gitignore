@@ -23,3 +23,8 @@ runs 2/
 
 slurm-*.out
 *.log
+*.aux
+*.fdb_latexmk
+*.fls
+*.out
+*.toc

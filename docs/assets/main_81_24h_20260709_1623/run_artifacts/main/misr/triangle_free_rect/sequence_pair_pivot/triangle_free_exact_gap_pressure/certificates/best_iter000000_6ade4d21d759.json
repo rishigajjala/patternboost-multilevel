@@ -1,0 +1,229 @@
+{
+  "alpha_int": 4,
+  "alpha_lp": 4.0,
+  "candidate_id": "d450678d2008a85288dcf94aba999ba4996ef136b78fbf4753df378fb2e736ba",
+  "certificate_hash": "6ade4d21d759dc404b307e279f50cdf29b2dd70ec9e4a70efe8a3f74e6ef818a",
+  "constraint_count": 13,
+  "constraints": {
+    "triangle_free": true
+  },
+  "control_mode": "patternboost",
+  "created_at": "2026-07-09T12:27:48.697320+00:00",
+  "dependency_versions": {
+    "numpy": "2.0.2",
+    "scipy": "1.13.1",
+    "torch": "2.8.0+cu128"
+  },
+  "exact_runtime_seconds": 0.001119691994972527,
+  "generation": 0,
+  "git_commit": "",
+  "git_dirty": null,
+  "hardware": {
+    "platform": "Linux-4.18.0-193.6.3.el8_2.x86_64-x86_64-with-glibc2.28",
+    "python": "3.11.3"
+  },
+  "integer_solution": [
+    0,
+    3,
+    5,
+    7
+  ],
+  "intersection_edges": [
+    [
+      0,
+      1
+    ],
+    [
+      0,
+      2
+    ],
+    [
+      0,
+      4
+    ],
+    [
+      0,
+      6
+    ],
+    [
+      1,
+      5
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      2,
+      7
+    ],
+    [
+      3,
+      4
+    ],
+    [
+      3,
+      6
+    ],
+    [
+      4,
+      5
+    ],
+    [
+      4,
+      7
+    ],
+    [
+      5,
+      6
+    ],
+    [
+      6,
+      7
+    ]
+  ],
+  "local_search": "sequence_pair_pivot",
+  "lp_dual": {
+    "clique_0": 0.0,
+    "clique_1": 0.0,
+    "clique_10": 1.0,
+    "clique_11": 0.0,
+    "clique_12": 0.0,
+    "clique_2": 1.0,
+    "clique_3": 0.0,
+    "clique_4": 0.0,
+    "clique_5": 0.0,
+    "clique_6": 1.0,
+    "clique_7": 1.0,
+    "clique_8": 0.0,
+    "clique_9": 0.0
+  },
+  "lp_primal": {
+    "0": 1.0,
+    "3": 1.0,
+    "5": 1.0,
+    "7": 1.0
+  },
+  "max_clique_size": 2,
+  "maximal_cliques": [
+    [
+      0,
+      1
+    ],
+    [
+      0,
+      2
+    ],
+    [
+      0,
+      4
+    ],
+    [
+      0,
+      6
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      3,
+      4
+    ],
+    [
+      3,
+      6
+    ],
+    [
+      1,
+      5
+    ],
+    [
+      4,
+      5
+    ],
+    [
+      5,
+      6
+    ],
+    [
+      2,
+      7
+    ],
+    [
+      4,
+      7
+    ],
+    [
+      6,
+      7
+    ]
+  ],
+  "n": 8,
+  "problem": "misr",
+  "rectangles": [
+    [
+      3,
+      5,
+      1,
+      9
+    ],
+    [
+      0,
+      5,
+      7,
+      9
+    ],
+    [
+      5,
+      10,
+      2,
+      4
+    ],
+    [
+      8,
+      10,
+      0,
+      10
+    ],
+    [
+      0,
+      10,
+      0,
+      1
+    ],
+    [
+      0,
+      1,
+      0,
+      9
+    ],
+    [
+      1,
+      10,
+      5,
+      6
+    ],
+    [
+      6,
+      7,
+      0,
+      10
+    ]
+  ],
+  "representation": "triangle_free_rect",
+  "schema": "misr_certificate_v1",
+  "score": 1.0,
+  "solver": {
+    "integer_solver": "branch_and_bound_maximum_independent_set",
+    "lp_method": "highs",
+    "lp_solver": "scipy.optimize.linprog",
+    "tolerance": 1e-08
+  },
+  "solver_status": "optimal",
+  "source_type": "initial_or_local",
+  "surrogate": "triangle_free_exact_gap_pressure",
+  "tool_version": "0.1.0",
+  "triangle_free": true,
+  "triangle_witness": null
+}

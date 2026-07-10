@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="640" viewBox="0 0 900 640">
+<title>MISR score=1.0 alpha_lp=3.0 alpha=3</title>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<rect x="83.152" y="198.261" width="684.783" height="382.609" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="83.152" y="198.261" font-size="13" font-family="monospace" fill="#111827">0</text>
+<rect x="132.065" y="267.826" width="489.13" height="139.13" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="132.065" y="267.826" font-size="13" font-family="monospace" fill="#111827">1</text>
+<rect x="180.978" y="128.696" width="635.87" height="382.609" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="180.978" y="128.696" font-size="13" font-family="monospace" fill="#111827">2</text>
+<rect x="229.891" y="59.13" width="48.913" height="313.043" fill="#22c55e" fill-opacity="0.36" stroke="#166534" stroke-width="2.0"/>
+<text x="229.891" y="59.13" font-size="13" font-family="monospace" fill="#111827">3</text>
+<rect x="327.717" y="93.913" width="146.739" height="382.609" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="327.717" y="93.913" font-size="13" font-family="monospace" fill="#111827">4</text>
+<rect x="376.63" y="233.043" width="293.478" height="69.565" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="376.63" y="233.043" font-size="13" font-family="monospace" fill="#111827">5</text>
+<rect x="425.543" y="337.391" width="97.826" height="208.696" fill="#22c55e" fill-opacity="0.36" stroke="#166534" stroke-width="2.0"/>
+<text x="425.543" y="337.391" font-size="13" font-family="monospace" fill="#111827">6</text>
+<rect x="572.283" y="163.478" width="146.739" height="278.261" fill="#22c55e" fill-opacity="0.36" stroke="#166534" stroke-width="2.0"/>
+<text x="572.283" y="163.478" font-size="13" font-family="monospace" fill="#111827">7</text>
+</svg>

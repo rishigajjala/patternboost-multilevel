@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="640" viewBox="0 0 900 640">
+<title>MISR score=1.25 alpha_lp=2.5 alpha=2</title>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<rect x="80.792" y="242.78" width="304.054" height="308.88" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="80.792" y="242.78" font-size="13" font-family="monospace" fill="#111827">0</text>
+<rect x="124.228" y="335.444" width="390.927" height="61.776" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="124.228" y="335.444" font-size="13" font-family="monospace" fill="#111827">1</text>
+<rect x="167.664" y="150.116" width="521.236" height="123.552" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="167.664" y="150.116" font-size="13" font-family="monospace" fill="#111827">2</text>
+<rect x="211.1" y="211.892" width="130.309" height="247.104" fill="#22c55e" fill-opacity="0.36" stroke="#166534" stroke-width="2.0"/>
+<text x="211.1" y="211.892" font-size="13" font-family="monospace" fill="#111827">3</text>
+<rect x="254.537" y="181.004" width="477.799" height="185.328" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="254.537" y="181.004" font-size="13" font-family="monospace" fill="#111827">4</text>
+<rect x="297.973" y="88.34" width="477.799" height="494.208" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="297.973" y="88.34" font-size="13" font-family="monospace" fill="#111827">5</text>
+<rect x="428.282" y="304.556" width="173.745" height="185.328" fill="#22c55e" fill-opacity="0.36" stroke="#166534" stroke-width="2.0"/>
+<text x="428.282" y="304.556" font-size="13" font-family="monospace" fill="#111827">6</text>
+<rect x="471.718" y="119.228" width="173.745" height="401.544" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="471.718" y="119.228" font-size="13" font-family="monospace" fill="#111827">7</text>
+<rect x="558.591" y="57.452" width="260.618" height="370.656" fill="#60a5fa" fill-opacity="0.24" stroke="#1d4ed8" stroke-width="1.4"/>
+<text x="558.591" y="57.452" font-size="13" font-family="monospace" fill="#111827">8</text>
+</svg>
