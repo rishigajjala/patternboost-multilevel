@@ -8,6 +8,7 @@ from multilevel.components import (
     COMPONENTS,
     REPLACEMENT_COMPONENTS,
     REPLACEMENT_REMOVALS,
+    REPLACEMENT_RUNTIME_PARAMETERS,
     SYMMETRY_CROSSOVER_LOCAL_SEARCH,
     SYMMETRY_CROSSOVER_REPRESENTATIONS,
     build_replacement_delta_matrix,
@@ -101,6 +102,32 @@ def test_replacement_delta_and_retained_cells_form_full_3x3x3_tables():
         assert retained_cells.isdisjoint(delta_cells)
         assert retained_cells | delta_cells == full_cells
         assert len(full_cells) == 27
+
+
+def test_replacement_delta_embeds_historical_runtime_with_fixed_grid_override():
+    rows = build_replacement_delta_matrix(stage="main", budget_seconds=24 * 3600, git_commit="abc123")
+    for row in rows:
+        for key, value in REPLACEMENT_RUNTIME_PARAMETERS.items():
+            fixed_grid = (
+                key == "grid"
+                and row["problem"] == "unit_square"
+                and row["representation"] == "fixed_symmetry_grid"
+            )
+            expected = 16 if fixed_grid else value
+            assert row[key] == expected
+
+    fixed_grid_rows = [
+        row
+        for row in rows
+        if row["problem"] == "unit_square" and row["representation"] == "fixed_symmetry_grid"
+    ]
+    assert len(fixed_grid_rows) == 9
+    assert {row["grid"] for row in fixed_grid_rows} == {16}
+    assert {
+        row["grid"]
+        for row in rows
+        if not (row["problem"] == "unit_square" and row["representation"] == "fixed_symmetry_grid")
+    } == {8}
 
 
 def test_fixed_symmetry_representations_preserve_cardinality_and_score():

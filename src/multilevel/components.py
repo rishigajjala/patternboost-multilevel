@@ -159,6 +159,21 @@ REPLACEMENT_COMPONENTS: dict[str, ProblemComponents] = {
 }
 
 
+REPLACEMENT_RUNTIME_PARAMETERS: dict[str, int] = {
+    "n": 8,
+    "grid": 8,
+    "iterations": 1_000_000,
+    "population": 32,
+    "elite": 6,
+    "exact_every": 5,
+    "train_every": 7,
+    "model_samples": 16,
+    "model_epochs": 3,
+    "block_size": 128,
+    "checkpoint_every": 1,
+}
+
+
 def iter_cells(problems: Iterable[str] | None = None):
     selected = tuple(problems) if problems is not None else tuple(COMPONENTS)
     for problem in selected:
@@ -336,6 +351,9 @@ def build_replacement_delta_matrix(
                 "local_search": local_search,
                 "surrogate": surrogate,
             }
+            runtime = dict(REPLACEMENT_RUNTIME_PARAMETERS)
+            if problem == "unit_square" and representation == "fixed_symmetry_grid":
+                runtime["grid"] = 16
             rows.append(
                 {
                     "schema": "run_matrix_row_v1",
@@ -352,6 +370,7 @@ def build_replacement_delta_matrix(
                     "experiment_group": experiment_group,
                     "removed_representation": REPLACEMENT_REMOVALS[problem]["representation"],
                     "removed_local_search": REPLACEMENT_REMOVALS[problem]["local_search"],
+                    **runtime,
                     **cell,
                 }
             )

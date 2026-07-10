@@ -40,3 +40,17 @@ PYTHON_BIN=python3 BUDGET_SECONDS=86400 \
 
 There is no seed-replication axis. Each row begins from fresh random geometry;
 the recorded RNG state exists only for provenance and exact replay.
+
+## Runtime compatibility
+
+The matrix embeds the completed table's runtime settings: `n=8`, population
+32, elite size 6, exact scoring every 5 generations, Transformer training
+every 7 generations, 16 model samples, 3 model epochs, and grid 8. The only
+override is `grid=16` for rows using `unit_square/fixed_symmetry_grid`.
+
+That representation fixes the common side at `Q=2`. On grid 8, three vertical
+lines cover every possible x-interval, so the required `tau_int >= 4` is
+impossible. Grid 16 restores a nontrivial search domain while leaving `n=8`
+and every optimization hyperparameter unchanged. The wider domain is part of
+the replacement representation; old-representation/new-local-search rows stay
+at the historical grid 8.
