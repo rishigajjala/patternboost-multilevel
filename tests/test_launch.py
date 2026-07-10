@@ -20,6 +20,7 @@ def test_write_slurm_array_preserves_target_hpc_paths(tmp_path, monkeypatch):
         partition="compute",
         cpus_per_task=1,
         mem="2G",
+        conda_env="/share/apps/NYUAD5/miniconda/3-4.11.0/envs/pytorch-2.7.1",
     )
 
     script = script_path.read_text(encoding="utf-8")
@@ -27,6 +28,7 @@ def test_write_slurm_array_preserves_target_hpc_paths(tmp_path, monkeypatch):
     assert "--matrix runs/matrix.jsonl" in script
     assert "--out-root /home/sg9396/patternboost/multi-level/runs/hpc" in script
     assert "/System/Volumes/Data/home" not in script
+    assert script.index("set +u") < script.index("conda activate") < script.index("set -u", script.index("set +u"))
 
 
 def test_write_slurm_array_supports_exploratory_runner(tmp_path):

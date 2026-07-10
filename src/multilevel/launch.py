@@ -94,6 +94,7 @@ cd {shlex.quote(project)}
 mkdir -p {shlex.quote(slurm_log_dir)}
 
 VENV="${{VENV:-}}"
+set +u
 if [ -n "$VENV" ] && [ -f "$VENV/bin/activate" ]; then
   source "$VENV/bin/activate"
 else
@@ -112,6 +113,7 @@ else
 {conda_line}
   fi
 fi
+set -u
 
 export PYTHONPATH=src
 export OMP_NUM_THREADS="${{SLURM_CPUS_PER_TASK:-{cpus_per_task}}}"
