@@ -9,6 +9,7 @@ from multilevel.components import (
     REPLACEMENT_COMPONENTS,
     REPLACEMENT_REMOVALS,
     REPLACEMENT_RUNTIME_PARAMETERS,
+    REPLACEMENT_RUNTIME_OVERRIDES,
     SYMMETRY_CROSSOVER_LOCAL_SEARCH,
     SYMMETRY_CROSSOVER_REPRESENTATIONS,
     build_replacement_delta_matrix,
@@ -104,30 +105,27 @@ def test_replacement_delta_and_retained_cells_form_full_3x3x3_tables():
         assert len(full_cells) == 27
 
 
-def test_replacement_delta_embeds_historical_runtime_with_fixed_grid_override():
+def test_replacement_delta_embeds_successful_probe_runtime():
     rows = build_replacement_delta_matrix(stage="main", budget_seconds=24 * 3600, git_commit="abc123")
     for row in rows:
-        for key, value in REPLACEMENT_RUNTIME_PARAMETERS.items():
-            fixed_grid = (
-                key == "grid"
-                and row["problem"] == "unit_square"
-                and row["representation"] == "fixed_symmetry_grid"
-            )
-            expected = 16 if fixed_grid else value
+        expected_runtime = dict(REPLACEMENT_RUNTIME_PARAMETERS)
+        expected_runtime.update(REPLACEMENT_RUNTIME_OVERRIDES.get(row["problem"], {}))
+        for key, expected in expected_runtime.items():
             assert row[key] == expected
+        assert row["experiment_family"] == "replacement_delta_v2_probe_runtime"
 
-    fixed_grid_rows = [
-        row
-        for row in rows
-        if row["problem"] == "unit_square" and row["representation"] == "fixed_symmetry_grid"
-    ]
-    assert len(fixed_grid_rows) == 9
-    assert {row["grid"] for row in fixed_grid_rows} == {16}
-    assert {
-        row["grid"]
-        for row in rows
-        if not (row["problem"] == "unit_square" and row["representation"] == "fixed_symmetry_grid")
-    } == {8}
+    for problem, expected_n, expected_grid in (
+        ("misr", 12, 8),
+        ("unit_square", 20, 16),
+        ("guillotine", 12, 8),
+    ):
+        problem_rows = [row for row in rows if row["problem"] == problem]
+        assert len(problem_rows) == 15
+        assert {row["n"] for row in problem_rows} == {expected_n}
+        assert {row["grid"] for row in problem_rows} == {expected_grid}
+        assert {row["population"] for row in problem_rows} == {16}
+        assert {row["elite"] for row in problem_rows} == {4}
+        assert {row["train_every"] for row in problem_rows} == {10}
 
 
 def test_fixed_symmetry_representations_preserve_cardinality_and_score():

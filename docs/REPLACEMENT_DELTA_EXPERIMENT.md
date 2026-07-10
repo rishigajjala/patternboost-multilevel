@@ -41,16 +41,21 @@ PYTHON_BIN=python3 BUDGET_SECONDS=86400 \
 There is no seed-replication axis. Each row begins from fresh random geometry;
 the recorded RNG state exists only for provenance and exact replay.
 
-## Runtime compatibility
+## Successful-probe runtime
 
-The matrix embeds the completed table's runtime settings: `n=8`, population
-32, elite size 6, exact scoring every 5 generations, Transformer training
-every 7 generations, 16 model samples, 3 model epochs, and grid 8. The only
-override is `grid=16` for rows using `unit_square/fixed_symmetry_grid`.
+The replacement matrix uses the runtime regime from the successful two-hour
+symmetry/crossover probe. MISR and Guillotine use `n=12` and grid 8;
+unit-square stabbing uses `n=20` and grid 16. Every row uses population 16,
+elite size 4, exact scoring every 5 generations, Transformer training every 10
+generations, 16 model samples, 3 model epochs, and checkpointing every
+generation. The unit-square regime is the one in which the generic
+`sqstab_exact_grid / symmetry_crossover_hillclimb /
+exact_stab_gap_pressure` row generated and exactly verified a 20-square
+certificate with `tau_int=4`, `tau_lp=13/5`, and gap `20/13`.
 
-That representation fixes the common side at `Q=2`. On grid 8, three vertical
-lines cover every possible x-interval, so the required `tau_int >= 4` is
-impossible. Grid 16 restores a nontrivial search domain while leaving `n=8`
-and every optimization hyperparameter unchanged. The wider domain is part of
-the replacement representation; old-representation/new-local-search rows stay
-at the historical grid 8.
+This is experiment family `replacement_delta_v2_probe_runtime`. It supersedes
+the initial `replacement_delta_v1` launch, whose `n=8`, grid-8 unit-square
+rows did not reproduce the successful probe's geometric regime. Because this
+runtime differs from the retained 24-hour table, any combined 81-cell analysis
+must disclose the size/runtime change rather than treating it as a strictly
+component-only ablation.
