@@ -2,10 +2,15 @@ from __future__ import annotations
 
 import random
 from collections import Counter
+from itertools import product
 
 from multilevel.components import (
+    COMPONENTS,
+    REPLACEMENT_COMPONENTS,
+    REPLACEMENT_REMOVALS,
     SYMMETRY_CROSSOVER_LOCAL_SEARCH,
     SYMMETRY_CROSSOVER_REPRESENTATIONS,
+    build_replacement_delta_matrix,
     build_symmetry_crossover_matrix,
 )
 from multilevel.mutations import _exact_hillclimb_key, mutate_instance
@@ -40,6 +45,62 @@ def test_symmetry_crossover_matrix_has_requested_63_cells():
             "representation_only": 9,
             "combined": 3,
         }
+
+
+def test_replacement_delta_has_15_changed_cells_per_problem():
+    rows = build_replacement_delta_matrix(
+        stage="main",
+        budget_seconds=24 * 3600,
+        git_commit="abc123",
+    )
+    assert len(rows) == 45
+    assert Counter(row["problem"] for row in rows) == {
+        "misr": 15,
+        "unit_square": 15,
+        "guillotine": 15,
+    }
+    for problem in REPLACEMENT_COMPONENTS:
+        problem_rows = [row for row in rows if row["problem"] == problem]
+        assert Counter(row["experiment_group"] for row in problem_rows) == {
+            "local_search_only": 6,
+            "representation_only": 6,
+            "combined": 3,
+        }
+
+
+def test_replacement_delta_and_retained_cells_form_full_3x3x3_tables():
+    rows = build_replacement_delta_matrix(stage="main", budget_seconds=60, git_commit="abc123")
+    for problem, replacement in REPLACEMENT_COMPONENTS.items():
+        old = COMPONENTS[problem]
+        removed = REPLACEMENT_REMOVALS[problem]
+        retained_representations = set(old.representations) - {removed["representation"]}
+        retained_local_search = set(old.local_search) - {removed["local_search"]}
+        retained_cells = {
+            (representation, local_search, surrogate)
+            for representation, local_search, surrogate in product(
+                retained_representations,
+                retained_local_search,
+                old.surrogates,
+            )
+        }
+        delta_cells = {
+            (row["representation"], row["local_search"], row["surrogate"])
+            for row in rows
+            if row["problem"] == problem
+        }
+        full_cells = {
+            (representation, local_search, surrogate)
+            for representation, local_search, surrogate in product(
+                replacement.representations,
+                replacement.local_search,
+                replacement.surrogates,
+            )
+        }
+        assert len(retained_cells) == 12
+        assert len(delta_cells) == 15
+        assert retained_cells.isdisjoint(delta_cells)
+        assert retained_cells | delta_cells == full_cells
+        assert len(full_cells) == 27
 
 
 def test_fixed_symmetry_representations_preserve_cardinality_and_score():

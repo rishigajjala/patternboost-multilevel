@@ -14,8 +14,10 @@ from multilevel.components import (
     COMPONENTS,
     CONTROL_MODES,
     DEFAULT_STAGE_BUDGETS,
+    REPLACEMENT_COMPONENTS,
     build_control_matrix,
     build_matrix,
+    build_replacement_delta_matrix,
     build_symmetry_crossover_matrix,
     fresh_rng_seed,
 )
@@ -102,6 +104,24 @@ def cmd_symmetry_crossover_matrix(args: argparse.Namespace) -> int:
     if budget is None:
         budget = DEFAULT_STAGE_BUDGETS.get(args.stage, 0)
     rows = build_symmetry_crossover_matrix(
+        stage=args.stage,
+        budget_seconds=int(budget),
+        git_commit=commit,
+        problems=args.problem,
+    )
+    out = Path(args.out)
+    _write_jsonl(out, rows)
+    print(f"wrote {len(rows)} rows to {out}")
+    return 0
+
+
+def cmd_replacement_delta_matrix(args: argparse.Namespace) -> int:
+    cwd = Path.cwd()
+    commit = args.git_commit if args.git_commit is not None else git_commit(cwd)
+    budget = args.budget_seconds
+    if budget is None:
+        budget = DEFAULT_STAGE_BUDGETS.get(args.stage, 0)
+    rows = build_replacement_delta_matrix(
         stage=args.stage,
         budget_seconds=int(budget),
         git_commit=commit,
@@ -467,6 +487,22 @@ def build_parser() -> argparse.ArgumentParser:
     symmetry_matrix.add_argument("--problem", action="append", choices=sorted(COMPONENTS), default=None)
     symmetry_matrix.add_argument("--out", default="runs/symmetry_crossover_matrix.jsonl")
     symmetry_matrix.set_defaults(func=cmd_symmetry_crossover_matrix)
+
+    replacement_matrix = sub.add_parser(
+        "replacement-delta-matrix",
+        help="generate the 45 changed cells in the replacement 3x3x3 tables",
+    )
+    replacement_matrix.add_argument("--stage", default="main", choices=sorted(DEFAULT_STAGE_BUDGETS))
+    replacement_matrix.add_argument("--budget-seconds", type=int, default=None)
+    replacement_matrix.add_argument("--git-commit", default=None)
+    replacement_matrix.add_argument(
+        "--problem",
+        action="append",
+        choices=sorted(REPLACEMENT_COMPONENTS),
+        default=None,
+    )
+    replacement_matrix.add_argument("--out", default="runs/replacement_delta_matrix.jsonl")
+    replacement_matrix.set_defaults(func=cmd_replacement_delta_matrix)
 
     control_matrix = sub.add_parser("control-matrix", help="generate manuscript control rows")
     control_matrix.add_argument("--stage", default="controls", choices=sorted(DEFAULT_STAGE_BUDGETS))

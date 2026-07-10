@@ -100,6 +100,65 @@ SYMMETRY_CROSSOVER_REPRESENTATIONS = {
 SYMMETRY_CROSSOVER_LOCAL_SEARCH = "symmetry_crossover_hillclimb"
 
 
+REPLACEMENT_REMOVALS: dict[str, dict[str, str]] = {
+    "misr": {
+        "representation": "endpoint_sequence_pair",
+        "local_search": "lp_dual_pivot",
+    },
+    "unit_square": {
+        "representation": "square_direct",
+        "local_search": "primal_dual_lines",
+    },
+    "guillotine": {
+        "representation": "sequence_pair_packing",
+        "local_search": "recursive_gadget_assembly",
+    },
+}
+
+
+REPLACEMENT_COMPONENTS: dict[str, ProblemComponents] = {
+    "misr": ProblemComponents(
+        representations=(
+            "triangle_free_rect",
+            "quadratic_program_rectangles",
+            "fixed_symmetry_rectangles",
+        ),
+        local_search=(
+            "sequence_pair_pivot",
+            "program_coeff_pivot",
+            SYMMETRY_CROSSOVER_LOCAL_SEARCH,
+        ),
+        surrogates=COMPONENTS["misr"].surrogates,
+    ),
+    "unit_square": ProblemComponents(
+        representations=(
+            "line_square_incidence",
+            "sqstab_exact_grid",
+            "fixed_symmetry_grid",
+        ),
+        local_search=(
+            "coord_mutation",
+            "sqstab_local_hillclimb",
+            SYMMETRY_CROSSOVER_LOCAL_SEARCH,
+        ),
+        surrogates=COMPONENTS["unit_square"].surrogates,
+    ),
+    "guillotine": ProblemComponents(
+        representations=(
+            "rect_direct_disjoint",
+            "recursive_obstruction_grammar",
+            "fixed_symmetry_packing",
+        ),
+        local_search=(
+            "packing_resize",
+            "witness_breaking",
+            SYMMETRY_CROSSOVER_LOCAL_SEARCH,
+        ),
+        surrogates=COMPONENTS["guillotine"].surrogates,
+    ),
+}
+
+
 def iter_cells(problems: Iterable[str] | None = None):
     selected = tuple(problems) if problems is not None else tuple(COMPONENTS)
     for problem in selected:
@@ -231,6 +290,68 @@ def build_symmetry_crossover_matrix(
                     "git_commit": git_commit or None,
                     "experiment_family": "symmetry_crossover_v1",
                     "experiment_group": experiment_group,
+                    **cell,
+                }
+            )
+    return rows
+
+
+def build_replacement_delta_matrix(
+    *,
+    stage: str,
+    budget_seconds: int,
+    git_commit: str,
+    problems: Iterable[str] | None = None,
+) -> list[dict[str, object]]:
+    """Build only the 15 changed cells in each replacement 3x3x3 table."""
+    selected = tuple(problems) if problems is not None else tuple(REPLACEMENT_COMPONENTS)
+    rows: list[dict[str, object]] = []
+    for problem in selected:
+        if problem not in REPLACEMENT_COMPONENTS:
+            raise ValueError(f"no replacement design for problem: {problem}")
+        old = COMPONENTS[problem]
+        new = REPLACEMENT_COMPONENTS[problem]
+        added_representations = set(new.representations) - set(old.representations)
+        added_local_search = set(new.local_search) - set(old.local_search)
+        if len(added_representations) != 1 or len(added_local_search) != 1:
+            raise ValueError(f"replacement design for {problem} must add one representation and one local search")
+        new_representation = next(iter(added_representations))
+        new_local_search = next(iter(added_local_search))
+        for representation, local_search, surrogate in product(
+            new.representations,
+            new.local_search,
+            new.surrogates,
+        ):
+            if representation != new_representation and local_search != new_local_search:
+                continue
+            if representation == new_representation and local_search == new_local_search:
+                experiment_group = "combined"
+            elif representation == new_representation:
+                experiment_group = "representation_only"
+            else:
+                experiment_group = "local_search_only"
+            cell = {
+                "problem": problem,
+                "representation": representation,
+                "local_search": local_search,
+                "surrogate": surrogate,
+            }
+            rows.append(
+                {
+                    "schema": "run_matrix_row_v1",
+                    "run_id": make_run_id(
+                        **cell,
+                        budget_seconds=budget_seconds,
+                        git_commit=git_commit,
+                    ),
+                    "stage": stage,
+                    "rng_seed": fresh_rng_seed(),
+                    "budget_seconds": budget_seconds,
+                    "git_commit": git_commit or None,
+                    "experiment_family": "replacement_delta_v1",
+                    "experiment_group": experiment_group,
+                    "removed_representation": REPLACEMENT_REMOVALS[problem]["representation"],
+                    "removed_local_search": REPLACEMENT_REMOVALS[problem]["local_search"],
                     **cell,
                 }
             )
