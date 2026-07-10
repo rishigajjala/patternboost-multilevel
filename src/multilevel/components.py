@@ -83,6 +83,16 @@ CONTROL_BASE_CELLS: dict[str, dict[str, str]] = {
 }
 
 
+SYMMETRY_CROSSOVER_REPRESENTATIONS = {
+    "misr": "fixed_symmetry_rectangles",
+    "unit_square": "fixed_symmetry_grid",
+    "guillotine": "fixed_symmetry_packing",
+}
+
+
+SYMMETRY_CROSSOVER_LOCAL_SEARCH = "symmetry_crossover_hillclimb"
+
+
 def iter_cells(problems: Iterable[str] | None = None):
     selected = tuple(problems) if problems is not None else tuple(COMPONENTS)
     for problem in selected:
@@ -160,6 +170,63 @@ def build_matrix(
                 **cell,
             }
         )
+    return rows
+
+
+def build_symmetry_crossover_matrix(
+    *,
+    stage: str,
+    budget_seconds: int,
+    git_commit: str,
+    problems: Iterable[str] | None = None,
+) -> list[dict[str, object]]:
+    """Build the 21-cell-per-problem symmetry/crossover experiment.
+
+    For each problem, isolate the new local search in 3x1x3 cells, isolate the
+    new representation in 1x3x3 cells, and combine both in 1x1x3 cells.
+    """
+    selected = tuple(problems) if problems is not None else tuple(COMPONENTS)
+    rows: list[dict[str, object]] = []
+    for problem in selected:
+        comp = COMPONENTS[problem]
+        new_representation = SYMMETRY_CROSSOVER_REPRESENTATIONS[problem]
+        cells: list[tuple[str, str, str, str]] = []
+        cells.extend(
+            (representation, SYMMETRY_CROSSOVER_LOCAL_SEARCH, surrogate, "local_search_only")
+            for representation, surrogate in product(comp.representations, comp.surrogates)
+        )
+        cells.extend(
+            (new_representation, local_search, surrogate, "representation_only")
+            for local_search, surrogate in product(comp.local_search, comp.surrogates)
+        )
+        cells.extend(
+            (new_representation, SYMMETRY_CROSSOVER_LOCAL_SEARCH, surrogate, "combined")
+            for surrogate in comp.surrogates
+        )
+        for representation, local_search, surrogate, experiment_group in cells:
+            cell = {
+                "problem": problem,
+                "representation": representation,
+                "local_search": local_search,
+                "surrogate": surrogate,
+            }
+            rows.append(
+                {
+                    "schema": "run_matrix_row_v1",
+                    "run_id": make_run_id(
+                        **cell,
+                        budget_seconds=budget_seconds,
+                        git_commit=git_commit,
+                    ),
+                    "stage": stage,
+                    "rng_seed": fresh_rng_seed(),
+                    "budget_seconds": budget_seconds,
+                    "git_commit": git_commit or None,
+                    "experiment_family": "symmetry_crossover_v1",
+                    "experiment_group": experiment_group,
+                    **cell,
+                }
+            )
     return rows
 
 

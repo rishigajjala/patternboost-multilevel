@@ -84,6 +84,58 @@ def _to_int(value: Any, default: int = 0) -> int:
         return default
 
 
+def _fixed_representation_target(instance: dict[str, Any], *, n_min: int, n_max: int) -> int:
+    payload = instance.get("_representation_payload", {})
+    raw_target = payload.get("target_n", n_min) if isinstance(payload, dict) else n_min
+    return max(n_min, min(n_max, _to_int(raw_target, n_min)))
+
+
+def _canonicalize_d4_squares(squares: list[list[int]]) -> list[list[int]]:
+    """Canonicalize square positions under translation and all eight D4 symmetries."""
+    if not squares:
+        return []
+    forms: list[tuple[tuple[int, int], ...]] = []
+    for swap_axes in (False, True):
+        for x_sign in (-1, 1):
+            for y_sign in (-1, 1):
+                transformed = []
+                for x, y in squares:
+                    a, b = (y, x) if swap_axes else (x, y)
+                    transformed.append((x_sign * a, y_sign * b))
+                min_x = min(x for x, _ in transformed)
+                min_y = min(y for _, y in transformed)
+                forms.append(tuple(sorted({(x - min_x, y - min_y) for x, y in transformed})))
+    return [list(point) for point in min(forms)]
+
+
+def _canonicalize_d4_rectangles(rectangles: list[list[int]]) -> list[list[int]]:
+    """Canonicalize axis-parallel rectangles under translation and D4 symmetries."""
+    if not rectangles:
+        return []
+    forms: list[tuple[tuple[int, int, int, int], ...]] = []
+    for swap_axes in (False, True):
+        for x_sign in (-1, 1):
+            for y_sign in (-1, 1):
+                transformed: list[tuple[int, int, int, int]] = []
+                for x1, x2, y1, y2 in rectangles:
+                    x_interval = (y1, y2) if swap_axes else (x1, x2)
+                    y_interval = (x1, x2) if swap_axes else (y1, y2)
+                    tx1, tx2 = x_interval if x_sign > 0 else (-x_interval[1], -x_interval[0])
+                    ty1, ty2 = y_interval if y_sign > 0 else (-y_interval[1], -y_interval[0])
+                    transformed.append((tx1, tx2, ty1, ty2))
+                min_x = min(rect[0] for rect in transformed)
+                min_y = min(rect[2] for rect in transformed)
+                forms.append(
+                    tuple(
+                        sorted(
+                            (x1 - min_x, x2 - min_x, y1 - min_y, y2 - min_y)
+                            for x1, x2, y1, y2 in transformed
+                        )
+                    )
+                )
+    return [list(rectangle) for rectangle in min(forms)]
+
+
 def _clean_rectangles(raw: Any, *, grid: int, n_min: int, n_max: int) -> list[list[int]]:
     if not isinstance(raw, list):
         raw = []
@@ -662,6 +714,17 @@ def _misr_instance(representation: str, rng: random.Random, *, n: int, grid: int
         return _misr_triangle_free_rectangles(rng, n=n, grid=grid)
     if representation == "quadratic_program_rectangles":
         return _misr_quadratic_program_rectangles(rng, n=n, grid=grid)
+    if representation == "fixed_symmetry_rectangles":
+        rectangles = _canonicalize_d4_rectangles(GENERATORS["misr"](rng, n=n, grid=grid)["rectangles"])
+        return _tag(
+            {"schema": "misr_instance_v1", "rectangles": rectangles},
+            representation,
+            {
+                "generator": "random_fixed_cardinality_rectangles",
+                "target_n": len(rectangles),
+                "symmetry_group": "D4_translation",
+            },
+        )
     raise ValueError(f"unknown MISR representation: {representation}")
 
 
@@ -766,6 +829,19 @@ def _repair_misr(
     n_min: int,
     n_max: int,
 ) -> dict[str, Any]:
+    if representation == "fixed_symmetry_rectangles":
+        target_n = _fixed_representation_target(instance, n_min=n_min, n_max=n_max)
+        rects = _clean_rectangles(instance.get("rectangles"), grid=grid, n_min=target_n, n_max=target_n)
+        rects = _canonicalize_d4_rectangles(rects)
+        return _tag(
+            {"schema": "misr_instance_v1", "rectangles": rects},
+            representation,
+            {
+                "generator": "random_fixed_cardinality_rectangles",
+                "target_n": target_n,
+                "symmetry_group": "D4_translation",
+            },
+        )
     if representation == "endpoint_sequence_pair":
         payload_in = instance.get("_representation_payload", {})
         h_raw = payload_in.get("H") if isinstance(payload_in, dict) else None
@@ -881,6 +957,19 @@ def _unit_square_instance(representation: str, rng: random.Random, *, n: int, gr
         return _unit_square_threshold_layers(rng, n=n, grid=grid)
     if representation == "sqstab_exact_grid":
         return _unit_square_sqstab_exact_grid(rng, n=n, grid=grid)
+    if representation == "fixed_symmetry_grid":
+        side = max(1, min(4, (grid + 2) // 4))
+        squares = _canonicalize_d4_squares(_random_unique_squares(rng, n=max(1, n), grid=grid))
+        return _tag(
+            {"schema": "unit_square_instance_v1", "squares": squares, "side": side},
+            representation,
+            {
+                "generator": "random_fixed_cardinality_grid",
+                "target_n": len(squares),
+                "side": side,
+                "symmetry_group": "D4_translation",
+            },
+        )
     raise ValueError(f"unknown unit-square representation: {representation}")
 
 
@@ -987,6 +1076,35 @@ def _repair_unit_square(
     n_max: int,
 ) -> dict[str, Any]:
     side = _unit_square_side(instance, grid=grid)
+    if representation == "fixed_symmetry_grid":
+        target_n = _fixed_representation_target(instance, n_min=n_min, n_max=n_max)
+        capacity = (grid + 1) ** 2
+        if target_n > capacity:
+            raise ValueError(f"fixed_symmetry_grid needs {target_n} distinct cells but grid capacity is {capacity}")
+        squares = _canonicalize_d4_squares(
+            _clean_squares(instance.get("squares"), grid=grid, n_min=0, n_max=target_n)
+        )
+        seen = {tuple(square) for square in squares}
+        cursor = 0
+        while len(squares) < target_n:
+            candidate = (cursor % (grid + 1), cursor // (grid + 1))
+            cursor += 1
+            if candidate in seen:
+                continue
+            seen.add(candidate)
+            squares.append([candidate[0], candidate[1]])
+        squares = _canonicalize_d4_squares(squares)
+        clean = {"schema": "unit_square_instance_v1", "squares": squares, "side": side}
+        return _tag(
+            clean,
+            representation,
+            {
+                "generator": "random_fixed_cardinality_grid",
+                "target_n": target_n,
+                "side": side,
+                "symmetry_group": "D4_translation",
+            },
+        )
     squares = _clean_squares(instance.get("squares"), grid=grid, n_min=n_min, n_max=n_max)
     clean = {"schema": "unit_square_instance_v1", "squares": squares}
     if side != 1 or representation == "sqstab_exact_grid":
@@ -1061,6 +1179,17 @@ def _guillotine_instance(representation: str, rng: random.Random, *, n: int, gri
         return _guillotine_sequence_pair(rng, n=n, grid=grid)
     if representation == "recursive_obstruction_grammar":
         return _guillotine_recursive_obstruction(rng, n=n, grid=grid)
+    if representation == "fixed_symmetry_packing":
+        rectangles = _canonicalize_d4_rectangles(_guillotine_random_valid_rects(rng, n=n, grid=grid))
+        return _tag(
+            {"schema": "guillotine_instance_v1", "rectangles": rectangles},
+            representation,
+            {
+                "generator": "random_fixed_cardinality_packing",
+                "target_n": len(rectangles),
+                "symmetry_group": "D4_translation",
+            },
+        )
     raise ValueError(f"unknown guillotine representation: {representation}")
 
 
@@ -1236,6 +1365,25 @@ def _repair_guillotine(
     n_min: int,
     n_max: int,
 ) -> dict[str, Any]:
+    if representation == "fixed_symmetry_packing":
+        target_n = _fixed_representation_target(instance, n_min=n_min, n_max=n_max)
+        rects = _clean_guillotine_rectangles(
+            instance.get("rectangles"),
+            grid=grid,
+            n_min=target_n,
+            n_max=target_n,
+        )
+        rects = _disjoint_rectangles_preserving_order(rects, grid=grid, n_min=target_n)[:target_n]
+        rects = _canonicalize_d4_rectangles(rects)
+        return _tag(
+            {"schema": "guillotine_instance_v1", "rectangles": rects},
+            representation,
+            {
+                "generator": "random_fixed_cardinality_packing",
+                "target_n": target_n,
+                "symmetry_group": "D4_translation",
+            },
+        )
     rects = _clean_guillotine_rectangles(instance.get("rectangles"), grid=grid, n_min=n_min, n_max=n_max)
     if representation in {"rect_direct_disjoint", "sequence_pair_packing", "recursive_obstruction_grammar"}:
         rects = _disjoint_rectangles_preserving_order(rects, grid=grid, n_min=n_min)

@@ -26,6 +26,10 @@ from multilevel.representations import (
 )
 
 
+SYMMETRY_CROSSOVER_LOCAL_SEARCH = "symmetry_crossover_hillclimb"
+SYMMETRY_CROSSOVER_STEPS = 25
+
+
 def mutate_instance(
     problem: str,
     local_search: str,
@@ -38,6 +42,16 @@ def mutate_instance(
     representation: str | None = None,
 ) -> dict[str, Any]:
     rep = representation or str(instance.get("_representation") or default_representation(problem))
+    if local_search == SYMMETRY_CROSSOVER_LOCAL_SEARCH:
+        return _symmetry_crossover_hillclimb(
+            problem,
+            instance,
+            rng,
+            grid=grid,
+            n_min=n_min,
+            n_max=n_max,
+            representation=rep,
+        )
     if problem == "misr":
         child = mutate_misr(local_search, instance, rng, grid=grid, n_min=n_min, n_max=n_max, representation=rep)
         return repair_instance_for_representation(problem, rep, child, grid=grid, n_min=n_min, n_max=n_max)
@@ -48,6 +62,214 @@ def mutate_instance(
         child = mutate_guillotine(local_search, instance, rng, grid=grid, n_min=n_min, n_max=n_max, representation=rep)
         return repair_instance_for_representation(problem, rep, child, grid=grid, n_min=n_min, n_max=n_max)
     raise ValueError(f"unknown problem: {problem}")
+
+
+def _symmetry_crossover_hillclimb(
+    problem: str,
+    instance: dict[str, Any],
+    rng: random.Random,
+    *,
+    grid: int,
+    n_min: int,
+    n_max: int,
+    representation: str,
+) -> dict[str, Any]:
+    """Run the imported 55/25/10/10 move portfolio with exact acceptance."""
+    best = repair_instance_for_representation(
+        problem,
+        representation,
+        copy.deepcopy(instance),
+        grid=grid,
+        n_min=n_min,
+        n_max=n_max,
+    )
+    best_key = _exact_hillclimb_key(problem, best)
+    accepted = 0
+    for _ in range(SYMMETRY_CROSSOVER_STEPS):
+        if problem == "misr" and representation == "quadratic_program_rectangles":
+            trial = _mutate_quadratic_program_portfolio(best, rng, grid=grid, n_min=n_min, n_max=n_max)
+        else:
+            trial = _mutate_geometry_portfolio(problem, best, rng, grid=grid)
+            trial.pop("_representation_payload", None)
+        try:
+            trial = repair_instance_for_representation(
+                problem,
+                representation,
+                trial,
+                grid=grid,
+                n_min=n_min,
+                n_max=n_max,
+            )
+            trial_key = _exact_hillclimb_key(problem, trial)
+        except Exception:
+            continue
+        if trial_key >= best_key:
+            best = trial
+            best_key = trial_key
+            accepted += 1
+    best["_local_search_payload"] = {
+        "algorithm": SYMMETRY_CROSSOVER_LOCAL_SEARCH,
+        "steps": SYMMETRY_CROSSOVER_STEPS,
+        "accepted": accepted,
+        "move_probabilities": {"shift": 0.55, "random_move": 0.25, "crossover": 0.10, "symmetry": 0.10},
+        "acceptance": "exact_nonworsening",
+    }
+    return best
+
+
+def _exact_hillclimb_key(problem: str, instance: dict[str, Any]) -> tuple[float, float, float]:
+    geometry = {key: value for key, value in instance.items() if not key.startswith("_")}
+    scorer = {
+        "misr": misr_scorer,
+        "unit_square": unit_square_scorer,
+        "guillotine": guillotine_scorer,
+    }[problem]
+    cert = scorer.score_instance(geometry)
+    score = float(cert["score"])
+    if problem == "misr":
+        return (score, float(cert.get("alpha_lp", 0.0)), -float(cert.get("alpha_int", 0.0)))
+    if problem == "unit_square":
+        return (score, float(cert.get("tau_int", 0.0)), -float(cert.get("tau_lp", 0.0)))
+    return (score, float(cert.get("destroyed", 0.0)), -float(cert.get("saved", 0.0)))
+
+
+def _portfolio_move(rng: random.Random) -> str:
+    draw = rng.random()
+    if draw < 0.55:
+        return "shift"
+    if draw < 0.80:
+        return "random_move"
+    if draw < 0.90:
+        return "crossover"
+    return "symmetry"
+
+
+def _mutate_geometry_portfolio(
+    problem: str,
+    instance: dict[str, Any],
+    rng: random.Random,
+    *,
+    grid: int,
+) -> dict[str, Any]:
+    trial = copy.deepcopy(instance)
+    move = _portfolio_move(rng)
+    if problem == "unit_square":
+        squares = trial.get("squares", [])
+        if not squares:
+            return trial
+        if move == "shift":
+            idx = rng.randrange(len(squares))
+            dx, dy = rng.choice([-1, 0, 1]), rng.choice([-1, 0, 1])
+            if dx == 0 and dy == 0:
+                dx = rng.choice([-1, 1])
+            squares[idx] = [max(0, min(grid, squares[idx][0] + dx)), max(0, min(grid, squares[idx][1] + dy))]
+        elif move == "random_move":
+            squares[rng.randrange(len(squares))] = [rng.randrange(grid + 1), rng.randrange(grid + 1)]
+        elif move == "crossover" and len(squares) >= 2:
+            first, second = rng.sample(range(len(squares)), 2)
+            x1, y1 = squares[first]
+            x2, y2 = squares[second]
+            squares[first], squares[second] = [x1, y2], [x2, y1]
+        else:
+            trial["squares"] = _random_d4_squares(squares, rng)
+        return trial
+
+    rectangles = trial.get("rectangles", [])
+    if not rectangles:
+        return trial
+    side = max(grid + 2, max((max(rect) for rect in rectangles), default=grid + 2))
+    if move == "shift":
+        idx = rng.randrange(len(rectangles))
+        dx, dy = rng.choice([-1, 0, 1]), rng.choice([-1, 0, 1])
+        if dx == 0 and dy == 0:
+            dx = rng.choice([-1, 1])
+        x1, x2, y1, y2 = rectangles[idx]
+        width, height = x2 - x1, y2 - y1
+        nx = max(0, min(max(0, side - width), x1 + dx))
+        ny = max(0, min(max(0, side - height), y1 + dy))
+        rectangles[idx] = [nx, nx + width, ny, ny + height]
+    elif move == "random_move":
+        idx = rng.randrange(len(rectangles))
+        x1, x2, y1, y2 = rectangles[idx]
+        width, height = x2 - x1, y2 - y1
+        nx = rng.randrange(max(1, side - width + 1))
+        ny = rng.randrange(max(1, side - height + 1))
+        rectangles[idx] = [nx, nx + width, ny, ny + height]
+    elif move == "crossover" and len(rectangles) >= 2:
+        first, second = rng.sample(range(len(rectangles)), 2)
+        a, b = rectangles[first], rectangles[second]
+        rectangles[first] = [a[0], a[1], b[2], b[3]]
+        rectangles[second] = [b[0], b[1], a[2], a[3]]
+    else:
+        trial["rectangles"] = _random_d4_rectangles(rectangles, rng)
+    return trial
+
+
+def _random_d4_squares(squares: list[list[int]], rng: random.Random) -> list[list[int]]:
+    swap_axes = bool(rng.randrange(2))
+    x_sign = rng.choice([-1, 1])
+    y_sign = rng.choice([-1, 1])
+    transformed = []
+    for x, y in squares:
+        a, b = (y, x) if swap_axes else (x, y)
+        transformed.append([x_sign * a, y_sign * b])
+    min_x = min(x for x, _ in transformed)
+    min_y = min(y for _, y in transformed)
+    return sorted([[x - min_x, y - min_y] for x, y in transformed])
+
+
+def _random_d4_rectangles(rectangles: list[list[int]], rng: random.Random) -> list[list[int]]:
+    swap_axes = bool(rng.randrange(2))
+    x_sign = rng.choice([-1, 1])
+    y_sign = rng.choice([-1, 1])
+    transformed = []
+    for x1, x2, y1, y2 in rectangles:
+        x_interval = (y1, y2) if swap_axes else (x1, x2)
+        y_interval = (x1, x2) if swap_axes else (y1, y2)
+        tx1, tx2 = x_interval if x_sign > 0 else (-x_interval[1], -x_interval[0])
+        ty1, ty2 = y_interval if y_sign > 0 else (-y_interval[1], -y_interval[0])
+        transformed.append([tx1, tx2, ty1, ty2])
+    min_x = min(rect[0] for rect in transformed)
+    min_y = min(rect[2] for rect in transformed)
+    return sorted([[x1 - min_x, x2 - min_x, y1 - min_y, y2 - min_y] for x1, x2, y1, y2 in transformed])
+
+
+def _mutate_quadratic_program_portfolio(
+    instance: dict[str, Any],
+    rng: random.Random,
+    *,
+    grid: int,
+    n_min: int,
+    n_max: int,
+) -> dict[str, Any]:
+    target_n = max(n_min, min(n_max, len(instance.get("rectangles", [])) or n_min))
+    payload = _quadratic_program_payload(instance.get("_representation_payload", {}), n=target_n, grid=grid)
+    coeffs = payload["coeffs"]
+    move = _portfolio_move(rng)
+    if move in {"shift", "random_move"}:
+        name = rng.choice(tuple(coeffs))
+        values = coeffs[name]
+        idx = rng.randrange(len(values))
+        bound = int(payload["coeff_bound"])
+        if move == "shift":
+            values[idx] = max(-bound, min(bound, values[idx] + rng.choice([-1, 1])))
+        else:
+            values[idx] = rng.randrange(-bound, bound + 1)
+    elif move == "crossover":
+        first_name, second_name = rng.sample(tuple(coeffs), 2)
+        first, second = coeffs[first_name], coeffs[second_name]
+        idx = rng.randrange(min(len(first), len(second)))
+        first[idx], second[idx] = second[idx], first[idx]
+    else:
+        coeffs["a"], coeffs["c"] = coeffs["c"], coeffs["a"]
+        coeffs["b"], coeffs["d"] = coeffs["d"], coeffs["b"]
+    return {
+        "schema": "misr_instance_v1",
+        "rectangles": _rectangles_from_quadratic_program_payload(payload, grid=grid),
+        "constraints": {"triangle_free": True},
+        "_representation": "quadratic_program_rectangles",
+        "_representation_payload": payload,
+    }
 
 
 def mutate_misr(

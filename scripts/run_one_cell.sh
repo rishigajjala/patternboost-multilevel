@@ -20,10 +20,11 @@ MODEL_EPOCHS="${MODEL_EPOCHS:-3}"
 BLOCK_SIZE="${BLOCK_SIZE:-128}"
 CHECKPOINT_EVERY="${CHECKPOINT_EVERY:-1}"
 RESUME="${RESUME:-}"
+PYTHON_BIN="${PYTHON_BIN:-python3}"
 
 export PYTHONPATH=src
 if [[ "$RUNNER" == "patternboost-cell" ]]; then
-  python3 -m multilevel.cli patternboost-cell \
+  "$PYTHON_BIN" -m multilevel.cli patternboost-cell \
     --matrix "$MATRIX" \
     --index "$INDEX" \
     --out-root "$OUT_ROOT" \
@@ -41,7 +42,7 @@ if [[ "$RUNNER" == "patternboost-cell" ]]; then
     --n "$N" \
     --grid "$GRID"
 elif [[ "$RUNNER" == "search-cell" ]]; then
-  python3 -m multilevel.cli search-cell \
+  "$PYTHON_BIN" -m multilevel.cli search-cell \
     --matrix "$MATRIX" \
     --index "$INDEX" \
     --out-root "$OUT_ROOT" \
@@ -52,7 +53,7 @@ elif [[ "$RUNNER" == "search-cell" ]]; then
     --n "$N" \
     --grid "$GRID"
 elif [[ "$RUNNER" == "explore-cell" ]]; then
-  python3 -m multilevel.cli explore-cell \
+  "$PYTHON_BIN" -m multilevel.cli explore-cell \
     --matrix "$MATRIX" \
     --index "$INDEX" \
     --out-root "$OUT_ROOT" \
@@ -62,7 +63,7 @@ elif [[ "$RUNNER" == "explore-cell" ]]; then
     --n "$N" \
     --grid "$GRID"
 else
-  python3 -m multilevel.cli run-cell \
+  "$PYTHON_BIN" -m multilevel.cli run-cell \
   --matrix "$MATRIX" \
   --index "$INDEX" \
   --out-root "$OUT_ROOT" \

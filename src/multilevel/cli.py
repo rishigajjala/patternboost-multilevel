@@ -16,6 +16,7 @@ from multilevel.components import (
     DEFAULT_STAGE_BUDGETS,
     build_control_matrix,
     build_matrix,
+    build_symmetry_crossover_matrix,
     fresh_rng_seed,
 )
 from multilevel.exploratory import run_exploratory_search
@@ -87,6 +88,24 @@ def cmd_control_matrix(args: argparse.Namespace) -> int:
         git_commit=commit,
         problems=args.problem,
         control_modes=args.control_mode,
+    )
+    out = Path(args.out)
+    _write_jsonl(out, rows)
+    print(f"wrote {len(rows)} rows to {out}")
+    return 0
+
+
+def cmd_symmetry_crossover_matrix(args: argparse.Namespace) -> int:
+    cwd = Path.cwd()
+    commit = args.git_commit if args.git_commit is not None else git_commit(cwd)
+    budget = args.budget_seconds
+    if budget is None:
+        budget = DEFAULT_STAGE_BUDGETS.get(args.stage, 0)
+    rows = build_symmetry_crossover_matrix(
+        stage=args.stage,
+        budget_seconds=int(budget),
+        git_commit=commit,
+        problems=args.problem,
     )
     out = Path(args.out)
     _write_jsonl(out, rows)
@@ -437,6 +456,17 @@ def build_parser() -> argparse.ArgumentParser:
     matrix.add_argument("--problem", action="append", choices=sorted(COMPONENTS), default=None)
     matrix.add_argument("--out", default="runs/matrix.jsonl")
     matrix.set_defaults(func=cmd_matrix)
+
+    symmetry_matrix = sub.add_parser(
+        "symmetry-crossover-matrix",
+        help="generate the 63-cell fixed-symmetry/crossover experiment",
+    )
+    symmetry_matrix.add_argument("--stage", default="pilot", choices=sorted(DEFAULT_STAGE_BUDGETS))
+    symmetry_matrix.add_argument("--budget-seconds", type=int, default=None)
+    symmetry_matrix.add_argument("--git-commit", default=None)
+    symmetry_matrix.add_argument("--problem", action="append", choices=sorted(COMPONENTS), default=None)
+    symmetry_matrix.add_argument("--out", default="runs/symmetry_crossover_matrix.jsonl")
+    symmetry_matrix.set_defaults(func=cmd_symmetry_crossover_matrix)
 
     control_matrix = sub.add_parser("control-matrix", help="generate manuscript control rows")
     control_matrix.add_argument("--stage", default="controls", choices=sorted(DEFAULT_STAGE_BUDGETS))
