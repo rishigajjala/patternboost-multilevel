@@ -208,6 +208,22 @@ def _row_optional_float(row: dict[str, Any], key: str, default: float | None) ->
     return default if value is None else float(value)
 
 
+def _row_bool(row: dict[str, Any], key: str, default: bool) -> bool:
+    value = row.get(key)
+    if value is None:
+        return default
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        normalized = value.strip().lower()
+        if normalized in {"1", "true", "yes", "on"}:
+            return True
+        if normalized in {"0", "false", "no", "off"}:
+            return False
+        raise ValueError(f"matrix row has invalid boolean {key}={value!r}")
+    return bool(value)
+
+
 def _row_rng_seed(row: dict[str, Any]) -> int:
     value = row.get("rng_seed")
     if value is None:
@@ -418,6 +434,17 @@ def cmd_patternboost_cell(args: argparse.Namespace) -> int:
         run_id=str(row["run_id"]),
         stage=str(row["stage"]),
         budget_seconds=int(row["budget_seconds"]) if row.get("budget_seconds") is not None else None,
+        initial_pool_size=_row_optional_int(row, "initial_pool_size", args.initial_pool_size),
+        immigrants_per_generation=_row_int(
+            row,
+            "immigrants_per_generation",
+            args.immigrants_per_generation,
+        ),
+        preserve_resolution_diversity=_row_bool(
+            row,
+            "preserve_resolution_diversity",
+            args.preserve_resolution_diversity,
+        ),
     )
     print(json.dumps(summary, indent=2, sort_keys=True))
     return 0
@@ -630,6 +657,9 @@ def build_parser() -> argparse.ArgumentParser:
     patternboost_cell.add_argument("--model-epochs", type=int, default=3)
     patternboost_cell.add_argument("--block-size", type=int, default=128)
     patternboost_cell.add_argument("--checkpoint-every", type=int, default=1)
+    patternboost_cell.add_argument("--initial-pool-size", type=int, default=None)
+    patternboost_cell.add_argument("--immigrants-per-generation", type=int, default=0)
+    patternboost_cell.add_argument("--preserve-resolution-diversity", action="store_true")
     patternboost_cell.add_argument("--resume", action="store_true")
     patternboost_cell.add_argument("--control-mode", choices=["patternboost", *CONTROL_MODES], default=None)
     patternboost_cell.add_argument("--n", type=int, default=12)

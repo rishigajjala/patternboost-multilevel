@@ -1,6 +1,18 @@
 from __future__ import annotations
 
-from multilevel.patternboost import _nontrivial_constraints, _training_instance_ok
+import random
+from collections import Counter
+
+from multilevel.patternboost import (
+    _certificate_failure_allows_evolution,
+    _fresh_population,
+    _nontrivial_certificate_ok,
+    _nontrivial_constraints,
+    _nontrivial_surrogate_ok,
+    _select_archive_rows,
+    _select_elites,
+    _training_instance_ok,
+)
 
 
 def test_large_example_constraints_reject_small_defaults():
@@ -52,3 +64,65 @@ def test_training_filter_blocks_small_instances():
         {"rectangles": [[idx, idx + 1, 0, 1] for idx in range(8)]},
         guillotine_constraints,
     )[0]
+
+
+def test_square_resolution_pool_is_balanced_without_targeting_one_side():
+    population = _fresh_population(
+        "unit_square",
+        "sqstab_exact_grid",
+        random.Random(4312),
+        count=128,
+        n=20,
+        grid=16,
+        preserve_resolution_diversity=True,
+    )
+    assert Counter(instance["side"] for instance in population) == {1: 32, 2: 32, 3: 32, 4: 32}
+    assert {len(instance["squares"]) for instance in population} == {20}
+
+
+def test_square_resolution_elites_retain_every_available_resolution():
+    scored = []
+    for index, (score, side) in enumerate(
+        [(10.0, 1), (9.0, 1), (8.0, 1), (7.0, 1), (4.0, 2), (3.0, 3), (2.0, 4)]
+    ):
+        scored.append((score, {"side": side, "squares": [[0, 0]]}, {}, f"id-{index}", "initial"))
+    selected = _select_elites(
+        scored,
+        elite_size=4,
+        problem="unit_square",
+        representation="sqstab_exact_grid",
+        preserve_resolution_diversity=True,
+    )
+    assert {row[1]["side"] for row in selected} == {1, 2, 3, 4}
+
+
+def test_square_training_archive_round_robins_over_resolutions():
+    archive = [
+        (100.0 - index, {"side": side, "squares": [[index, side]]})
+        for index, side in enumerate([1, 1, 1, 1, 2, 2, 3, 3, 4, 4])
+    ]
+    selected = _select_archive_rows(
+        archive,
+        limit=8,
+        problem="unit_square",
+        representation="sqstab_exact_grid",
+        preserve_resolution_diversity=True,
+    )
+    assert Counter(instance["side"] for _, instance in selected) == {1: 2, 2: 2, 3: 2, 4: 2}
+
+
+def test_subthreshold_square_can_evolve_but_cannot_be_exported():
+    constraints = _nontrivial_constraints("unit_square", 20)
+    instance = {"squares": [[index, 0] for index in range(20)], "side": 4}
+    assert _nontrivial_surrogate_ok(
+        "unit_square",
+        instance,
+        {"tau_int": 3},
+        constraints,
+    ) == (True, None)
+
+    certificate = {"squares": instance["squares"], "tau_int": 3}
+    ok, reason = _nontrivial_certificate_ok("unit_square", certificate, constraints)
+    assert not ok
+    assert reason == "stabbing_integer_cover_below_4"
+    assert _certificate_failure_allows_evolution("unit_square", reason)

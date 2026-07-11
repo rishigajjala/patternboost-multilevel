@@ -112,7 +112,7 @@ def test_replacement_delta_embeds_successful_probe_runtime():
         expected_runtime.update(REPLACEMENT_RUNTIME_OVERRIDES.get(row["problem"], {}))
         for key, expected in expected_runtime.items():
             assert row[key] == expected
-        assert row["experiment_family"] == "replacement_delta_v2_probe_runtime"
+        assert row["experiment_family"] == "replacement_delta_v3_resolution_diverse"
 
     for problem, expected_n, expected_grid in (
         ("misr", 12, 8),

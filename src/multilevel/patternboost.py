@@ -50,6 +50,123 @@ def _prune_model_artifacts(model_dir: Path, *, keep: int) -> None:
         shutil.rmtree(old, ignore_errors=True)
 
 
+def _resolution_diversity_active(
+    problem: str,
+    representation: str,
+    preserve_resolution_diversity: bool,
+) -> bool:
+    return (
+        preserve_resolution_diversity
+        and problem == "unit_square"
+        and representation == "sqstab_exact_grid"
+    )
+
+
+def _unit_square_resolution_values(grid: int) -> tuple[int, ...]:
+    return tuple(range(1, max(1, min(grid + 2, 4)) + 1))
+
+
+def _set_unit_square_resolution(instance: dict[str, Any], side: int) -> None:
+    instance["side"] = side
+    payload = instance.get("_representation_payload")
+    if isinstance(payload, dict):
+        payload["side"] = side
+
+
+def _fresh_population(
+    problem: str,
+    representation: str,
+    rng: random.Random,
+    *,
+    count: int,
+    n: int,
+    grid: int,
+    preserve_resolution_diversity: bool,
+    resolution_offset: int = 0,
+) -> list[dict[str, Any]]:
+    population: list[dict[str, Any]] = []
+    resolutions = _unit_square_resolution_values(grid)
+    diverse = _resolution_diversity_active(problem, representation, preserve_resolution_diversity)
+    for index in range(max(0, count)):
+        instance = initial_instance_for_representation(problem, representation, rng, n=n, grid=grid)
+        if diverse:
+            side = resolutions[(resolution_offset + index) % len(resolutions)]
+            _set_unit_square_resolution(instance, side)
+        population.append(instance)
+    rng.shuffle(population)
+    return population
+
+
+def _resolution_bucket(instance: dict[str, Any]) -> int:
+    try:
+        return max(1, int(instance.get("side", 1)))
+    except (TypeError, ValueError):
+        return 1
+
+
+def _select_elites(
+    scored: list[tuple[float, dict[str, Any], dict[str, Any], str, str]],
+    *,
+    elite_size: int,
+    problem: str,
+    representation: str,
+    preserve_resolution_diversity: bool,
+) -> list[tuple[float, dict[str, Any], dict[str, Any], str, str]]:
+    limit = max(1, elite_size)
+    if not _resolution_diversity_active(problem, representation, preserve_resolution_diversity):
+        return scored[:limit]
+
+    best_by_resolution: dict[int, tuple[float, dict[str, Any], dict[str, Any], str, str]] = {}
+    for row in scored:
+        best_by_resolution.setdefault(_resolution_bucket(row[1]), row)
+
+    selected = sorted(best_by_resolution.values(), key=lambda row: row[0], reverse=True)[:limit]
+    selected_ids = {row[3] for row in selected}
+    for row in scored:
+        if len(selected) >= limit:
+            break
+        if row[3] not in selected_ids:
+            selected.append(row)
+            selected_ids.add(row[3])
+    return selected
+
+
+def _select_archive_rows(
+    archive: list[tuple[float, dict[str, Any]]],
+    *,
+    limit: int,
+    problem: str,
+    representation: str,
+    preserve_resolution_diversity: bool,
+) -> list[tuple[float, dict[str, Any]]]:
+    ranked = sorted(archive, key=lambda item: item[0], reverse=True)
+    if not _resolution_diversity_active(problem, representation, preserve_resolution_diversity):
+        return ranked[:limit]
+
+    buckets: dict[int, list[tuple[float, dict[str, Any]]]] = {}
+    for row in ranked:
+        buckets.setdefault(_resolution_bucket(row[1]), []).append(row)
+    selected: list[tuple[float, dict[str, Any]]] = []
+    depth = 0
+    while len(selected) < limit:
+        added = False
+        for side in sorted(buckets):
+            rows = buckets[side]
+            if depth < len(rows):
+                selected.append(rows[depth])
+                added = True
+                if len(selected) >= limit:
+                    break
+        if not added:
+            break
+        depth += 1
+    return selected
+
+
+def _certificate_failure_allows_evolution(problem: str, reason: str | None) -> bool:
+    return problem == "unit_square" and bool(reason and reason.startswith("stabbing_integer_cover_below_"))
+
+
 def _as_tuple(value):
     if isinstance(value, list):
         return tuple(_as_tuple(item) for item in value)
@@ -81,11 +198,23 @@ def run_patternboost(
     run_id: str | None = None,
     stage: str = "pilot",
     budget_seconds: int | None = None,
+    initial_pool_size: int | None = None,
+    immigrants_per_generation: int = 0,
+    preserve_resolution_diversity: bool = False,
 ) -> dict[str, Any]:
     if problem not in SCORERS:
         raise ValueError("PatternBoost runner currently supports the three main ablation problems")
     if control_mode not in {"patternboost", "local_only", "model_only_weak_local", "shuffled_label"}:
         raise ValueError(f"unknown control mode: {control_mode}")
+    configured_initial_pool_size = max(population_size, int(initial_pool_size or population_size))
+    configured_immigrants = max(0, int(immigrants_per_generation))
+    if _resolution_diversity_active(problem, representation, preserve_resolution_diversity):
+        resolution_count = len(_unit_square_resolution_values(grid))
+        if population_size < resolution_count or elite_size < resolution_count:
+            raise ValueError(
+                "resolution diversity needs population and elite sizes at least "
+                f"the {resolution_count} available resolutions"
+            )
     effective_train_every = train_every
     effective_model_samples = model_samples
     effective_model_kind = model_kind
@@ -122,6 +251,8 @@ def run_patternboost(
     model_train_calls = 0
     num_model_samples = 0
     num_model_samples_valid = 0
+    num_random_immigrants = 0
+    num_certificate_ineligible = 0
     fallback_floor_attempts = 0
     fallback_floor_used = False
     latest_model_kind = None
@@ -165,6 +296,8 @@ def run_patternboost(
         model_train_calls = int(checkpoint.get("num_model_train_calls", 0))
         num_model_samples = int(checkpoint.get("num_model_samples", 0))
         num_model_samples_valid = int(checkpoint.get("num_model_samples_valid", 0))
+        num_random_immigrants = int(checkpoint.get("num_random_immigrants", 0))
+        num_certificate_ineligible = int(checkpoint.get("num_certificate_ineligible", 0))
         training_archive_pruned += int(checkpoint.get("num_training_archive_pruned", 0))
         latest_model_kind = checkpoint.get("latest_model_kind")
         time_to_best = checkpoint.get("time_to_best")
@@ -175,10 +308,15 @@ def run_patternboost(
         if checkpoint.get("best_rendering_path"):
             best_rendering_path = Path(str(checkpoint["best_rendering_path"]))
     else:
-        population = [
-            initial_instance_for_representation(problem, representation, rng, n=search_n_min, grid=grid)
-            for _ in range(population_size)
-        ]
+        population = _fresh_population(
+            problem,
+            representation,
+            rng,
+            count=configured_initial_pool_size,
+            n=search_n_min,
+            grid=grid,
+            preserve_resolution_diversity=preserve_resolution_diversity,
+        )
         archive: list[tuple[float, dict[str, Any]]] = []
         seen: set[str] = set()
         nontrivial_rejected_keys: set[str] = set()
@@ -190,7 +328,8 @@ def run_patternboost(
         *,
         extra_metadata: dict[str, Any] | None = None,
     ) -> dict[str, Any] | None:
-        nonlocal best_cert, best_path, best_rendering_path, time_to_best, exact_calls, nontrivial_rejected
+        nonlocal best_cert, best_path, best_rendering_path, time_to_best
+        nonlocal exact_calls, nontrivial_rejected, num_certificate_ineligible
         clean_instance = decoded_geometry(instance)
         try:
             cert = SCORERS[problem].score_instance(clean_instance)
@@ -210,6 +349,11 @@ def run_patternboost(
         cert = attach_certificate_hash(cert)
         ok, reason = _nontrivial_certificate_ok(problem, cert, constraints)
         if not ok:
+            if _certificate_failure_allows_evolution(problem, reason):
+                num_certificate_ineligible += 1
+                cert["certificate_eligible"] = False
+                cert["certificate_ineligible_reason"] = reason
+                return cert
             nontrivial_rejected += 1
             nontrivial_rejected_keys.add(str(cert["candidate_id"]))
             cert["solver_status"] = "rejected_nontriviality"
@@ -245,7 +389,13 @@ def run_patternboost(
 
     def make_training_texts() -> list[str]:
         purge_archive_for_training()
-        top = sorted(archive, key=lambda item: item[0], reverse=True)[: max(elite_size * 8, 8)]
+        top = _select_archive_rows(
+            archive,
+            limit=max(elite_size * 8, 8),
+            problem=problem,
+            representation=representation,
+            preserve_resolution_diversity=preserve_resolution_diversity,
+        )
         if control_mode == "shuffled_label":
             top = list(archive)
             rng.shuffle(top)
@@ -276,7 +426,13 @@ def run_patternboost(
                 "population": population,
                 "archive": [
                     {"surrogate_score": score, "instance": instance}
-                    for score, instance in sorted(archive, key=lambda item: item[0], reverse=True)[: max(population_size * 8, 64)]
+                    for score, instance in _select_archive_rows(
+                        archive,
+                        limit=max(population_size * 8, 64),
+                        problem=problem,
+                        representation=representation,
+                        preserve_resolution_diversity=preserve_resolution_diversity,
+                    )
                     if sha256_obj(decoded_geometry(instance)) not in nontrivial_rejected_keys
                 ],
                 "seen": sorted(seen),
@@ -296,6 +452,11 @@ def run_patternboost(
                 "num_model_train_calls": model_train_calls,
                 "num_model_samples": num_model_samples,
                 "num_model_samples_valid": num_model_samples_valid,
+                "num_random_immigrants": num_random_immigrants,
+                "num_certificate_ineligible": num_certificate_ineligible,
+                "initial_pool_size": configured_initial_pool_size,
+                "immigrants_per_generation": configured_immigrants,
+                "preserve_resolution_diversity": preserve_resolution_diversity,
                 "latest_model_kind": latest_model_kind,
                 "stop_reason": stop_reason,
                 "completed_iterations": completed_iterations,
@@ -303,7 +464,7 @@ def run_patternboost(
         )
 
     event_mode = "a" if resume and checkpoint_path.exists() else "w"
-    with event_path.open(event_mode, encoding="utf-8") as events:
+    with event_path.open(event_mode, encoding="utf-8", buffering=1) as events:
         if generation_start:
             events.write(json.dumps({
                 "schema": "resume_event_v1",
@@ -393,7 +554,13 @@ def run_patternboost(
                 scored.append((s_score, candidate, row["features"], key, source))
                 archive.append((s_score, candidate))
             scored.sort(key=lambda item: item[0], reverse=True)
-            elites = scored[: max(1, elite_size)]
+            elites = _select_elites(
+                scored,
+                elite_size=max(1, elite_size),
+                problem=problem,
+                representation=representation,
+                preserve_resolution_diversity=preserve_resolution_diversity,
+            )
 
             if generation % max(1, exact_every) == 0 or generation == iterations - 1:
                 for rank, (s_score, instance, features, key, source) in enumerate(elites):
@@ -516,7 +683,12 @@ def run_patternboost(
                             "error": repr(exc),
                         }, sort_keys=True) + "\n")
 
-            while len(next_population) < population_size:
+            immigrant_count = min(
+                configured_immigrants,
+                max(0, population_size - len(next_population)),
+            )
+            mutation_target = population_size - immigrant_count
+            while len(next_population) < mutation_target:
                 if not next_population:
                     fresh = initial_instance_for_representation(problem, representation, rng, n=search_n_min, grid=grid)
                     fresh["_source_type"] = "random_reseed"
@@ -542,6 +714,21 @@ def run_patternboost(
                     continue
                 child["_source_type"] = "local_mutation"
                 next_population.append(child)
+            if immigrant_count:
+                immigrants = _fresh_population(
+                    problem,
+                    representation,
+                    rng,
+                    count=immigrant_count,
+                    n=search_n_min,
+                    grid=grid,
+                    preserve_resolution_diversity=preserve_resolution_diversity,
+                    resolution_offset=generation * immigrant_count,
+                )
+                for immigrant in immigrants:
+                    immigrant["_source_type"] = "random_immigrant"
+                next_population.extend(immigrants)
+                num_random_immigrants += len(immigrants)
             population = next_population[:population_size]
             completed_iterations = generation + 1
             if (generation + 1) % max(1, checkpoint_every) == 0 or generation == iterations - 1:
@@ -641,6 +828,9 @@ def run_patternboost(
         "completed_iterations": completed_iterations,
         "stop_reason": stop_reason,
         "population_size": population_size,
+        "initial_pool_size": configured_initial_pool_size,
+        "immigrants_per_generation": configured_immigrants,
+        "preserve_resolution_diversity": preserve_resolution_diversity,
         "elite_size": elite_size,
         "exact_every": exact_every,
         "train_every": train_every,
@@ -681,6 +871,8 @@ def run_patternboost(
         "num_model_train_calls": model_train_calls,
         "num_model_samples": num_model_samples,
         "num_model_samples_valid": num_model_samples_valid,
+        "num_random_immigrants": num_random_immigrants,
+        "num_certificate_ineligible": num_certificate_ineligible,
         "fallback_floor_attempts": fallback_floor_attempts,
         "fallback_floor_used": fallback_floor_used,
         "num_exports": len(list(cert_dir.glob("*.json"))),
@@ -762,14 +954,6 @@ def _nontrivial_surrogate_ok(
     n_items = _instance_item_count(problem, instance)
     if n_items < min_items:
         return False, f"item_count_below_{min_items}"
-
-    if problem == "unit_square":
-        min_tau = int(constraints.get("min_tau_int", 0))
-        tau_hint = _as_int(features.get("tau_int"))
-        if tau_hint is None:
-            tau_hint = _as_int(features.get("greedy_cover"))
-        if tau_hint is not None and tau_hint < min_tau:
-            return False, f"stabbing_integer_cover_below_{min_tau}"
 
     return True, None
 

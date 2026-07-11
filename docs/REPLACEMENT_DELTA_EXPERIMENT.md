@@ -53,7 +53,15 @@ generation. The unit-square regime is the one in which the generic
 exact_stab_gap_pressure` row generated and exactly verified a 20-square
 certificate with `tau_int=4`, `tau_lp=13/5`, and gap `20/13`.
 
-This is experiment family `replacement_delta_v2_probe_runtime`. It supersedes
+The unit-square rows also use an initial pool of 128 candidates, four fresh
+immigrants per generation, and resolution-stratified retention over every
+available integer side length. These are diversity controls, not target hints:
+no side length or score is preferred. Candidates below `tau_int=4` may remain
+as parents, while the final certificate gate still rejects them. This avoids
+permanently losing a potentially useful coordinate resolution before local
+search can improve it.
+
+This is experiment family `replacement_delta_v3_resolution_diverse`. It supersedes
 the initial `replacement_delta_v1` launch, whose `n=8`, grid-8 unit-square
 rows did not reproduce the successful probe's geometric regime. Because this
 runtime differs from the retained 24-hour table, any combined 81-cell analysis

@@ -173,8 +173,18 @@ REPLACEMENT_RUNTIME_PARAMETERS: dict[str, int] = {
     "checkpoint_every": 1,
 }
 
-REPLACEMENT_RUNTIME_OVERRIDES: dict[str, dict[str, int]] = {
-    "unit_square": {"n": 20, "grid": 16},
+UNIT_SQUARE_DIVERSITY_PARAMETERS: dict[str, int | bool] = {
+    "initial_pool_size": 128,
+    "immigrants_per_generation": 4,
+    "preserve_resolution_diversity": True,
+}
+
+REPLACEMENT_RUNTIME_OVERRIDES: dict[str, dict[str, int | bool]] = {
+    "unit_square": {
+        "n": 20,
+        "grid": 16,
+        **UNIT_SQUARE_DIVERSITY_PARAMETERS,
+    },
 }
 
 
@@ -369,7 +379,7 @@ def build_replacement_delta_matrix(
                     "rng_seed": fresh_rng_seed(),
                     "budget_seconds": budget_seconds,
                     "git_commit": git_commit or None,
-                    "experiment_family": "replacement_delta_v2_probe_runtime",
+                    "experiment_family": "replacement_delta_v3_resolution_diverse",
                     "experiment_group": experiment_group,
                     "removed_representation": REPLACEMENT_REMOVALS[problem]["representation"],
                     "removed_local_search": REPLACEMENT_REMOVALS[problem]["local_search"],
