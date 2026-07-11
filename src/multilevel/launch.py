@@ -101,8 +101,8 @@ if [ -n "$VENV" ] && [ -f "$VENV/bin/activate" ]; then
   source "$VENV/bin/activate"
 else
   if command -v module >/dev/null 2>&1; then
-    module purge || true
-    module load miniconda || true
+    module purge >/dev/null 2>&1 || true
+    module load miniconda >/dev/null 2>&1 || true
   fi
   if ! command -v conda >/dev/null 2>&1 && [ -f /share/apps/NYUAD5/miniconda/3-4.11.0/bin/activate ]; then
     source /share/apps/NYUAD5/miniconda/3-4.11.0/bin/activate

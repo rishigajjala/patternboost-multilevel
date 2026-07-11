@@ -30,6 +30,8 @@ def test_write_slurm_array_preserves_target_hpc_paths(tmp_path, monkeypatch):
     assert "--out-root /home/sg9396/patternboost/multi-level/runs/hpc" in script
     assert "/System/Volumes/Data/home" not in script
     assert script.index("set +u") < script.index("conda activate") < script.index("set -u", script.index("set +u"))
+    assert "module purge >/dev/null 2>&1 || true" in script
+    assert "module load miniconda >/dev/null 2>&1 || true" in script
     assert (
         "export PYTHONPATH=src:/home/sg9396/patternboost/multi-level/.venv-hpc/lib/python3.11/site-packages"
         in script
