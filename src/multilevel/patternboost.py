@@ -116,11 +116,29 @@ def _select_elites(
     if not _resolution_diversity_active(problem, representation, preserve_resolution_diversity):
         return scored[:limit]
 
-    best_by_resolution: dict[int, tuple[float, dict[str, Any], dict[str, Any], str, str]] = {}
+    buckets: dict[int, list[tuple[float, dict[str, Any], dict[str, Any], str, str]]] = {}
     for row in scored:
-        best_by_resolution.setdefault(_resolution_bucket(row[1]), row)
+        buckets.setdefault(_resolution_bucket(row[1]), []).append(row)
 
-    selected = sorted(best_by_resolution.values(), key=lambda row: row[0], reverse=True)[:limit]
+    selected: list[tuple[float, dict[str, Any], dict[str, Any], str, str]] = []
+    sides = sorted(buckets)
+    base, remainder = divmod(limit, max(1, len(sides)))
+    for position, side in enumerate(sides):
+        quota = base + (1 if position < remainder else 0)
+        if quota <= 0:
+            continue
+        rows = buckets[side]
+        newest_immigrant = max(
+            (row for row in rows if row[4] == "random_immigrant"),
+            key=lambda row: int(row[1].get("_immigrant_generation", -1)),
+            default=None,
+        )
+        objective_quota = quota - (1 if newest_immigrant is not None and quota >= 2 else 0)
+        objective_rows = [row for row in rows if row is not newest_immigrant]
+        selected.extend(objective_rows[:objective_quota])
+        if newest_immigrant is not None and quota >= 2:
+            selected.append(newest_immigrant)
+
     selected_ids = {row[3] for row in selected}
     for row in scored:
         if len(selected) >= limit:
@@ -507,6 +525,8 @@ def run_patternboost(
                 source = instance.get("_source_type", candidate.get("_source_type", "initial_or_local"))
                 if source:
                     candidate["_source_type"] = source
+                if instance.get("_immigrant_generation") is not None:
+                    candidate["_immigrant_generation"] = int(instance["_immigrant_generation"])
                 clean_instance = decoded_geometry(candidate)
                 key = sha256_obj(clean_instance)
                 if key in seen:
@@ -688,13 +708,20 @@ def run_patternboost(
                 max(0, population_size - len(next_population)),
             )
             mutation_target = population_size - immigrant_count
+            mutation_parents = list(next_population)
+            rng.shuffle(mutation_parents)
+            mutation_parent_index = 0
             while len(next_population) < mutation_target:
                 if not next_population:
                     fresh = initial_instance_for_representation(problem, representation, rng, n=search_n_min, grid=grid)
                     fresh["_source_type"] = "random_reseed"
                     next_population.append(fresh)
                     continue
-                parent = rng.choice(next_population)
+                if mutation_parent_index < len(mutation_parents):
+                    parent = mutation_parents[mutation_parent_index]
+                    mutation_parent_index += 1
+                else:
+                    parent = rng.choice(next_population)
                 try:
                     child = mutate_instance(
                         problem,
@@ -713,6 +740,7 @@ def run_patternboost(
                     next_population.append(child)
                     continue
                 child["_source_type"] = "local_mutation"
+                child.pop("_immigrant_generation", None)
                 next_population.append(child)
             if immigrant_count:
                 immigrants = _fresh_population(
@@ -727,6 +755,7 @@ def run_patternboost(
                 )
                 for immigrant in immigrants:
                     immigrant["_source_type"] = "random_immigrant"
+                    immigrant["_immigrant_generation"] = generation
                 next_population.extend(immigrants)
                 num_random_immigrants += len(immigrants)
             population = next_population[:population_size]

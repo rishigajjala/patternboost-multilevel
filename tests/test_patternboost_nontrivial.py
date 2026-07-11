@@ -96,6 +96,40 @@ def test_square_resolution_elites_retain_every_available_resolution():
     assert {row[1]["side"] for row in selected} == {1, 2, 3, 4}
 
 
+def test_square_resolution_islands_keep_multiple_elites_and_newest_immigrant():
+    scored = []
+    for side in range(1, 5):
+        for rank in range(4):
+            candidate_id = f"side-{side}-local-{rank}"
+            scored.append(
+                (100.0 - 10 * side - rank, {"side": side, "squares": [[rank, side]]}, {}, candidate_id, "local_mutation")
+            )
+        for generation in (4, 9):
+            candidate_id = f"side-{side}-immigrant-{generation}"
+            scored.append(
+                (
+                    1.0 - generation / 100.0,
+                    {"side": side, "squares": [[generation, side]], "_immigrant_generation": generation},
+                    {},
+                    candidate_id,
+                    "random_immigrant",
+                )
+            )
+    scored.sort(key=lambda row: row[0], reverse=True)
+    selected = _select_elites(
+        scored,
+        elite_size=12,
+        problem="unit_square",
+        representation="sqstab_exact_grid",
+        preserve_resolution_diversity=True,
+    )
+    assert Counter(row[1]["side"] for row in selected) == {1: 3, 2: 3, 3: 3, 4: 3}
+    selected_ids = {row[3] for row in selected}
+    for side in range(1, 5):
+        assert f"side-{side}-immigrant-9" in selected_ids
+        assert f"side-{side}-immigrant-4" not in selected_ids
+
+
 def test_square_training_archive_round_robins_over_resolutions():
     archive = [
         (100.0 - index, {"side": side, "squares": [[index, side]]})

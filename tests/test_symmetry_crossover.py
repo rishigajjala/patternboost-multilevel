@@ -123,8 +123,8 @@ def test_replacement_delta_embeds_successful_probe_runtime():
         assert len(problem_rows) == 15
         assert {row["n"] for row in problem_rows} == {expected_n}
         assert {row["grid"] for row in problem_rows} == {expected_grid}
-        assert {row["population"] for row in problem_rows} == {16}
-        assert {row["elite"] for row in problem_rows} == {4}
+        assert {row["population"] for row in problem_rows} == ({32} if problem == "unit_square" else {16})
+        assert {row["elite"] for row in problem_rows} == ({12} if problem == "unit_square" else {4})
         assert {row["train_every"] for row in problem_rows} == {10}
 
 

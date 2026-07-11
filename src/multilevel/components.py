@@ -174,6 +174,8 @@ REPLACEMENT_RUNTIME_PARAMETERS: dict[str, int] = {
 }
 
 UNIT_SQUARE_DIVERSITY_PARAMETERS: dict[str, int | bool] = {
+    "population": 32,
+    "elite": 12,
     "initial_pool_size": 128,
     "immigrants_per_generation": 4,
     "preserve_resolution_diversity": True,

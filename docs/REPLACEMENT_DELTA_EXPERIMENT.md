@@ -45,9 +45,11 @@ the recorded RNG state exists only for provenance and exact replay.
 
 The replacement matrix uses the runtime regime from the successful two-hour
 symmetry/crossover probe. MISR and Guillotine use `n=12` and grid 8;
-unit-square stabbing uses `n=20` and grid 16. Every row uses population 16,
-elite size 4, exact scoring every 5 generations, Transformer training every 10
-generations, 16 model samples, 3 model epochs, and checkpointing every
+unit-square stabbing uses `n=20` and grid 16. MISR and Guillotine use
+population 16 and elite size 4. Unit-square rows use population 32 and elite
+size 12 so that each available resolution retains multiple search lineages.
+Every row uses exact scoring every 5 generations, Transformer training every
+10 generations, 16 model samples, 3 model epochs, and checkpointing every
 generation. The unit-square regime is the one in which the generic
 `sqstab_exact_grid / symmetry_crossover_hillclimb /
 exact_stab_gap_pressure` row generated and exactly verified a 20-square
@@ -59,7 +61,9 @@ available integer side length. These are diversity controls, not target hints:
 no side length or score is preferred. Candidates below `tau_int=4` may remain
 as parents, while the final certificate gate still rejects them. This avoids
 permanently losing a potentially useful coordinate resolution before local
-search can improve it.
+search can improve it. A newest immigrant is temporarily retained in each
+resolution island and every retained parent receives a mutation opportunity
+before random parent selection resumes.
 
 This is experiment family `replacement_delta_v3_resolution_diverse`. It supersedes
 the initial `replacement_delta_v1` launch, whose `n=8`, grid-8 unit-square
