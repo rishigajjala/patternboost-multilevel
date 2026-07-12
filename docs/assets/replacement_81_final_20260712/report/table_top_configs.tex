@@ -1,0 +1,34 @@
+\scriptsize
+\begin{longtable}{@{}p{0.08\textwidth}p{0.055\textwidth}p{0.145\textwidth}p{0.145\textwidth}p{0.145\textwidth}rrr@{}}
+\caption{Top five configurations per problem. Epoch is cumulative transformer training epoch; time is elapsed hours to the first appearance of the final best.}
+\label{tab:top-configs}\\
+\toprule
+Problem & Score & Representation & Local search & Surrogate & Epoch & Time & Items \\
+\midrule
+\endfirsthead
+\toprule
+Problem & Score & Representation & Local search & Surrogate & Epoch & Time & Items \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+MISR & $\frac{3}{2}$ & \code{triangle\_\allowbreak{}free\_\allowbreak{}rect} & \code{sequence\_\allowbreak{}pair\_\allowbreak{}pivot} & \code{exact\_\allowbreak{}lp\_\allowbreak{}gap\_\allowbreak{}pressure} & 1860 & 3.12 & 12 \\
+MISR & $\frac{7}{5}$ & \code{triangle\_\allowbreak{}free\_\allowbreak{}rect} & \code{program\_\allowbreak{}coeff\_\allowbreak{}pivot} & \code{exact\_\allowbreak{}lp\_\allowbreak{}gap\_\allowbreak{}pressure} & 4782 & 14.48 & 14 \\
+MISR & $\frac{11}{8}$ & \code{triangle\_\allowbreak{}free\_\allowbreak{}rect} & \code{program\_\allowbreak{}coeff\_\allowbreak{}pivot} & \code{triangle\_\allowbreak{}free\_\allowbreak{}exact\_\allowbreak{}gap\_\allowbreak{}pressure} & 156 & 0.15 & 11 \\
+MISR & $\frac{11}{8}$ & \code{triangle\_\allowbreak{}free\_\allowbreak{}rect} & \code{sequence\_\allowbreak{}pair\_\allowbreak{}pivot} & \code{triangle\_\allowbreak{}free\_\allowbreak{}exact\_\allowbreak{}gap\_\allowbreak{}pressure} & 231 & 0.22 & 11 \\
+MISR & $\frac{4}{3}$ & \code{fixed\_\allowbreak{}symmetry\_\allowbreak{}rectangles} & \code{symmetry\_\allowbreak{}crossover\_\allowbreak{}hillclimb} & \code{exact\_\allowbreak{}lp\_\allowbreak{}gap\_\allowbreak{}pressure} & 12 & 0.30 & 12 \\
+\addlinespace
+Unit-square & $\frac{20}{13}$ & \code{sqstab\_\allowbreak{}exact\_\allowbreak{}grid} & \code{symmetry\_\allowbreak{}crossover\_\allowbreak{}hillclimb} & \code{exact\_\allowbreak{}stab\_\allowbreak{}gap\_\allowbreak{}pressure} & 54 & 0.37 & 20 \\
+Unit-square & $\frac{3}{2}$ & \code{sqstab\_\allowbreak{}exact\_\allowbreak{}grid} & \code{coord\_\allowbreak{}mutation} & \code{exact\_\allowbreak{}stab\_\allowbreak{}gap\_\allowbreak{}pressure} & 117 & 0.35 & 14 \\
+Unit-square & $\frac{3}{2}$ & \code{fixed\_\allowbreak{}symmetry\_\allowbreak{}grid} & \code{symmetry\_\allowbreak{}crossover\_\allowbreak{}hillclimb} & \code{incidence\_\allowbreak{}statistics} & 183 & 0.92 & 20 \\
+Unit-square & $\frac{3}{2}$ & \code{sqstab\_\allowbreak{}exact\_\allowbreak{}grid} & \code{symmetry\_\allowbreak{}crossover\_\allowbreak{}hillclimb} & \code{greedy\_\allowbreak{}partial\_\allowbreak{}lp\_\allowbreak{}bitset} & 39 & 1.41 & 20 \\
+Unit-square & $\frac{3}{2}$ & \code{fixed\_\allowbreak{}symmetry\_\allowbreak{}grid} & \code{symmetry\_\allowbreak{}crossover\_\allowbreak{}hillclimb} & \code{exact\_\allowbreak{}stab\_\allowbreak{}gap\_\allowbreak{}pressure} & 408 & 2.06 & 20 \\
+\addlinespace
+Guillotine & $\frac{1}{3}$ & \code{rect\_\allowbreak{}direct\_\allowbreak{}disjoint} & \code{witness\_\allowbreak{}breaking} & \code{depth\_\allowbreak{}limited\_\allowbreak{}dp} & 858 & 5.81 & 9 \\
+Guillotine & $\frac{3}{11}$ & \code{rect\_\allowbreak{}direct\_\allowbreak{}disjoint} & \code{packing\_\allowbreak{}resize} & \code{depth\_\allowbreak{}limited\_\allowbreak{}dp} & 345 & 1.92 & 11 \\
+Guillotine & $\frac{3}{11}$ & \code{recursive\_\allowbreak{}obstruction\_\allowbreak{}grammar} & \code{witness\_\allowbreak{}breaking} & \code{first\_\allowbreak{}cut\_\allowbreak{}obstruction} & 468 & 2.54 & 11 \\
+Guillotine & $\frac{3}{11}$ & \code{rect\_\allowbreak{}direct\_\allowbreak{}disjoint} & \code{witness\_\allowbreak{}breaking} & \code{first\_\allowbreak{}cut\_\allowbreak{}obstruction} & 696 & 3.06 & 11 \\
+Guillotine & $\frac{4}{15}$ & \code{recursive\_\allowbreak{}obstruction\_\allowbreak{}grammar} & \code{witness\_\allowbreak{}breaking} & \code{depth\_\allowbreak{}limited\_\allowbreak{}dp} & 669 & 8.10 & 15 \\
+\addlinespace
+\end{longtable}
+\normalsize

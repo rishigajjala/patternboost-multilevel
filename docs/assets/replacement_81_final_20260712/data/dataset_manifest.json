@@ -1,0 +1,25 @@
+{
+  "artifact_mapping": "docs/assets/replacement_81_final_20260712/run_artifacts/artifact_mapping.csv",
+  "best_scores": {
+    "guillotine": 0.3333333333333333,
+    "misr": 1.5,
+    "unit_square": 1.538461538461539
+  },
+  "delta_postprocess": [
+    "external:new42",
+    "external:new3"
+  ],
+  "epoch_history_rows": 529,
+  "problem_counts": {
+    "guillotine": 27,
+    "misr": 27,
+    "unit_square": 27
+  },
+  "retained_postprocess": "docs/assets/main_81_24h_20260709_1623/postprocess",
+  "row_count": 81,
+  "schema": "patternboost_replacement_81_dataset_v1",
+  "source_cohorts": {
+    "replacement_24h_20260711": 45,
+    "retained_24h_20260709": 36
+  }
+}

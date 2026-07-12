@@ -1,0 +1,138 @@
+{
+  "caution": "The matrix has one fresh random run per configuration and no repeated-seed axis. Component levels are partially confounded with runtime regime; all effects are descriptive, not sampling-based confidence statements.",
+  "problems": {
+    "guillotine": {
+      "best_descriptive_component_levels": {
+        "local_search": {
+          "level": "witness_breaking",
+          "maximum": 0.3333333333333333,
+          "mean": 0.2673693456302152,
+          "median": 0.2608695652173913
+        },
+        "representation": {
+          "level": "rect_direct_disjoint",
+          "maximum": 0.3333333333333333,
+          "mean": 0.2348979996038819,
+          "median": 0.25
+        },
+        "surrogate": {
+          "level": "depth_limited_dp",
+          "maximum": 0.3333333333333333,
+          "mean": 0.23585858585858585,
+          "median": 0.25
+        }
+      },
+      "maximum_score": 0.3333333333333333,
+      "mean_score_gain": 0.04767313454440476,
+      "median_duplicate_slot_fraction": 0.2264590231788079,
+      "median_duplicates_per_generation": 5.228014951800118,
+      "median_model_train_calls": 484.0,
+      "median_model_valid_fraction": 0.8666424418604651,
+      "median_plateau_fraction": 0.8716887417218543,
+      "median_repairs_per_generation": 1.552026286966046,
+      "median_score": 0.25,
+      "minimum_score": 0.1666666666666666,
+      "model_improvement_fraction": 0.014705882352941176,
+      "problem": "guillotine",
+      "q1_score": 0.1666666666666666,
+      "q3_score": 0.25,
+      "rank_correlation_at_25_percent_epochs": 0.944072279347515,
+      "rows": 27,
+      "rows_at_maximum": 1,
+      "top_best_generation": 2030,
+      "top_best_model_epoch": 858,
+      "top_config_id": "guillotine/rect_direct_disjoint/witness_breaking/depth_limited_dp",
+      "top_n_items": 9,
+      "top_time_to_best_seconds": 20915.01611273736
+    },
+    "misr": {
+      "best_descriptive_component_levels": {
+        "local_search": {
+          "level": "program_coeff_pivot",
+          "maximum": 1.4,
+          "mean": 1.3175925925925926,
+          "median": 1.3333333333333333
+        },
+        "representation": {
+          "level": "triangle_free_rect",
+          "maximum": 1.5,
+          "mean": 1.3009259259259258,
+          "median": 1.3333333333333333
+        },
+        "surrogate": {
+          "level": "exact_lp_gap_pressure",
+          "maximum": 1.5,
+          "mean": 1.3203703703703704,
+          "median": 1.3333333333333333
+        }
+      },
+      "maximum_score": 1.5,
+      "mean_score_gain": 0.26049382716049385,
+      "median_duplicate_slot_fraction": 0.4264047619047619,
+      "median_duplicates_per_generation": 8.393431432038835,
+      "median_model_train_calls": 2150.0,
+      "median_model_valid_fraction": 0.1109903665413533,
+      "median_plateau_fraction": 0.9751226826608506,
+      "median_repairs_per_generation": 0.2295071077454497,
+      "median_score": 1.3,
+      "minimum_score": 1.0,
+      "model_improvement_fraction": 0.0,
+      "problem": "misr",
+      "q1_score": 1.225,
+      "q3_score": 1.3333333333333333,
+      "rank_correlation_at_25_percent_epochs": 0.9080569173626898,
+      "rows": 27,
+      "rows_at_maximum": 1,
+      "top_best_generation": 4345,
+      "top_best_model_epoch": 1860,
+      "top_config_id": "misr/triangle_free_rect/sequence_pair_pivot/exact_lp_gap_pressure",
+      "top_n_items": 12,
+      "top_time_to_best_seconds": 11231.834610372083
+    },
+    "unit_square": {
+      "best_descriptive_component_levels": {
+        "local_search": {
+          "level": "symmetry_crossover_hillclimb",
+          "maximum": 1.538461538461539,
+          "mean": 1.476051634992853,
+          "median": 1.5000000000000002
+        },
+        "representation": {
+          "level": "sqstab_exact_grid",
+          "maximum": 1.538461538461539,
+          "mean": 1.4264502801523322,
+          "median": 1.4406779661016949
+        },
+        "surrogate": {
+          "level": "exact_stab_gap_pressure",
+          "maximum": 1.538461538461539,
+          "mean": 1.4851613811151385,
+          "median": 1.5000000000000004
+        }
+      },
+      "maximum_score": 1.538461538461539,
+      "mean_score_gain": 0.34286256880917465,
+      "median_duplicate_slot_fraction": 0.3614155537373311,
+      "median_duplicates_per_generation": 9.786125902691662,
+      "median_model_train_calls": 2116.0,
+      "median_model_valid_fraction": 0.2596303285968028,
+      "median_plateau_fraction": 0.6414010784270746,
+      "median_repairs_per_generation": 0.5344202272805775,
+      "median_score": 1.4141414141414144,
+      "minimum_score": 1.25,
+      "model_improvement_fraction": 0.004524886877828055,
+      "problem": "unit_square",
+      "q1_score": 1.3333333333333333,
+      "q3_score": 1.5000000000000004,
+      "rank_correlation_at_25_percent_epochs": 0.8990702072863045,
+      "rows": 27,
+      "rows_at_maximum": 1,
+      "top_best_generation": 190,
+      "top_best_model_epoch": 54,
+      "top_config_id": "unit_square/sqstab_exact_grid/symmetry_crossover_hillclimb/exact_stab_gap_pressure",
+      "top_n_items": 20,
+      "top_time_to_best_seconds": 1340.4237353419885
+    }
+  },
+  "schema": "patternboost_descriptive_findings_v1"
+}

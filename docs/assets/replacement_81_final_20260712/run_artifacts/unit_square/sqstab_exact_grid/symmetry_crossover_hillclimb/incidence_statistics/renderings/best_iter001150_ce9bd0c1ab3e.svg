@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="640" viewBox="0 0 900 640">
+<title>Unit-square score=1.4406779661016949 tau=5 tau_lp=3.4705882352941178</title>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<rect x="78.906" y="361.667" width="117.188" height="83.333" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="78.906" y="361.667" font-size="13" font-family="monospace" fill="#111827">0</text>
+<rect x="117.969" y="445" width="117.188" height="83.333" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="117.969" y="445" font-size="13" font-family="monospace" fill="#111827">1</text>
+<rect x="117.969" y="195" width="117.188" height="83.333" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="117.969" y="195" font-size="13" font-family="monospace" fill="#111827">2</text>
+<rect x="157.031" y="445" width="117.188" height="83.333" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="157.031" y="445" font-size="13" font-family="monospace" fill="#111827">3</text>
+<rect x="157.031" y="389.444" width="117.188" height="83.333" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="157.031" y="389.444" font-size="13" font-family="monospace" fill="#111827">4</text>
+<rect x="157.031" y="278.333" width="117.188" height="83.333" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="157.031" y="278.333" font-size="13" font-family="monospace" fill="#111827">5</text>
+<rect x="196.094" y="56.111" width="117.188" height="83.333" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="196.094" y="56.111" font-size="13" font-family="monospace" fill="#111827">6</text>
+<rect x="235.156" y="361.667" width="117.188" height="83.333" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="235.156" y="361.667" font-size="13" font-family="monospace" fill="#111827">7</text>
+<rect x="391.406" y="417.222" width="117.187" height="83.333" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="391.406" y="417.222" font-size="13" font-family="monospace" fill="#111827">8</text>
+<rect x="391.406" y="139.444" width="117.187" height="83.333" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="391.406" y="139.444" font-size="13" font-family="monospace" fill="#111827">9</text>
+<rect x="430.469" y="167.222" width="117.188" height="83.333" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="430.469" y="167.222" font-size="13" font-family="monospace" fill="#111827">10</text>
+<rect x="430.469" y="111.667" width="117.188" height="83.333" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="430.469" y="111.667" font-size="13" font-family="monospace" fill="#111827">11</text>
+<rect x="469.531" y="500.556" width="117.188" height="83.333" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="469.531" y="500.556" font-size="13" font-family="monospace" fill="#111827">12</text>
+<rect x="469.531" y="167.222" width="117.188" height="83.333" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="469.531" y="167.222" font-size="13" font-family="monospace" fill="#111827">13</text>
+<rect x="508.594" y="139.444" width="117.188" height="83.333" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="508.594" y="139.444" font-size="13" font-family="monospace" fill="#111827">14</text>
+<rect x="508.594" y="56.111" width="117.188" height="83.333" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="508.594" y="56.111" font-size="13" font-family="monospace" fill="#111827">15</text>
+<rect x="547.656" y="111.667" width="117.188" height="83.333" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="547.656" y="111.667" font-size="13" font-family="monospace" fill="#111827">16</text>
+<rect x="625.781" y="445" width="117.188" height="83.333" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="625.781" y="445" font-size="13" font-family="monospace" fill="#111827">17</text>
+<rect x="664.844" y="333.889" width="117.188" height="83.333" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="664.844" y="333.889" font-size="13" font-family="monospace" fill="#111827">18</text>
+<rect x="703.906" y="139.444" width="117.188" height="83.333" fill="#fbbf24" fill-opacity="0.32" stroke="#92400e" stroke-width="1.4"/>
+<text x="703.906" y="139.444" font-size="13" font-family="monospace" fill="#111827">19</text>
+<line x1="196.094" y1="640" x2="196.094" y2="0" stroke="#dc2626" stroke-width="2.4"/>
+<line x1="235.156" y1="640" x2="235.156" y2="0" stroke="#dc2626" stroke-width="2.4"/>
+<line x1="508.594" y1="640" x2="508.594" y2="0" stroke="#dc2626" stroke-width="2.4"/>
+<line x1="664.844" y1="640" x2="664.844" y2="0" stroke="#dc2626" stroke-width="2.4"/>
+<line x1="703.906" y1="640" x2="703.906" y2="0" stroke="#dc2626" stroke-width="2.4"/>
+</svg>

@@ -1,0 +1,23 @@
+\begin{table}[tbp]
+\centering
+\caption{Descriptive component marginals for Unit-square. Each level pools nine distinct component cells.}
+\label{tab:unit-square-marginals}
+\begin{tabularx}{\textwidth}{p{0.16\textwidth}Xrrrrr}
+\toprule
+Factor & Level & Mean & Median & Min. & Max. & IQR \\
+\midrule
+Representation & \code{sqstab\_\allowbreak{}exact\_\allowbreak{}grid} & 1.4265 & 1.4407 & 1.3158 & 1.5385 & [1.3462, 1.5000] \\
+ & \code{line\_\allowbreak{}square\_\allowbreak{}incidence} & 1.3984 & 1.4141 & 1.2500 & 1.5000 & [1.3333, 1.4644] \\
+ & \code{fixed\_\allowbreak{}symmetry\_\allowbreak{}grid} & 1.3960 & 1.3636 & 1.2766 & 1.5000 & [1.3043, 1.5000] \\
+\addlinespace
+Local Search & \code{symmetry\_\allowbreak{}crossover\_\allowbreak{}hillclimb} & 1.4761 & 1.5000 & 1.4141 & 1.5385 & [1.4407, 1.5000] \\
+ & \code{sqstab\_\allowbreak{}local\_\allowbreak{}hillclimb} & 1.3732 & 1.3462 & 1.2857 & 1.5000 & [1.3333, 1.3636] \\
+ & \code{coord\_\allowbreak{}mutation} & 1.3715 & 1.3333 & 1.2500 & 1.5000 & [1.3043, 1.5000] \\
+\addlinespace
+Surrogate & \code{exact\_\allowbreak{}stab\_\allowbreak{}gap\_\allowbreak{}pressure} & 1.4852 & 1.5000 & 1.3636 & 1.5385 & [1.5000, 1.5000] \\
+ & \code{greedy\_\allowbreak{}partial\_\allowbreak{}lp\_\allowbreak{}bitset} & 1.3750 & 1.3636 & 1.2500 & 1.5000 & [1.3333, 1.4141] \\
+ & \code{incidence\_\allowbreak{}statistics} & 1.3606 & 1.3333 & 1.2766 & 1.5000 & [1.3158, 1.4268] \\
+\addlinespace
+\bottomrule
+\end{tabularx}
+\end{table}

@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import math
 from pathlib import Path
 
 try:
@@ -24,11 +23,15 @@ PROBLEM_ORDER = ["misr", "unit_square", "guillotine"]
 COMPONENTS = {
     "misr": {
         "representation": [
-            "endpoint_sequence_pair",
+            "fixed_symmetry_rectangles",
             "triangle_free_rect",
             "quadratic_program_rectangles",
         ],
-        "local_search": ["sequence_pair_pivot", "lp_dual_pivot", "program_coeff_pivot"],
+        "local_search": [
+            "sequence_pair_pivot",
+            "symmetry_crossover_hillclimb",
+            "program_coeff_pivot",
+        ],
         "surrogate": [
             "exact_lp_gap_pressure",
             "triangle_free_exact_gap_pressure",
@@ -36,8 +39,12 @@ COMPONENTS = {
         ],
     },
     "unit_square": {
-        "representation": ["square_direct", "line_square_incidence", "sqstab_exact_grid"],
-        "local_search": ["coord_mutation", "primal_dual_lines", "sqstab_local_hillclimb"],
+        "representation": ["fixed_symmetry_grid", "line_square_incidence", "sqstab_exact_grid"],
+        "local_search": [
+            "coord_mutation",
+            "symmetry_crossover_hillclimb",
+            "sqstab_local_hillclimb",
+        ],
         "surrogate": [
             "greedy_partial_lp_bitset",
             "exact_stab_gap_pressure",
@@ -47,10 +54,14 @@ COMPONENTS = {
     "guillotine": {
         "representation": [
             "rect_direct_disjoint",
-            "sequence_pair_packing",
+            "fixed_symmetry_packing",
             "recursive_obstruction_grammar",
         ],
-        "local_search": ["packing_resize", "recursive_gadget_assembly", "witness_breaking"],
+        "local_search": [
+            "packing_resize",
+            "symmetry_crossover_hillclimb",
+            "witness_breaking",
+        ],
         "surrogate": [
             "first_cut_obstruction",
             "depth_limited_dp",
@@ -215,8 +226,14 @@ def plot_configuration_trajectories(
         _save(fig, out_dir, f"fig_{problem}_27_trajectories_{axis}")
 
 
-def plot_normalized_overview(curves: pd.DataFrame, out_dir: Path) -> None:
+def plot_normalized_overview(
+    curves: pd.DataFrame, metrics: pd.DataFrame, out_dir: Path
+) -> None:
     subset = curves[curves["axis"] == "model_epoch"].copy()
+    trained_ids = set(
+        metrics.loc[_safe_float(metrics["total_model_epochs"]) > 0, "config_id"]
+    )
+    subset = subset[subset["config_id"].isin(trained_ids)]
     subset["best_score"] = _safe_float(subset["best_score"])
     subset = subset.sort_values(["config_id", "progress_percent"])
     subset["best_score"] = subset.groupby("config_id")["best_score"].transform(
@@ -247,7 +264,12 @@ def plot_normalized_overview(curves: pd.DataFrame, out_dir: Path) -> None:
         ax.set_xlim(0, 100)
     handles, labels = axes[0].get_legend_handles_labels()
     fig.legend(handles, labels, loc="upper center", ncol=2, bbox_to_anchor=(0.5, 1.04))
-    fig.suptitle("Learning behavior across all 81 configurations", fontsize=14, fontweight="bold", y=1.11)
+    fig.suptitle(
+        "Learning behavior across configurations with model training",
+        fontsize=14,
+        fontweight="bold",
+        y=1.11,
+    )
     fig.tight_layout()
     _save(fig, out_dir, "fig_all_81_normalized_epoch_curves")
 
@@ -367,7 +389,7 @@ def plot_factor_marginals(metrics: pd.DataFrame, marginals: pd.DataFrame, out_di
                 )
     handles, labels = axes[0, 0].get_legend_handles_labels()
     fig.legend(handles, labels, loc="upper center", ncol=2, bbox_to_anchor=(0.5, 1.015))
-    fig.suptitle("Descriptive marginal effects of each component", fontsize=15, fontweight="bold", y=1.055)
+    fig.suptitle("Descriptive marginal contrasts for each component", fontsize=15, fontweight="bold", y=1.055)
     fig.tight_layout()
     _save(fig, out_dir, "fig_component_marginal_effects")
 
@@ -376,7 +398,8 @@ def early_final_rank_table(curves: pd.DataFrame, metrics: pd.DataFrame) -> pd.Da
     subset = curves[curves["axis"] == "model_epoch"].copy()
     subset["best_score"] = _safe_float(subset["best_score"])
     rows: list[dict[str, object]] = []
-    final_scores = metrics.set_index("config_id")["best_score"]
+    trained = metrics[_safe_float(metrics["total_model_epochs"]) > 0]
+    final_scores = trained.set_index("config_id")["best_score"]
     for problem in PROBLEM_ORDER:
         for percent in (1, 5, 10, 25, 50, 75):
             early = subset[(subset["problem"] == problem) & (subset["progress_percent"] == percent)].set_index("config_id")["best_score"]
@@ -592,6 +615,7 @@ def problem_summary(metrics: pd.DataFrame, improvements: pd.DataFrame) -> pd.Dat
         plateau = _safe_float(data["plateau_fraction"]).dropna().to_numpy(dtype=float)
         gains = _safe_float(data["score_gain"]).dropna().to_numpy(dtype=float)
         duplicates = _safe_float(data["duplicates_per_generation"]).dropna().to_numpy(dtype=float)
+        duplicate_slots = _safe_float(data["duplicate_slot_fraction"]).dropna().to_numpy(dtype=float)
         repairs = _safe_float(data["repairs_per_generation"]).dropna().to_numpy(dtype=float)
         model_valid = _safe_float(data["model_samples_valid_fraction"]).dropna().to_numpy(dtype=float)
         model_calls = _safe_float(data["model_train_calls"]).dropna().to_numpy(dtype=float)
@@ -618,6 +642,9 @@ def problem_summary(metrics: pd.DataFrame, improvements: pd.DataFrame) -> pd.Dat
                     else float("nan")
                 ),
                 "median_duplicates_per_generation": float(np.median(duplicates)) if duplicates.size else float("nan"),
+                "median_duplicate_slot_fraction": (
+                    float(np.median(duplicate_slots)) if duplicate_slots.size else float("nan")
+                ),
                 "median_repairs_per_generation": float(np.median(repairs)) if repairs.size else float("nan"),
                 "median_model_valid_fraction": float(np.median(model_valid)) if model_valid.size else float("nan"),
                 "median_model_train_calls": float(np.median(model_calls)) if model_calls.size else float("nan"),
@@ -642,7 +669,8 @@ def write_findings(
         "schema": "patternboost_descriptive_findings_v1",
         "caution": (
             "The matrix has one fresh random run per configuration and no repeated-seed axis. "
-            "All effects are descriptive, not sampling-based confidence statements."
+            "Component levels are partially confounded with runtime regime; all effects are "
+            "descriptive, not sampling-based confidence statements."
         ),
         "problems": {},
     }
@@ -707,7 +735,7 @@ def main() -> int:
     args.out_dir.mkdir(parents=True, exist_ok=True)
     for axis in ("model_epoch", "generation", "elapsed_seconds"):
         plot_configuration_trajectories(metrics, improvements, args.out_dir, axis=axis)
-    plot_normalized_overview(curves, args.out_dir)
+    plot_normalized_overview(curves, metrics, args.out_dir)
     plot_heatmaps(metrics, args.out_dir)
     marginals = factor_marginals(metrics)
     plot_factor_marginals(metrics, marginals, args.out_dir)

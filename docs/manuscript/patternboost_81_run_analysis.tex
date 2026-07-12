@@ -22,8 +22,8 @@
 \definecolor{lightgray}{HTML}{F3F4F6}
 
 \graphicspath{
-  {../assets/main_81_24h_20260709_1623/analysis/}
-  {../assets/main_81_24h_20260709_1623/constructions/}
+  {../assets/replacement_81_final_20260712/analysis/}
+  {../assets/replacement_81_final_20260712/constructions/}
 }
 
 \newcommand{\code}[1]{\texttt{#1}}
@@ -46,12 +46,12 @@
 \fancyfoot[C]{\thepage}
 \setlength{\headheight}{14pt}
 
-\input{../assets/main_81_24h_20260709_1623/report/analysis_values.tex}
+\input{../assets/replacement_81_final_20260712/report/analysis_values.tex}
 
-\title{\textbf{PatternBoost Three-Problem Final Experiment Analysis}\\[0.4em]
+\title{\textbf{PatternBoost Three-Problem Updated Experiment Analysis}\\[0.4em]
 \large Complete 81-cell trajectories, exact certificate audit, and limitations study}
 \author{Multi-level PatternBoost project}
-\date{July 10, 2026}
+\date{July 12, 2026}
 
 \begin{document}
 
@@ -60,10 +60,10 @@
 \begin{center}
 \begin{tabular}{@{}ll@{}}
 \toprule
-Experimental commit & \code{20750a588a5b5d8e744689b9efa7538b5eaab26b} \\
-Slurm array & \code{16602591} \\
-Run root & \code{runs/main\_81\_24h\_20260709\_1623} \\
+Evidence commits & \code{20750a588a5b}; \code{6f80dfec1a16}; \code{87326f25dbec} \\
+Analysis dataset & \code{docs/assets/replacement\_81\_final\_20260712} \\
 Design & $3$ problems $\times$ $3$ representations $\times$ $3$ local searches $\times$ $3$ surrogates \\
+Nominal search budget & 24 hours per cell \\
 Repeated-seed axis & None \\
 \bottomrule
 \end{tabular}
@@ -74,22 +74,24 @@ This report gives the final, configuration-level analysis of the 81-cell
 PatternBoost experiment on three geometric extremal-search problems: the LP
 integrality gap for maximum independent set of rectangles (MISR), the LP
 integrality gap for stabbing unit squares by horizontal and vertical lines,
-and recursive guillotine hardness for disjoint rectangle packings.  All cells
-were run from freshly generated instances under the same 24-hour search
-budget, with no repeated-seed axis and no warm-started certificate.  The best
+and recursive guillotine hardness for disjoint rectangle packings.  Every
+cell starts from freshly generated geometry, uses a nominal 24-hour search
+budget, has no repeated-seed axis, and receives no warm-started certificate.  The best
 exact scores were \MisrBest{} for MISR, \UnitSquareBest{} for unit-square
 stabbing, and \GuillotineBest{} for guillotine hardness.  The post-run audit
-independently re-evaluated the saved certificates: \AuditPassed{} of
-\AuditTotal{} rows passed and \AuditFailed{} failed.  Beyond the endpoint
+freshly re-evaluated the 45 replacement certificates and matched the 36
+retained certificates by configuration, hash, and score to their prior exact
+audits: \AuditPassed{} of \AuditTotal{} rows passed and \AuditFailed{} failed.
+Beyond the endpoint
 scores, this report analyzes every strict improvement against search
 generation, elapsed time, and cumulative transformer-training epoch.  The
 main conclusion is that the observed plateaus are primarily structural:
 representation constraints, discrete objective values, surrogate/exact-score
 misalignment, and limited compositional mechanisms dominate the effect of
-additional epochs.  By 25\% of the model-epoch budget, the final configuration
-ranking already has descriptive Spearman correlation at least $0.83$ in all
-three problems; median post-best plateaus occupy 74--98\% of search
-generations, and learned-model samples account for only 0--5.4\% of strict
+additional epochs.  By 25\% of each row's available model epochs, the final configuration
+ranking already has descriptive Spearman correlation at least $0.899$ in all
+three problems; median post-best plateaus occupy 64--98\% of search
+generations, and learned-model samples account for only 0--1.5\% of strict
 record improvements.
 \end{abstract}
 
@@ -102,7 +104,7 @@ The experiment was designed to answer five distinct questions.
 
 \begin{enumerate}
 \item What exact value does each of the 81 component combinations reach under
-the same long-run budget?
+the same nominal 86,400-second wall-clock budget?
 \item How does each row improve as search generations and transformer-training
 epochs accumulate?
 \item Which representations, local-search operators, and surrogates are
@@ -129,6 +131,27 @@ operators, and three surrogate objectives.  Thus each problem has
 $3^3=27$ cells and the complete experiment has 81 cells.  This is a full
 component factorial, not 27 repetitions of one algorithm.
 
+% BEGIN OPTIONAL PROVENANCE REMARK. Comment out this paragraph if desired.
+\paragraph{Provenance remark.}
+The final table combines 36 retained cells from the July 9 matrix, 42
+replacement cells from the main July 11 update, and three resolution-island
+unit-square cells from its final follow-up.  All cells have the same
+nominal 24-hour wall-clock budget, but the replacement regime changes object
+count, population size, and unit-square diversity controls.  The combined
+table is therefore the final algorithm comparison, not a pure one-factor
+causal ablation between the retained and replacement components.
+
+The retained rows use $n=8$, grid 8, search range 8--24, population 32, elite
+size 6, and model training every seven generations.  In the 42-row replacement
+cohort, MISR and guillotine use $n=12$, grid 8, and range 12--36; unit-square
+uses $n=20$, grid 16, and range 20--60; all use population 16, elite size 4,
+and training every ten generations.  The final three unit-square rows keep the
+same size/grid regime but use population 32, elite size 12, an initial pool of
+128, four immigrants per generation, and resolution-island retention.  Every
+regime uses exact scoring every five generations, 16 model samples, three
+model epochs per call, and checkpointing every generation.
+% END OPTIONAL PROVENANCE REMARK.
+
 \begin{table}[tbp]
 \centering
 \caption{Component registry for the final matrix.}
@@ -139,34 +162,34 @@ component factorial, not 27 repetitions of one algorithm.
 Problem & Representations & Local search & Surrogates \\
 \midrule
 MISR &
-\code{endpoint\_sequence\_pair};
 \code{triangle\_free\_rect};
-\code{quadratic\_program\_rectangles} &
+\code{quadratic\_program\_rectangles};
+\code{fixed\_symmetry\_rectangles} &
 \code{sequence\_pair\_pivot};
-\code{lp\_dual\_pivot};
-\code{program\_coeff\_pivot} &
+\code{program\_coeff\_pivot};
+\code{symmetry\_\allowbreak{}crossover\_\allowbreak{}hillclimb} &
 \code{exact\_lp\_gap\_pressure};
 \code{triangle\_free\_exact\_gap\_pressure};
 \code{graph\_conflict\_proxy} \\
 \addlinespace
 Unit-square &
-\code{square\_direct};
 \code{line\_square\_incidence};
-\code{sqstab\_exact\_grid} &
+\code{sqstab\_exact\_grid};
+\code{fixed\_symmetry\_grid} &
 \code{coord\_mutation};
-\code{primal\_dual\_lines};
-\code{sqstab\_local\_hillclimb} &
+\code{sqstab\_local\_hillclimb};
+\code{symmetry\_\allowbreak{}crossover\_\allowbreak{}hillclimb} &
 \code{greedy\_partial\_lp\_bitset};
 \code{exact\_stab\_gap\_pressure};
 \code{incidence\_statistics} \\
 \addlinespace
 Guillotine &
 \code{rect\_direct\_disjoint};
-\code{sequence\_pair\_packing};
-\code{recursive\_obstruction\_grammar} &
+\code{recursive\_obstruction\_grammar};
+\code{fixed\_symmetry\_packing} &
 \code{packing\_resize};
-\code{recursive\_gadget\_assembly};
-\code{witness\_breaking} &
+\code{witness\_breaking};
+\code{symmetry\_\allowbreak{}crossover\_\allowbreak{}hillclimb} &
 \code{first\_cut\_obstruction};
 \code{depth\_limited\_dp};
 \code{k\_subset\_nonseparability} \\
@@ -177,11 +200,12 @@ Guillotine &
 \subsection{What every component means}
 
 Across the complete study there are nine representation families, nine
-local-search operators, and nine surrogate objectives.  Each problem uses its
-own three of each; only those three are crossed, giving $3\times3\times3=27$
-valid cells per problem.  A representation specifies emph{how an instance is
-encoded and repaired}; local search specifies emph{how an encoded instance is
-changed}; and a surrogate specifies emph{how candidates are ranked before
+problem-specific local-search slots (seven distinct operator names), and nine
+surrogate objectives.  Each problem uses three of each; only those three are
+crossed, giving $3\times3\times3=27$
+valid cells per problem.  A representation specifies \emph{how an instance is
+encoded and repaired}; local search specifies \emph{how an encoded instance is
+changed}; and a surrogate specifies \emph{how candidates are ranked before
 expensive exact verification}.  The exact verifier, not a surrogate, decides
 whether a certificate becomes a saved record.
 
@@ -198,20 +222,17 @@ Problem & Representation & Meaning \\
 \endhead
 \bottomrule
 \endfoot
-MISR & \code{endpoint\_sequence\_pair} & Two double-occurrence sequences
-encode the endpoint orders on the horizontal and vertical axes.  A deterministic
-decoder turns the pair into rectangles, so mutations act on relative endpoint
-order rather than raw coordinates. \\
 MISR & \code{triangle\_free\_rect} & Direct rectangle coordinates, with
 generation and repair restricted so that the rectangle intersection graph is
 triangle-free.  It searches sparse conflict graphs directly. \\
 MISR & \code{quadratic\_\allowbreak{}program\_\allowbreak{}rectangles} & A bounded integer coefficient
 program, decoder choice, and block composition are decoded to rectangles and
 then repaired to the permitted size and triangle-free constraint. \\
+MISR & \code{fixed\_\allowbreak{}symmetry\_\allowbreak{}rectangles} & Random direct rectangle
+coordinates at a fixed object count, canonicalized under translation,
+horizontal and vertical reflection, and axis exchange.  Repair preserves the
+cardinality and valid MISR geometry. \\
 \addlinespace
-Unit-square & \code{square\_direct} & Direct lower-left grid coordinates for
-unit squares (or the stored common side length).  This is the least structured
-geometric encoding. \\
 Unit-square & \code{line\_square\_incidence} & A balanced row/column incidence
 layout is generated first and then mapped to square coordinates.  The stored
 payload tracks which abstract grid row and column each square occupies. \\
@@ -219,17 +240,21 @@ Unit-square & \code{sqstab\_exact\_grid} & Distinct finite-grid square
 coordinates plus a common side length, normalized to a canonical origin after
 repair.  It is designed to make the exact finite line-stabbing geometry easy
 to audit. \\
+Unit-square & \code{fixed\_\allowbreak{}symmetry\_\allowbreak{}grid} & Distinct grid positions at
+fixed common side length $Q=2$ and fixed object count, canonicalized under the
+same objective-preserving planar symmetries.  Its nine final cells use 20
+squares on a grid of extent 16. \\
 \addlinespace
 Guillotine & \code{rect\_direct\_disjoint} & Direct coordinates for disjoint
 rectangles, followed by geometric repair that removes overlaps and enforces
 the size bounds. \\
-Guillotine & \code{sequence\_pair\_packing} & A shuffled order drives a
-shelf-packing decoder that places small disjoint rectangles row by row.  The
-order supplies the combinatorial packing prior. \\
 Guillotine & \code{recursive\_\allowbreak{}obstruction\_\allowbreak{}grammar} & Randomly instantiated
 non-sliceable obstruction cores are combined with filler rectangles and then
 repaired.  It is a random generator family, not a fixed injected certificate.
 \\
+Guillotine & \code{fixed\_\allowbreak{}symmetry\_\allowbreak{}packing} & A fixed-cardinality random
+disjoint-rectangle packing, canonicalized under translation, reflection, and
+axis exchange.  It supplies no fixed obstruction or target score. \\
 \end{longtable}
 
 \begin{longtable}{@{}p{0.13\textwidth}p{0.25\textwidth}p{0.53\textwidth}@{}}
@@ -244,36 +269,42 @@ Problem & Local search & Meaning \\
 \endhead
 \bottomrule
 \endfoot
-MISR & \code{sequence\_pair\_pivot} & Swaps or reorders endpoints in the
-sequence-pair encoding, including occasional size lifts.  Candidate neighbors
-are compared with a MISR LP-gap/independent-set key before repair. \\
-MISR & \code{lp\_dual\_pivot} & Uses the same representation-safe mutation
-families but emphasizes neighbors favored by the exact LP-gap and independent
-set signals; in direct triangle-free coordinates it preferentially adds or
-replaces rectangles that preserve sparse conflicts. \\
+MISR & \code{sequence\_pair\_pivot} & Uses representation-safe add, replace,
+nudge, resize, and delete proposals, with add/replace moves upweighted in
+direct triangle-free coordinates.  The historical name remains, but no final
+representation stores endpoint sequences. \\
 MISR & \code{program\_coeff\_pivot} & When a program payload is present,
 perturbs coefficient blocks, decoder choice, composition, or active size.  In
 other representations it falls back to their safe local mutation templates.
 \\
+MISR & \code{symmetry\_\allowbreak{}crossover\_\allowbreak{}hillclimb} & Runs 25 exactly scored,
+proposals using one-step shifts, random relocations, coordinate exchange
+between two rectangles, and objective-preserving planar symmetries.  A
+lexicographic key prioritizes admissibility and then exact objective score; for
+program encodings the analogous moves act on coefficient blocks. \\
 \addlinespace
 Unit-square & \code{coord\_mutation} & Basic coordinate-level move, duplicate,
 or deletion of a square, followed by canonical geometric repair. \\
-Unit-square & \code{primal\_dual\_lines} & Biases moves toward aligning a
-square with another square's horizontal or vertical coordinate, so a proposed
-change directly affects candidate stabbing lines. \\
 Unit-square & \code{sqstab\_local\_hillclimb} & Builds several nearby
 line-tightening, addition/replacement, deletion, restart, and canonical-shift
 candidates, then retains the strongest quick local neighbor. \\
+Unit-square & \code{symmetry\_\allowbreak{}crossover\_\allowbreak{}hillclimb} & Applies the same
+25-proposal exact hill climb: 55\% one-step shifts, 25\% random relocations,
+10\% pairwise coordinate exchange, and 10\% random planar symmetry.  Repair
+keeps all squares congruent; fixed cardinality is guaranteed only when paired
+with the fixed-symmetry representation.
+\\
 \addlinespace
 Guillotine & \code{packing\_resize} & Moves, resizes, adds, replaces, and
 occasionally bars rectangles, then applies a nonseparability-guided local
 step.  It is a geometry-first packing search. \\
-Guillotine & \code{recursive\_\allowbreak{}gadget\_\allowbreak{}assembly} & Inserts or copies small
-obstruction motifs, bars, and recursive tiles to test whether local hard
-patterns can be assembled into a larger packing. \\
 Guillotine & \code{witness\_breaking} & Uses a separable-subset/cut witness to
 close a gap or add a bridge/blocker that makes the witness's easy guillotine
 cut less effective. \\
+Guillotine & \code{symmetry\_\allowbreak{}crossover\_\allowbreak{}hillclimb} & Uses the shared exact
+nonworsening hill climb on disjoint rectangles, with shifts, relocations,
+pairwise interval exchange, and planar symmetries followed by packing repair.
+\\
 \end{longtable}
 
 \begin{longtable}{@{}p{0.13\textwidth}p{0.25\textwidth}p{0.53\textwidth}@{}}
@@ -322,9 +353,10 @@ size terms. \\
 \end{longtable}
 \normalsize
 
-Each cell used an independently generated random seed recorded in the matrix
-manifest.  Seeds are provenance fields, not an experimental axis: there is
-one run per component cell.  Consequently, marginal means and rank
+Each cell began from independently generated pseudorandom geometry.  The RNG
+seed and state recorded in the source checkpoints support provenance and
+replay, but there is no seed-replication axis and no user-selected starting
+seed: there is one run per component cell.  Consequently, marginal means and rank
 correlations in this report are descriptive summaries of the matrix.  They
 are not confidence intervals over repeated stochastic trials.
 
@@ -338,10 +370,24 @@ Every cell repeatedly performs the following cycle.
 \item Exactly audit the elite candidates at the configured interval.
 \item Save a certificate only when the exact score strictly improves.
 \item Mutate elites with the chosen local operator.
-\item Every ten search generations, initialize and train a new small
-transformer for three epochs on the strongest valid archive entries and
-sample additional candidates from it.
+\item Every seven retained-row generations or ten replacement-row
+generations, initialize and train a new small transformer for three epochs on
+the strongest valid archive entries and sample additional candidates from it.
 \end{enumerate}
+
+Exact evaluation is not limited to the periodic elite audit.  Exact-pressure
+surrogates invoke the exact scorer during ranking, and each
+\code{symmetry\_crossover\_hillclimb} mutation exact-scores 25 internal
+proposals.
+
+The final three
+\code{sqstab\_exact\_grid/symmetry\_crossover\_hillclimb} unit-square cells
+add representation-specific diversity controls around this loop: a
+128-candidate initial pool, four fresh immigrants per generation, and
+retention stratified by every available integer side length.  No target score,
+certificate, preferred denominator, or preferred side length is supplied.
+The purpose is to keep multiple coordinate resolutions alive long enough for
+local search to test them.
 
 The model never sees a target answer.  Its training corpus is the serialized
 archive selected by the current surrogate.  Exact verification remains
@@ -369,36 +415,41 @@ be confused with search generation.  A score can improve between training
 events through local mutation.
 \end{itemize}
 
-All three views are plotted.  The model-epoch plot therefore measures where
-improvements occur relative to learned-model updates, while the generation
-and time plots guard against misleading conclusions caused by different
-scorer speeds.
+All three views are generated.  The manuscript displays the model-epoch and
+generation panels for each problem, while the elapsed-time panels remain in
+the committed analysis directory.  The model-epoch plot measures where
+improvements occur relative to learned-model updates; the generation and time
+views guard against misleading conclusions caused by different scorer speeds.
 
 \subsection{Nontriviality and natural-search constraints}
 
 The final code enforced at least eight geometric objects in every accepted
 training example.  Unit-square certificates additionally required integer
 stabbing number at least four, and guillotine certificates required at least
-two destroyed rectangles.  The run did not start from any previously saved
-best certificate.  All 81 checkpoints contained a naturally discovered best
-certificate before finalization; the guillotine emergency export fallback
-was not used.
+two destroyed rectangles.  No row started from a previously saved best
+certificate.  Seventy-seven rows saved a best certificate through ordinary
+initialization or search.  Four replacement guillotine rows using the new
+symmetry/crossover local search reached finalization without such a record and
+therefore exported a fresh structural-random fallback at score $1/6$.  These
+four rows remain in the matrix as poor outcomes; they are not used to raise a
+reported record.
 
-The search is not entirely prior-free.  Endpoint orders, balanced incidence
-layouts, triangle-free repair, and recursive obstruction layouts encode
-domain knowledge.  In particular, the guillotine
+The search is not entirely prior-free.  Fixed-cardinality symmetry
+canonicalization, balanced incidence layouts, triangle-free repair, and
+recursive obstruction layouts encode domain knowledge.  In particular, the guillotine
 \code{recursive\_obstruction\_grammar} contains a randomized geometric
 realization of a fixed seven-rectangle spiral topology.  It does not encode a
 score or final certificate, but it is a strong construction-family prior and
-must be disclosed when interpreting representation effects.
+must be disclosed when interpreting representation contrasts.
 
 \section{Run integrity and exact audit}
 
-The source deployed to Jubail matched commit
-\code{20750a588a5b5d8e744689b9efa7538b5eaab26b}.  The matrix manifest, event
-streams, checkpoints, summaries, certificates, renderings, Slurm logs, compact
-trajectory tables, and analysis-script hashes are retained under one run
-root.  The strict post-processing job checked:
+The deployed evidence comes from commits \code{20750a588a5b},
+\code{6f80dfec1a16}, and \code{87326f25dbec}.  The final compact dataset
+retains the matrix identifiers, event-derived trajectories, fields derived
+from source checkpoints and summaries, certificate metadata, and
+source-cohort provenance needed to reconstruct the 81 unique cells.  The
+strict post-processing checked:
 
 \begin{enumerate}
 \item exactly 81 unique component cells and 27 cells per problem;
@@ -411,20 +462,20 @@ scores;
 \item independent exact verification of every best certificate.
 \end{enumerate}
 
-All 81 array tasks completed with return code zero, stop reason
-\code{budget\_exhausted}, and empty stderr.  Observed row elapsed times ranged
-from 86,405 to 88,007 seconds.  The longest row exceeded the nominal
-86,400-second search budget by roughly 26 minutes because it entered a hard
-MISR solve before the next between-generation budget check; it still finished
-inside the 24-hour-30-minute Slurm allocation and wrote a normal summary.
+All 81 selected tasks completed with return code zero and stop reason
+\code{budget\_exhausted}.  Observed row elapsed times range from 86,403 to
+86,509 seconds around the nominal 86,400-second budget.  Every row has a
+summary, checkpoint, terminal score, and recoverable improvement trajectory.
 
 The audit outcome was \AuditPassed{} passed and \AuditFailed{} failed out of
-\AuditTotal{} rows.  A row that fails any of these checks is retained in the
-diagnostic appendix but is not evidence for a reported construction.
+\AuditTotal{} rows.  The 45 replacement certificates were freshly recomputed;
+the 36 retained rows were matched by configuration, hash, and score to their
+prior passed exact audits.  A row that fails any of these checks is retained
+in the diagnostic appendix but is not evidence for a reported construction.
 
 \section{Overall results}
 
-\input{../assets/main_81_24h_20260709_1623/report/table_problem_summary.tex}
+\input{../assets/replacement_81_final_20260712/report/table_problem_summary.tex}
 
 The best values alone do not describe the experiment.  MISR has median
 \MisrMedian{} and range \MisrMinimum{}--\MisrBest{}; unit-square stabbing has
@@ -446,7 +497,7 @@ numbers are the evidence.}
 \label{fig:heatmaps}
 \end{figure}
 
-\input{../assets/main_81_24h_20260709_1623/report/table_top_configs.tex}
+\input{../assets/replacement_81_final_20260712/report/table_top_configs.tex}
 
 \clearpage
 \section{Learning dynamics across all 81 cells}
@@ -456,11 +507,11 @@ numbers are the evidence.}
 \begin{figure}[tbp]
 \centering
 \includegraphics[width=\textwidth]{fig_all_81_normalized_epoch_curves.pdf}
-\caption{All 27 trajectories per problem after normalizing each cell by its
-available cumulative transformer-training epochs.  Gray lines are individual
+\caption{Trajectories after normalizing each trained cell by its available
+cumulative transformer-training epochs.  Gray lines are individual
 configurations; the blue line is the median and the band is the middle 50\%.
-This normalization compares the shape of learning, not raw computational
-throughput.}
+The four zero-epoch guillotine fallback rows are omitted.  This normalization
+compares the shape of learning, not raw computational throughput.}
 \label{fig:all-curves}
 \end{figure}
 
@@ -476,13 +527,14 @@ those cases.
 \centering
 \includegraphics[width=0.82\textwidth]{fig_early_to_final_rank_stability.pdf}
 \caption{Spearman rank correlation between the configuration ranking at an
-early fraction of the model-epoch budget and the final ranking.  Because each
-cell is a different configuration and there are no repeated seeds, the curve
-is descriptive rather than an inferential test.}
+early fraction of each row's available model epochs and the final ranking.
+Rows with zero model-training epochs are undefined on this axis and omitted.
+Because each cell is a different configuration and there are no repeated
+seeds, the curve is descriptive rather than an inferential test.}
 \label{fig:rank-stability}
 \end{figure}
 
-At 25\% of the epoch budget, the descriptive rank correlations with the final
+At 25\% of each row's available model epochs, the descriptive rank correlations with the final
 ranking are \MisrRankRhoTwentyFive{} for MISR,
 \UnitSquareRankRhoTwentyFive{} for unit-square stabbing, and
 \GuillotineRankRhoTwentyFive{} for guillotine hardness.  High early
@@ -490,9 +542,9 @@ correlation indicates that longer runtime mostly refines an ordering already
 visible early; low correlation indicates meaningful late rearrangement among
 configurations.
 
-All three correlations exceed $0.83$ by this point.  Unit-square and
-guillotine rankings are already strongly predictive after only 10\% of the
-epoch budget, while MISR reorganizes somewhat longer.  The remaining runtime
+All three correlations exceed $0.899$ by this point.  Unit-square and
+guillotine rankings are already strongly predictive after only 10\% of each
+row's available epochs, while MISR reorganizes somewhat longer.  The remaining runtime
 mostly extends plateaus or improves a small number of outlying cells rather
 than changing the broad component ordering.
 
@@ -518,10 +570,11 @@ improvements are \MisrModelImprovementPercent\%,
 than the raw number of training calls: a model can train thousands of times
 while mostly reproducing the archive or proposing invalid candidates.
 In absolute terms, the event streams contain no model-sourced strict MISR
-improvement, only two for unit-square stabbing, and six for guillotine.  The
-combined initialization/local-mutation path accounts for 93, 166, and 105
-strict improvements, respectively.  The combined label is deliberate:
-code{initial\_or\_local} events do not support a finer attribution.
+improvement and one each for unit-square stabbing and guillotine.  The
+combined initialization/local-mutation path accounts for 78, 220, and 63
+strict improvements, respectively; four additional guillotine records are
+structural-random fallback exports.  The combined label is deliberate:
+\code{initial\_or\_local} events do not support a finer attribution.
 
 \subsection{Plateaus and computational throughput}
 
@@ -530,8 +583,8 @@ code{initial\_or\_local} events do not support a finer attribution.
 \includegraphics[width=\textwidth]{fig_plateau_diagnostics.pdf}
 \caption{Left: when each cell first reached its final score, colored by search
 throughput.  Right: fraction of search generations after the final strict
-improvement.  Long plateaus provide direct evidence that wall time alone was
-not the principal missing ingredient.}
+improvement.  Long plateaus show stasis under the observed search process;
+they do not by themselves establish an extended-run counterfactual.}
 \label{fig:plateaus}
 \end{figure}
 
@@ -540,6 +593,8 @@ generations, \UnitSquareMedianPlateauPercent\% of unit-square generations,
 and \GuillotineMedianPlateauPercent\% of guillotine generations.  The top
 records first appeared after \MisrTopTimeToBestHours{},
 \UnitSquareTopTimeToBestHours{}, and \GuillotineTopTimeToBestHours{} hours.
+The all-row guillotine median includes four terminal fallback exports assigned
+zero plateau; among the 23 ordinary-record rows its median plateau is 97.1\%.
 
 \begin{figure}[tbp]
 \centering
@@ -547,7 +602,9 @@ records first appeared after \MisrTopTimeToBestHours{},
 \caption{Search generations completed per hour versus final exact score.
 Exact or deeper surrogates may lower throughput while improving alignment;
 fast proxies are useful only if their additional generations translate into
-better exact certificates.}
+better exact certificates.  Population, object count, training cadence, and
+internal exact-scoring cost also differ by runtime regime, so this is a
+descriptive diagnostic rather than a controlled speed comparison.}
 \label{fig:throughput}
 \end{figure}
 
@@ -557,14 +614,16 @@ better exact certificates.}
 \caption{Final score against duplicate pressure, valid learned-model sample
 yield, and representation-repair pressure.  These diagnostics test whether
 additional training produces genuinely new feasible structures or repeatedly
-returns to the same basin.}
+returns to the same basin.  Runtime regime and population size are potential
+confounders across component levels.}
 \label{fig:search-efficiency}
 \end{figure}
 
-The median cell produced \MisrMedianDuplicatesPerGeneration{} duplicate
-candidates per MISR generation, \UnitSquareMedianDuplicatesPerGeneration{}
-per unit-square generation, and \GuillotineMedianDuplicatesPerGeneration{}
-per guillotine generation, from a population of 32.  Median valid
+The median fractions of candidate slots rejected as duplicates were
+\MisrMedianDuplicateSlotPercent\% for MISR,
+\UnitSquareMedianDuplicateSlotPercent\% for unit-square stabbing, and
+\GuillotineMedianDuplicateSlotPercent\% for guillotine.  Slot fractions are
+used because populations are 16 or 32 according to runtime regime.  Median valid
 learned-model yields were only \MisrMedianModelValidPercent\% and
 \UnitSquareMedianModelValidPercent\% for the two LP-gap problems, versus
 \GuillotineMedianModelValidPercent\% for guillotine.  High syntactic validity
@@ -602,34 +661,36 @@ are the surrogates.}
 \centering
 \includegraphics[width=\textwidth]{fig_misr_27_trajectories_generation.pdf}
 \caption{The same 27 MISR cells against search generation.  Comparing this
-figure with Figure~\ref{fig:misr-epochs} separates model-update effects from
-raw local-search progress.}
+figure with Figure~\ref{fig:misr-epochs} distinguishes progress aligned with
+model updates from raw search-generation progress.}
 \label{fig:misr-generations}
 \end{figure}
 
-\input{../assets/main_81_24h_20260709_1623/report/table_misr_marginals.tex}
+\input{../assets/replacement_81_final_20260712/report/table_misr_marginals.tex}
 
-The matrix separates the effects cleanly at a descriptive level.  The
-\code{triangle\_free\_rect} representation has mean score $1.3546$ and is the
-only representation to reach $1.5$.  Every
-\code{quadratic\_program\_rectangles} cell ends at exactly $4/3$, a striking
-sign that its decoder and triangle-free repair map many different component
-choices into the same objective basin.  The unrestricted endpoint-sequence
-representation averages only $1.2685$.  Surrogate alignment is also visible:
-\code{exact\_lp\_gap\_pressure} averages $1.3454$, compared with $1.2824$ for
-\code{graph\_conflict\_proxy}.  By contrast, the three local-search marginal
-means differ by only about $0.012$, so representation and scoring dominate the
-choice of mutation label in this run.
+The matrix shows descriptive marginal contrasts, not clean causal effects.  The
+\code{triangle\_free\_rect} representation has mean score $1.3009$ and is the
+only representation to reach $3/2$.  The
+\code{quadratic\_program\_rectangles} representation is nearly as strong on
+mean ($1.3000$) but remains between $6/5$ and $4/3$, while the new
+\code{fixed\_symmetry\_rectangles} representation averages $1.2407$.
+Surrogate alignment is visible: \code{exact\_lp\_gap\_pressure} averages
+$1.3204$, compared with $1.2250$ for \code{graph\_conflict\_proxy}.  The local
+search axis also matters in the updated table: \code{program\_coeff\_pivot}
+averages $1.3176$, \code{sequence\_pair\_pivot} $1.2870$, and the new
+\code{symmetry\_crossover\_hillclimb} $1.2370$.
 
 \subsection{What worked}
 
 The strongest MISR behavior combines a representation that can maintain
 sparse conflict structure with a surrogate that observes the exact LP/integer
 imbalance.  Triangle-free repair removes three-way cliques, making edge
-constraints the clique LP and exposing half-integral pressure.  Endpoint
-sequence pairs provide large combinatorial moves without tying the search to
-small coordinate perturbations.  LP-aware pivots are useful when they change
-tight constraints without simultaneously increasing the integral optimum.
+constraints the clique LP and exposing half-integral pressure.  In the winning
+direct triangle-free row, \code{sequence\_pair\_pivot} upweights add and
+replace proposals alongside nudge, resize, and delete moves.  These moves are
+useful when they change tight constraints without simultaneously increasing
+the integral optimum.  The $3/2$ record appears at
+generation 4345, cumulative model epoch 1860, and 3.12 hours.
 
 \begin{figure}[tbp]
 \centering
@@ -696,18 +757,19 @@ epoch.}
 \label{fig:unit-generations}
 \end{figure}
 
-\input{../assets/main_81_24h_20260709_1623/report/table_unit_square_marginals.tex}
+\input{../assets/replacement_81_final_20260712/report/table_unit_square_marginals.tex}
 
-Unit-square stabbing has the strongest single component effect in the entire
-study.  The exact gap surrogate averages $1.4629$ and every one of its nine
-cells lies between $10/7$ and $3/2$.  The greedy and incidence-statistics
-surrogates average only $1.3081$ and $1.3017$.  Thus additional generations
-under a cheap proxy do not compensate for optimizing the wrong quantity.  The
+Unit-square stabbing has the largest descriptive marginal contrast in the
+updated table.  The exact gap surrogate averages $1.4852$ and every one of its nine
+cells lies between $15/11$ and $20/13$.  The greedy and incidence-statistics
+surrogates average $1.3750$ and $1.3606$.  Thus additional generations under a
+cheap proxy do not compensate for optimizing the wrong quantity.  The
 \code{sqstab\_exact\_grid} representation has the strongest representation
-mean ($1.3872$), while \code{sqstab\_local\_hillclimb} has the strongest local
-search mean ($1.3969$).  Four exact-pressure cells reach numerical $3/2$,
-showing that this plateau is reproducible across multiple component paths even
-without repeated seeds.
+mean ($1.4265$), while \code{symmetry\_crossover\_hillclimb} has by far the
+strongest local-search mean ($1.4761$).  Nine cells reach $3/2$, and one
+exact-grid/symmetry-crossover/exact-pressure cell reaches $20/13$.  Because
+that winner is also one of the three resolution-island follow-up rows, the
+record cannot be attributed uniquely to the local-search label.
 
 \subsection{What worked}
 
@@ -715,30 +777,36 @@ The successful paths optimize the geometric set-cover instance through its
 critical-line incidence rather than treating coordinates as independent
 numbers.  Exact gap pressure is particularly valuable because greedy cover
 size, maximum line frequency, and incidence balance are not reliable proxies
-for the LP optimum.  Coordinate mutation can still help when it crosses a
-critical endpoint and therefore changes several incidence relations at once.
+for the LP optimum.  The new hill climb adds coordinated pair exchange and
+objective-preserving symmetry moves to ordinary shifts and relocations.  Its
+resolution-stratified archive prevents an initially weak side length from
+being discarded before these moves alter the incidence pattern.  The winning
+$20/13$ certificate has 20 squares, $\tau=4$, and $\tau^*=13/5$; it first
+appears at generation 190, cumulative model epoch 54, after 0.37 hours.
 
 \begin{figure}[tbp]
 \centering
 \includegraphics[width=0.76\textwidth]{fig_best_unit_square.png}
 \caption{Best audited unit-square stabbing construction from the final
-matrix.}
+matrix.  The 20 congruent squares are labeled 0--19; the four red lines form
+an optimal integral stabbing cover.  The exact certificate has
+$\tau=4$, $\tau^*=13/5$, and ratio $20/13$.}
 \label{fig:unit-best}
 \end{figure}
 
 \subsection{Why improvement stopped}
 
-The unit-square plateau is strongly discrete.  A local move usually preserves
+The unit-square objective is strongly discrete.  A local move usually preserves
 the same critical-line incidence matrix and therefore leaves both $\tau$ and
 $\tau^*$ unchanged.  A threshold-crossing move often changes the integer and
-fractional optima together.  The search operates on an integer coordinate
-grid with 8--24 accepted squares, so it explores only a small part of the
+fractional optima together.  The final certificates have 9--28 squares on
+integer coordinate grids, so the search still explores only a small part of the
 realizable incidence landscape.  Moreover, the generic model learns a
 serialization of coordinates; it has no explicit equivariance under
 translation, relabeling, or affine normalization.
 
-The observed $3/2$-type behavior is compact and repeatedly rediscovered, but
-the code has no neutral, general composition rule that combines such blocks
+The $20/13$ result is a rare single-cell hit while $3/2$ is repeatedly
+rediscovered.  The code still has no neutral, general composition rule that combines such blocks
 without allowing one line to stab multiple blocks.  That cross-block line is
 the geometric reason direct sums fail to amplify the set-cover gap.
 
@@ -776,20 +844,19 @@ epoch.}
 \label{fig:guillotine-generations}
 \end{figure}
 
-\input{../assets/main_81_24h_20260709_1623/report/table_guillotine_marginals.tex}
+\input{../assets/replacement_81_final_20260712/report/table_guillotine_marginals.tex}
 
 The guillotine matrix shows that witness use matters more than a more elaborate
-generator label.  \code{witness\_breaking} averages $0.2810$, compared with
-$0.2534$ for \code{packing\_resize} and only $0.1983$ for
-\code{recursive\_gadget\_assembly}.  The latter often adds or copies local
-blocks without closing the recursive escape route and is actively harmful in
-this matrix.  Among surrogates, \code{depth\_limited\_dp} is strongest on
-average ($0.2560$), while \code{k\_subset\_nonseparability} is weakest
-($0.2344$) despite being more elaborate.  The recursive-obstruction
-representation is stable but capped between $0.25$ and $0.2727$; direct
-disjoint search is more variable and contains both weaker rows and the unique
-$1/3$ record.  This is a useful distinction between robust initialization and
-record potential.
+generator label.  \code{witness\_breaking} averages $0.2674$, compared with
+$0.2509$ for \code{packing\_resize}.  Every
+\code{symmetry\_crossover\_hillclimb} guillotine cell ends at $1/6$, including
+four structural-random fallback exports, so the shared exact-nonworsening move
+rule does not transfer successfully to this objective.  Among surrogates,
+\code{depth\_limited\_dp} is strongest on average ($0.2359$), while
+\code{k\_subset\_nonseparability} is weakest ($0.2218$).  Direct disjoint
+search has the strongest representation mean ($0.2349$) and contains the
+unique $1/3$ record; the recursive grammar and fixed-symmetry packing average
+$0.2278$ and $0.2222$.
 
 \subsection{What worked}
 
@@ -798,7 +865,14 @@ local structure and the mutation operator responds to actual separable
 subsets.  Witness breaking and packing resize can close easy projection gaps;
 the depth-limited dynamic program is more aligned with the exact recursive
 objective than first-cut obstruction.  The $k$-subset surrogate adds useful
-large-subset pressure, although it is sampled above 16 rectangles.
+large-subset pressure, although it is sampled above 16 rectangles.  The
+winning direct/witness/depth-DP row reaches $1/3$ with nine rectangles,
+six saved and three destroyed, at generation 2030 and 5.81 hours.
+
+The all-nine $1/6$ result for symmetry/crossover is specific to its
+replacement runtime and fixed proposal policy.  It demonstrates failed
+transfer in this experiment, not a universal limitation of symmetry moves for
+guillotine search.
 
 \begin{figure}[tbp]
 \centering
@@ -859,31 +933,32 @@ reachable constructions, not how easy the fix would be.}
 Limitation & Evidence and consequence & Likely leverage \\
 \midrule
 Closed representation families & Entire component families collapse to one
-score---for example, all nine quadratic-program MISR cells finish at $4/3$,
-and six recursive-grammar guillotine cells remain at $1/4$.  Search cannot
-discover a structure its representation and repair operators cannot express.
+score---for example, all nine symmetry/crossover guillotine cells finish at
+$1/6$, and nine MISR cells across several component paths finish at $4/3$.
+Search cannot discover a structure its representation and repair operators
+cannot express.
 & Very high \\
 
 Weak exact-witness feedback & Surrogates rank most candidates, while exact
 primal, dual, stabbing, and cut-tree witnesses are not converted into dense
-move-level feedback.  Learned-model samples account for only 0, 2, and 6
+move-level feedback.  Learned-model samples account for only 0, 1, and 1
 strict records in MISR, unit-square, and guillotine. & Very high \\
 
-Archive collapse and model restart & Median duplicate counts reach
-\MisrMedianDuplicatesPerGeneration{},
-\UnitSquareMedianDuplicatesPerGeneration{}, and
-\GuillotineMedianDuplicatesPerGeneration{} per generation.  Each training
-event fits a fresh three-epoch model, so optimizer state and learned features
-do not accumulate across events. & Very high \\
+Archive collapse and model restart & Median duplicate-slot fractions reach
+\MisrMedianDuplicateSlotPercent\%,
+\UnitSquareMedianDuplicateSlotPercent\%, and
+\GuillotineMedianDuplicateSlotPercent\%.  Each training event fits a fresh
+three-epoch model, so optimizer state and learned features do not accumulate
+across events. & Very high \\
 
-No composition mechanism & The best certificates have only 12, 14, and 9
+No composition mechanism & The best certificates have only 12, 20, and 9
 objects.  The code searches finite witnesses but has no reliable operator that
 combines two certified blocks while preserving the relevant ratio.  A record
 therefore does not automatically generate a stronger family. & Very high \\
 
 Discrete exact objectives & Small geometric changes usually leave the exact
 ratio unchanged, while the next useful change may require several coordinated
-objects.  This creates sparse rewards and explains the 74--98\% median
+objects.  This creates sparse rewards and explains the 64--98\% median
 post-best plateaus. & High \\
 
 Proposal--repair mismatch & Repair guarantees valid triangle-free,
@@ -901,10 +976,10 @@ are bounded to keep exact verification tractable.  More epochs at the same
 scale do not test whether a qualitatively different obstruction appears only
 at larger $n$ or finer order type. & Medium \\
 
-Unreplicated cells and unequal solver cost & One run per cell prevents error
-bars over stochastic repetitions.  Solver-dependent throughput and
-generation-level budget checks also give cells unequal numbers of proposals
-under the same nominal wall time. & Methodological \\
+Unreplicated cells and runtime confounding & One run per cell prevents error
+bars over stochastic repetitions.  New component levels occur only in the
+replacement runtime regimes, while solver-dependent throughput gives cells
+unequal numbers of proposals under the same nominal wall time. & Methodological \\
 
 Incomplete source provenance & The event label \code{model\_sample} does not
 separate a direct transformer sample from the character n-gram backfill.
@@ -983,7 +1058,7 @@ therefore be tested separately from simply extending a fixed-size run.
 
 The full factorial permits complete coverage of component combinations, but
 without repeated seeds an observed difference between two cells contains
-both a component effect and run-specific stochasticity.  Main-effect means
+both a component association and run-specific stochasticity.  Marginal means
 pool nine distinct cells and are useful for prioritization, yet they are not
 standard errors.  This is the principal statistical limitation of the final
 matrix.
@@ -1073,46 +1148,58 @@ size lexicographically before taking the ratio.
 
 \section{Reproducibility and artifact map}
 
-Raw event streams are retained on the HPC run root rather than committed to
-Git.  On that run root, the compact analysis is regenerated with:
+Raw event streams remain in their HPC run roots rather than being committed to
+Git.  After compacting those streams, the final matrix is assembled with the
+following schematic command; the two angle-bracketed inputs are the compact
+outputs produced from the corresponding HPC roots:
 
 \begin{verbatim}
-python3 scripts/compact_main_matrix_events.py \
-  runs/main_81_24h_20260709_1623/main_results \
-  --out-dir runs/main_81_24h_20260709_1623/postprocess/analysis \
-  --expected-rows 81 --default-model-epochs 3 --strict
+python3 scripts/build_replacement_81_dataset.py \
+  --retained-postprocess \
+    docs/assets/main_81_24h_20260709_1623/postprocess \
+  --delta-postprocess <compact-replacement-42> \
+  --delta-postprocess <compact-unit-square-3> \
+  --artifact-map \
+    docs/assets/replacement_81_final_20260712/run_artifacts/artifact_mapping.csv \
+  --out-dir docs/assets/replacement_81_final_20260712/data
 \end{verbatim}
 
 Plots and descriptive tables are regenerated with:
 
 \begin{verbatim}
 python3 scripts/plot_main_matrix_analysis.py \
-  docs/assets/main_81_24h_20260709_1623/postprocess \
-  --out-dir docs/assets/main_81_24h_20260709_1623/analysis
+  docs/assets/replacement_81_final_20260712/data \
+  --out-dir docs/assets/replacement_81_final_20260712/analysis
 \end{verbatim}
 
 Generated TeX tables are rebuilt from the committed compact evidence with:
 
 \begin{verbatim}
 python3 scripts/generate_main_matrix_tex.py \
-  docs/assets/main_81_24h_20260709_1623/postprocess \
-  --plot-table-dir docs/assets/main_81_24h_20260709_1623/analysis \
-  --audit-csv docs/assets/main_81_24h_20260709_1623/postprocess/audit.csv \
-  --out-dir docs/assets/main_81_24h_20260709_1623/report
+  docs/assets/replacement_81_final_20260712/data \
+  --plot-table-dir docs/assets/replacement_81_final_20260712/analysis \
+  --audit-csv docs/assets/replacement_81_final_20260712/audit/audit.csv \
+  --out-dir docs/assets/replacement_81_final_20260712/report
 \end{verbatim}
 
-The analysis manifest records hashes for the compaction script and every
-compact CSV.  The repository snapshot contains the compact trajectory data,
-the 81-row metrics, audit table, best certificates and renderings, generated
-figures, and this report.  Re-running the exact audit requires the HPC run
-root because the original summaries retain their certificate paths.  The raw
-event streams remain the source of truth for candidate-level reconstruction.
+The two principal machine-readable artifacts are
+\artifact{docs/assets/replacement\_81\_final\_20260712/data/final\_81\_runs.csv},
+with one endpoint row per configuration, and
+\artifact{docs/assets/replacement\_81\_final\_20260712/data/final\_81\_epoch\_history.csv},
+with every strict improvement plus an explicit final endpoint.  The latter
+contains generation, elapsed time, cumulative model epoch, source type, and
+running best score, so score-versus-epoch traces can be reconstructed without
+the large raw streams.  The current plotting script directly consumes
+\artifact{row\_metrics.csv}, \artifact{score\_improvements.csv}, and
+\artifact{normalized\_learning\_curves.csv}; the epoch-history file is the
+portable convenience export.  The dataset manifest records row counts,
+problem coverage, source provenance, and final best values.
 
 \appendix
 \clearpage
 \section{Complete 81-cell table}
 
-\input{../assets/main_81_24h_20260709_1623/report/table_all_81.tex}
+\input{../assets/replacement_81_final_20260712/report/table_all_81.tex}
 
 \clearpage
 \section{Interpretation guide}
@@ -1137,8 +1224,9 @@ Plateau fraction & Fraction of completed search generations occurring after
 the last strict best-score improvement. \\
 Model improvement & Strict improvement whose audited candidate had
 \code{source\_type=model\_sample}. \\
-Fallback & Emergency randomized export attempted only when a guillotine row
-would otherwise end without any certificate; unused in this run. \\
+Fallback & Fresh structural-random export attempted only when a guillotine row
+would otherwise end without any certificate; used by four poor-performing
+symmetry/crossover rows and never by a reported record. \\
 \bottomrule
 \end{tabularx}
 \end{table}

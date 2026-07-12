@@ -138,23 +138,31 @@ resume commands, collection, and audit.
 
 ## Final 81-Cell Evidence
 
-The final audited 81-cell matrix completed on NYUAD Jubail on 2026-07-09 from
-commit `20750a588a5b5d8e744689b9efa7538b5eaab26b`. It has one independently
-generated run for each of the $3 \times 3 \times 3$ component combinations per
-problem and no repeated-seed axis.
+The updated final 81-cell matrix combines the strongest retained configurations
+from the July 9 study with the 45 replacement-component runs completed on July
+11. It has one independently generated run for every cell in the final
+$3 \times 3 \times 3$ component matrix per problem and no repeated-seed axis.
 
 The best exact audited values in this matrix are:
 
 ```text
 misr         1.5
-unit_square 1.5000000000000004
+unit_square 1.538461538461539  (20/13)
 guillotine  0.3333333333333333
 ```
 
-All 81 saved certificates pass the post-run exact audit. The complete evidence
-bundle, including compact learning curves, all saved certificates, construction
-renderings, figures, and generated tables, is stored in
-[docs/assets/main_81_24h_20260709_1623](docs/assets/main_81_24h_20260709_1623).
+All 81 final certificates pass exact verification: 45 replacement
+certificates were freshly recomputed, and 36 retained certificates match their
+prior passed audits by configuration, hash, and score.
+
+The updated evidence bundle, including the final 81-row table, epoch histories,
+construction renderings, figures, generated tables, and audit metadata, is
+stored in
+[docs/assets/replacement_81_final_20260712](docs/assets/replacement_81_final_20260712).
+The two principal data exports are
+[final_81_runs.csv](docs/assets/replacement_81_final_20260712/data/final_81_runs.csv)
+and
+[final_81_epoch_history.csv](docs/assets/replacement_81_final_20260712/data/final_81_epoch_history.csv).
 
 The full 81-cell report is available as
 [PDF](docs/manuscript/patternboost_81_run_analysis.pdf) and

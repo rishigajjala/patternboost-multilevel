@@ -1,0 +1,23 @@
+\begin{table}[tbp]
+\centering
+\caption{Descriptive component marginals for MISR. Each level pools nine distinct component cells.}
+\label{tab:misr-marginals}
+\begin{tabularx}{\textwidth}{p{0.16\textwidth}Xrrrrr}
+\toprule
+Factor & Level & Mean & Median & Min. & Max. & IQR \\
+\midrule
+Representation & \code{triangle\_\allowbreak{}free\_\allowbreak{}rect} & 1.3009 & 1.3333 & 1.1250 & 1.5000 & [1.2000, 1.3750] \\
+ & \code{quadratic\_\allowbreak{}program\_\allowbreak{}rectangles} & 1.3000 & 1.3333 & 1.2000 & 1.3333 & [1.3000, 1.3333] \\
+ & \code{fixed\_\allowbreak{}symmetry\_\allowbreak{}rectangles} & 1.2407 & 1.2500 & 1.0000 & 1.3333 & [1.2500, 1.2500] \\
+\addlinespace
+Local Search & \code{program\_\allowbreak{}coeff\_\allowbreak{}pivot} & 1.3176 & 1.3333 & 1.2500 & 1.4000 & [1.2500, 1.3333] \\
+ & \code{sequence\_\allowbreak{}pair\_\allowbreak{}pivot} & 1.2870 & 1.3333 & 1.0000 & 1.5000 & [1.2500, 1.3333] \\
+ & \code{symmetry\_\allowbreak{}crossover\_\allowbreak{}hillclimb} & 1.2370 & 1.2000 & 1.2000 & 1.3333 & [1.2000, 1.2500] \\
+\addlinespace
+Surrogate & \code{exact\_\allowbreak{}lp\_\allowbreak{}gap\_\allowbreak{}pressure} & 1.3204 & 1.3333 & 1.2000 & 1.5000 & [1.2500, 1.3333] \\
+ & \code{triangle\_\allowbreak{}free\_\allowbreak{}exact\_\allowbreak{}gap\_\allowbreak{}pressure} & 1.2963 & 1.3000 & 1.2000 & 1.3750 & [1.2500, 1.3333] \\
+ & \code{graph\_\allowbreak{}conflict\_\allowbreak{}proxy} & 1.2250 & 1.2500 & 1.0000 & 1.3333 & [1.2000, 1.3333] \\
+\addlinespace
+\bottomrule
+\end{tabularx}
+\end{table}

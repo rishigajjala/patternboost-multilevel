@@ -23,14 +23,29 @@ from typing import Any, Iterable
 
 PROBLEMS = ("misr", "unit_square", "guillotine")
 EPS = 1e-12
+CERTIFICATE_SCHEMAS = {
+    "misr": "misr_certificate_v1",
+    "unit_square": "unit_square_stab_certificate_v1",
+    "guillotine": "guillotine_certificate_v1",
+}
+CERTIFICATE_SCORE_TOLERANCE = 1e-9
+
+
+def _load_json_object(path: Path) -> tuple[dict[str, Any] | None, str]:
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except OSError as exc:
+        return None, f"could not read certificate JSON: {exc}"
+    except json.JSONDecodeError as exc:
+        return None, f"malformed certificate JSON at line {exc.lineno} column {exc.colno}"
+    if not isinstance(value, dict):
+        return None, "certificate JSON top-level value is not an object"
+    return value, ""
 
 
 def _load_json(path: Path) -> dict[str, Any] | None:
-    try:
-        value = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return None
-    return value if isinstance(value, dict) else None
+    value, _error = _load_json_object(path)
+    return value
 
 
 def _as_float(value: Any) -> float | None:
@@ -81,6 +96,91 @@ def _sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _certificate_content_hash(cert: dict[str, Any]) -> str:
+    payload = dict(cert)
+    payload.pop("certificate_hash", None)
+    serialized = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
+    return hashlib.sha256(serialized.encode("utf-8")).hexdigest()
+
+
+def _scores_match(left: Any, right: Any) -> bool:
+    left_number = _as_float(left)
+    right_number = _as_float(right)
+    return (
+        left_number is not None
+        and right_number is not None
+        and abs(left_number - right_number) <= CERTIFICATE_SCORE_TOLERANCE
+    )
+
+
+def _certificate_validation(
+    cert: dict[str, Any] | None,
+    *,
+    parse_error: str,
+    problem: str,
+    expected_score: Any,
+    state_hashes: Iterable[Any],
+    state_scores: Iterable[Any],
+) -> dict[str, Any]:
+    errors: list[str] = []
+    json_valid = cert is not None
+    schema_valid = False
+    hash_valid = False
+    score_valid = False
+
+    if cert is None:
+        errors.append(parse_error or "certificate JSON is missing")
+    else:
+        expected_schema = CERTIFICATE_SCHEMAS[problem]
+        schema = cert.get("schema")
+        certificate_problem = cert.get("problem")
+        schema_valid = schema == expected_schema and certificate_problem == problem
+        if schema != expected_schema:
+            errors.append(f"certificate schema {schema!r} does not match {expected_schema!r}")
+        if certificate_problem != problem:
+            errors.append(
+                f"certificate problem {certificate_problem!r} does not match {problem!r}"
+            )
+
+        stored_hash = cert.get("certificate_hash")
+        if not isinstance(stored_hash, str) or not stored_hash:
+            errors.append("certificate hash is missing")
+        elif _certificate_content_hash(cert) != stored_hash:
+            errors.append("certificate hash does not match certificate content")
+        else:
+            conflicting_hashes = [
+                value for value in state_hashes if value not in (None, "", stored_hash)
+            ]
+            if conflicting_hashes:
+                errors.append("certificate hash does not match summary/checkpoint hash")
+            else:
+                hash_valid = True
+
+        certificate_score = _as_float(cert.get("score"))
+        if certificate_score is None:
+            errors.append("certificate score is missing or non-finite")
+        else:
+            comparison_scores = [expected_score, *state_scores]
+            conflicting_scores = [
+                value
+                for value in comparison_scores
+                if value not in (None, "") and not _scores_match(certificate_score, value)
+            ]
+            if conflicting_scores:
+                errors.append("certificate score does not match row/summary/checkpoint score")
+            else:
+                score_valid = True
+
+    return {
+        "certificate_json_valid": json_valid,
+        "certificate_schema_valid": schema_valid,
+        "certificate_hash_valid": hash_valid,
+        "certificate_score_valid": score_valid,
+        "certificate_valid": json_valid and schema_valid and hash_valid and score_valid,
+        "certificate_validation_error": "; ".join(errors),
+    }
+
+
 def _git_commit(cwd: Path) -> str:
     try:
         result = subprocess.run(
@@ -113,7 +213,16 @@ def _resolve_artifact(path_value: Any, *, row_dir: Path, project_root: Path) -> 
     path = Path(path_value)
     candidates = [path]
     if not path.is_absolute():
-        candidates.extend((project_root / path, row_dir / path.name))
+        candidates.append(project_root / path)
+    # Archived runs often retain the original absolute HPC path in summary.json.
+    # Resolve the copied winning artifact by basename when the archive is local.
+    candidates.extend(
+        (
+            row_dir / path.name,
+            row_dir / "certificates" / path.name,
+            row_dir / "renderings" / path.name,
+        )
+    )
     for candidate in candidates:
         if candidate.exists():
             return candidate.resolve()
@@ -368,8 +477,25 @@ def _metric_row(row: RowData, *, project_root: Path) -> dict[str, Any]:
     cert_path = _resolve_artifact(
         state.get("best_certificate_path"), row_dir=row.row_dir, project_root=project_root
     )
-    cert = _load_json(cert_path) if cert_path is not None else None
+    cert: dict[str, Any] | None = None
+    certificate_parse_error = "certificate path did not resolve"
+    if cert_path is not None:
+        cert, certificate_parse_error = _load_json_object(cert_path)
     cert_fields = _certificate_fields(cert or {}, row.problem)
+    certificate_validation = _certificate_validation(
+        cert,
+        parse_error=certificate_parse_error,
+        problem=row.problem,
+        expected_score=best_score,
+        state_hashes=(
+            row.summary.get("best_certificate_hash"),
+            row.checkpoint.get("best_certificate_hash"),
+        ),
+        state_scores=(
+            _first(row.summary, ("best_exact_score", "score")),
+            _first(row.checkpoint, ("best_exact_score", "score")),
+        ),
+    )
     if not cert_fields.get("n_items"):
         cert_fields["n_items"] = ""
 
@@ -467,6 +593,7 @@ def _metric_row(row: RowData, *, project_root: Path) -> dict[str, Any]:
         ),
     }
     result.update(cert_fields)
+    result.update(certificate_validation)
     return result
 
 
@@ -503,6 +630,112 @@ def _write_csv(path: Path, rows: list[dict[str, Any]], fieldnames: list[str] | N
             writer.writerow({name: row.get(name, "") for name in names})
 
 
+def _batch_expectation_issues(
+    rows: list[RowData],
+    *,
+    expected_rows: int,
+    expected_problem_counts: dict[str, int] | None,
+    expected_configs: Iterable[str] | None,
+) -> tuple[list[str], dict[str, int], set[str] | None]:
+    issues: list[str] = []
+    actual_problems = Counter(row.problem for row in rows)
+    actual_configs = {row.config_id for row in rows}
+    expected_config_values = list(expected_configs) if expected_configs is not None else None
+    expected_config_set = (
+        set(expected_config_values) if expected_config_values is not None else None
+    )
+
+    if expected_config_values is not None:
+        duplicate_expected_configs = sorted(
+            config
+            for config, count in Counter(expected_config_values).items()
+            if count > 1
+        )
+        if duplicate_expected_configs:
+            issues.append(
+                f"duplicate expected configuration identifiers: {duplicate_expected_configs}"
+            )
+
+    normalized_problem_counts: dict[str, int] = {}
+    if expected_problem_counts is not None:
+        unknown_problems = sorted(set(expected_problem_counts) - set(PROBLEMS))
+        if unknown_problems:
+            issues.append(f"unknown expected problems: {unknown_problems}")
+        normalized_problem_counts = {
+            problem: int(expected_problem_counts.get(problem, 0)) for problem in PROBLEMS
+        }
+        invalid_counts = {
+            problem: count for problem, count in normalized_problem_counts.items() if count < 0
+        }
+        if invalid_counts:
+            issues.append(f"negative expected problem counts: {invalid_counts}")
+        if sum(normalized_problem_counts.values()) != expected_rows:
+            issues.append(
+                "expected problem counts sum to "
+                f"{sum(normalized_problem_counts.values())}, not expected_rows={expected_rows}"
+            )
+
+    config_problem_counts: dict[str, int] = {}
+    if expected_config_set is not None:
+        invalid_configs = sorted(
+            config
+            for config in expected_config_set
+            if config.split("/", 1)[0] not in PROBLEMS or config.count("/") != 3
+        )
+        if invalid_configs:
+            issues.append(f"invalid expected configuration identifiers: {invalid_configs}")
+        config_problem_counts = dict(
+            Counter(config.split("/", 1)[0] for config in expected_config_set)
+        )
+        if len(expected_config_set) != expected_rows:
+            issues.append(
+                f"expected configuration set has {len(expected_config_set)} rows, "
+                f"not expected_rows={expected_rows}"
+            )
+        missing = sorted(expected_config_set - actual_configs)
+        unexpected = sorted(actual_configs - expected_config_set)
+        if missing:
+            issues.append(f"missing expected configurations: {missing}")
+        if unexpected:
+            issues.append(f"unexpected configurations: {unexpected}")
+        if normalized_problem_counts and any(
+            normalized_problem_counts[problem] != config_problem_counts.get(problem, 0)
+            for problem in PROBLEMS
+        ):
+            issues.append(
+                "expected configuration set problem counts do not match explicit expected problem counts"
+            )
+
+    effective_problem_counts = normalized_problem_counts
+    if not effective_problem_counts and expected_config_set is not None:
+        effective_problem_counts = {
+            problem: config_problem_counts.get(problem, 0) for problem in PROBLEMS
+        }
+    if not effective_problem_counts and expected_rows == 81:
+        effective_problem_counts = {problem: 27 for problem in PROBLEMS}
+
+    for problem, expected_count in effective_problem_counts.items():
+        actual_count = actual_problems.get(problem, 0)
+        if actual_count != expected_count:
+            issues.append(f"{problem}: expected {expected_count} rows, found {actual_count}")
+
+    return issues, effective_problem_counts, expected_config_set
+
+
+def _parse_problem_count(value: str) -> tuple[str, int]:
+    problem, separator, raw_count = value.partition("=")
+    if not separator or problem not in PROBLEMS:
+        choices = ", ".join(PROBLEMS)
+        raise argparse.ArgumentTypeError(f"expected PROBLEM=COUNT where PROBLEM is one of: {choices}")
+    try:
+        count = int(raw_count)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError(f"invalid count in {value!r}") from exc
+    if count < 0:
+        raise argparse.ArgumentTypeError(f"count must be non-negative in {value!r}")
+    return problem, count
+
+
 def compact_run(
     root: Path,
     out_dir: Path,
@@ -510,9 +743,16 @@ def compact_run(
     expected_rows: int,
     default_model_epochs: int,
     strict: bool,
+    completed_only: bool = False,
+    expected_problem_counts: dict[str, int] | None = None,
+    expected_configs: Iterable[str] | None = None,
 ) -> dict[str, Any]:
     project_root = Path.cwd().resolve()
-    event_paths = sorted(path for path in root.rglob("events.jsonl") if "main" in path.parts)
+    all_event_paths = sorted(root.rglob("events.jsonl"))
+    main_event_paths = [path for path in all_event_paths if "main" in path.parts]
+    event_paths = main_event_paths or all_event_paths
+    if completed_only:
+        event_paths = [path for path in event_paths if (path.parent / "summary.json").exists()]
     rows = [
         _load_row(path, project_root=project_root, default_model_epochs=default_model_epochs)
         for path in event_paths
@@ -593,12 +833,13 @@ def compact_run(
     duplicates = sorted(config for config, count in configs.items() if count != 1)
     if duplicates:
         issues.append(f"non-unique configurations: {duplicates}")
-    for problem in PROBLEMS:
-        expected_problem_rows = expected_rows // len(PROBLEMS) if expected_rows % len(PROBLEMS) == 0 else 27
-        if problems.get(problem, 0) != expected_problem_rows:
-            issues.append(
-                f"{problem}: expected {expected_problem_rows} rows, found {problems.get(problem, 0)}"
-            )
+    batch_issues, effective_problem_counts, expected_config_set = _batch_expectation_issues(
+        rows,
+        expected_rows=expected_rows,
+        expected_problem_counts=expected_problem_counts,
+        expected_configs=expected_configs,
+    )
+    issues.extend(batch_issues)
     for metric in metrics:
         config = metric["config_id"]
         if not metric["summary_present"]:
@@ -607,6 +848,10 @@ def compact_run(
             issues.append(f"{config}: missing best score")
         if not metric["best_certificate_path"]:
             issues.append(f"{config}: missing best certificate")
+        elif not metric["certificate_valid"]:
+            issues.append(
+                f"{config}: invalid best certificate: {metric['certificate_validation_error']}"
+            )
         difference = _as_float(metric["summary_event_score_difference"])
         if difference is not None and abs(difference) > 1e-9:
             issues.append(f"{config}: summary/event score mismatch {difference}")
@@ -621,6 +866,10 @@ def compact_run(
         "analysis_script": str(Path(__file__).resolve()),
         "analysis_script_sha256": _sha256(Path(__file__).resolve()),
         "expected_rows": expected_rows,
+        "expected_problem_counts": dict(sorted(effective_problem_counts.items())),
+        "expected_config_count": (
+            len(expected_config_set) if expected_config_set is not None else None
+        ),
         "rows_found": len(rows),
         "problem_counts": dict(sorted(problems.items())),
         "source_run_ids": sorted(row.run_id for row in rows if row.run_id),
@@ -632,7 +881,10 @@ def compact_run(
             }
         ),
         "summary_count": sum(bool(metric["summary_present"]) for metric in metrics),
-        "certificate_count": sum(bool(metric["best_certificate_path"]) for metric in metrics),
+        "resolved_certificate_count": sum(
+            bool(metric["best_certificate_path"]) for metric in metrics
+        ),
+        "certificate_count": sum(bool(metric["certificate_valid"]) for metric in metrics),
         "event_rows": sum(int(metric["event_rows"]) for metric in metrics),
         "exact_events": sum(int(metric["exact_events"]) for metric in metrics),
         "model_train_calls": sum(int(metric["model_train_calls"]) for metric in metrics),
@@ -652,20 +904,78 @@ def compact_run(
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Compact an 81-row PatternBoost event stream for trajectory analysis."
+        description="Compact a PatternBoost matrix event stream for trajectory analysis."
     )
     parser.add_argument("root", type=Path, help="main_results directory containing the main/ tree")
     parser.add_argument("--out-dir", type=Path, required=True, help="directory for compact CSV/JSON outputs")
-    parser.add_argument("--expected-rows", type=int, default=81)
+    parser.add_argument(
+        "--expected-rows",
+        type=int,
+        help="expected total rows (defaults to 81, or to the supplied counts/configuration set)",
+    )
+    parser.add_argument(
+        "--expected-problem-count",
+        action="append",
+        default=[],
+        metavar="PROBLEM=COUNT",
+        type=_parse_problem_count,
+        help="expected rows for one problem; repeat for problem-specific partial batches",
+    )
+    parser.add_argument(
+        "--expected-config",
+        action="append",
+        default=[],
+        metavar="CONFIG_ID",
+        help="expected problem/representation/local_search/surrogate ID; repeat for each row",
+    )
     parser.add_argument("--default-model-epochs", type=int, default=3)
     parser.add_argument("--strict", action="store_true", help="fail on missing rows, summaries, scores, or certificates")
+    parser.add_argument(
+        "--completed-only",
+        action="store_true",
+        help="ignore interrupted event streams that do not have a summary.json",
+    )
     args = parser.parse_args()
+
+    expected_problem_counts: dict[str, int] | None = None
+    if args.expected_problem_count:
+        repeated_problems = sorted(
+            problem
+            for problem, count in Counter(
+                problem for problem, _count in args.expected_problem_count
+            ).items()
+            if count > 1
+        )
+        if repeated_problems:
+            parser.error(
+                "--expected-problem-count was repeated for: " + ", ".join(repeated_problems)
+            )
+        expected_problem_counts = dict(args.expected_problem_count)
+
+    expected_configs = args.expected_config or None
+    if expected_configs and len(set(expected_configs)) != len(expected_configs):
+        parser.error("--expected-config values must be unique")
+
+    if args.expected_rows is not None:
+        expected_rows = args.expected_rows
+    elif expected_problem_counts is not None:
+        expected_rows = sum(expected_problem_counts.values())
+    elif expected_configs is not None:
+        expected_rows = len(expected_configs)
+    else:
+        expected_rows = 81
+    if expected_rows < 0:
+        parser.error("--expected-rows must be non-negative")
+
     manifest = compact_run(
         args.root,
         args.out_dir,
-        expected_rows=args.expected_rows,
+        expected_rows=expected_rows,
         default_model_epochs=args.default_model_epochs,
         strict=args.strict,
+        completed_only=args.completed_only,
+        expected_problem_counts=expected_problem_counts,
+        expected_configs=expected_configs,
     )
     print(json.dumps(manifest, indent=2, sort_keys=True))
     return 0

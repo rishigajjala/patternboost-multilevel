@@ -1,0 +1,249 @@
+{
+  "candidate_id": "f4916c61b73385db43e2d1c66d3b116e745a503a17bdd9266aacdc0abcda7b8d",
+  "certificate_hash": "69877fd54db58428affbe0ada4190aef5ef1dfb6946c0380ccb5370e5b317c97",
+  "control_mode": "patternboost",
+  "created_at": "2026-07-09T12:28:01.777031+00:00",
+  "critical_lines": [
+    {
+      "axis": "vertical",
+      "coordinate": 0,
+      "id": "v0"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 1,
+      "id": "v1"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": "3/2",
+      "id": "v2"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 3,
+      "id": "v3"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 4,
+      "id": "v4"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": "9/2",
+      "id": "v5"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 5,
+      "id": "v6"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": "11/2",
+      "id": "v7"
+    },
+    {
+      "axis": "vertical",
+      "coordinate": 7,
+      "id": "v8"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 0,
+      "id": "h0"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 3,
+      "id": "h1"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 4,
+      "id": "h2"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "9/2",
+      "id": "h3"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 5,
+      "id": "h4"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "11/2",
+      "id": "h5"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 7,
+      "id": "h6"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": 8,
+      "id": "h7"
+    },
+    {
+      "axis": "horizontal",
+      "coordinate": "17/2",
+      "id": "h8"
+    }
+  ],
+  "dependency_versions": {
+    "numpy": "2.0.2",
+    "scipy": "1.13.1",
+    "torch": "2.8.0+cu128"
+  },
+  "exact_runtime_seconds": 0.002051219344139099,
+  "generation": 5,
+  "git_commit": "",
+  "git_dirty": null,
+  "hardware": {
+    "platform": "Linux-4.18.0-193.6.3.el8_2.x86_64-x86_64-with-glibc2.28",
+    "python": "3.11.3"
+  },
+  "incidence": [
+    [
+      "v0",
+      "v1",
+      "h1",
+      "h2"
+    ],
+    [
+      "v1",
+      "v2",
+      "h4",
+      "h5"
+    ],
+    [
+      "v1",
+      "v2",
+      "h6",
+      "h7"
+    ],
+    [
+      "v1",
+      "v2",
+      "h7",
+      "h8"
+    ],
+    [
+      "v3",
+      "v4",
+      "h4",
+      "h5"
+    ],
+    [
+      "v3",
+      "v4",
+      "h7",
+      "h8"
+    ],
+    [
+      "v4",
+      "v5",
+      "v6",
+      "h0"
+    ],
+    [
+      "v6",
+      "v7",
+      "h7",
+      "h8"
+    ],
+    [
+      "v8",
+      "h2",
+      "h3",
+      "h4"
+    ]
+  ],
+  "integer_lines": [
+    "v1",
+    "v4",
+    "v6",
+    "v8"
+  ],
+  "line_count": 18,
+  "local_search": "sqstab_local_hillclimb",
+  "lp_dual": {
+    "square_0": 0.0,
+    "square_1": 0.0,
+    "square_2": 0.0,
+    "square_3": 1.0,
+    "square_4": 0.0,
+    "square_5": 0.0,
+    "square_6": 1.0,
+    "square_7": 0.0,
+    "square_8": 1.0
+  },
+  "lp_primal": {
+    "h2": 0.5,
+    "h4": 0.5,
+    "h7": 0.5,
+    "v1": 0.5,
+    "v4": 0.5,
+    "v6": 0.5
+  },
+  "problem": "unit_square",
+  "representation": "sqstab_exact_grid",
+  "schema": "unit_square_stab_certificate_v1",
+  "score": 1.3333333333333333,
+  "side": 1,
+  "solver": {
+    "integer_solver": "exact_branch_and_bound_set_cover",
+    "lp_method": "highs",
+    "lp_solver": "scipy.optimize.linprog",
+    "tolerance": 1e-08
+  },
+  "solver_status": "optimal",
+  "source_type": "local_mutation",
+  "squares": [
+    [
+      0,
+      3
+    ],
+    [
+      1,
+      5
+    ],
+    [
+      1,
+      7
+    ],
+    [
+      1,
+      8
+    ],
+    [
+      3,
+      5
+    ],
+    [
+      3,
+      8
+    ],
+    [
+      4,
+      0
+    ],
+    [
+      5,
+      8
+    ],
+    [
+      7,
+      4
+    ]
+  ],
+  "surrogate": "incidence_statistics",
+  "tau_int": 4,
+  "tau_lp": 3.0,
+  "tool_version": "0.1.0"
+}

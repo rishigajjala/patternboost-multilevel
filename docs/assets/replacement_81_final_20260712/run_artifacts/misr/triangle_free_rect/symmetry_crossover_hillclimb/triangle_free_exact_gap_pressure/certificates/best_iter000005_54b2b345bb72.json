@@ -1,0 +1,325 @@
+{
+  "alpha_int": 5,
+  "alpha_lp": 6.0,
+  "candidate_id": "91a36da4de60b31bd71b59a1d8e3b6a47320c080db67031461bb419ed3b1d377",
+  "certificate_hash": "54b2b345bb72503463061b5455b36b65bf9efeba3f7cf0618e4ef5cda86feafb",
+  "constraint_count": 20,
+  "constraints": {
+    "triangle_free": true
+  },
+  "control_mode": "patternboost",
+  "created_at": "2026-07-10T21:30:36.867078+00:00",
+  "dependency_versions": {
+    "numpy": "2.0.2",
+    "scipy": "1.13.1",
+    "torch": "2.7.1"
+  },
+  "exact_runtime_seconds": 0.0013984590768814087,
+  "generation": 5,
+  "git_commit": "6f80dfec1a16c0d8428b97d587cb65f3e41354af",
+  "git_dirty": false,
+  "hardware": {
+    "platform": "Linux-4.18.0-193.6.3.el8_2.x86_64-x86_64-with-glibc2.28",
+    "python": "3.11.14"
+  },
+  "integer_solution": [
+    4,
+    6,
+    8,
+    10,
+    11
+  ],
+  "intersection_edges": [
+    [
+      0,
+      1
+    ],
+    [
+      0,
+      2
+    ],
+    [
+      0,
+      3
+    ],
+    [
+      0,
+      4
+    ],
+    [
+      1,
+      5
+    ],
+    [
+      1,
+      8
+    ],
+    [
+      1,
+      11
+    ],
+    [
+      2,
+      5
+    ],
+    [
+      2,
+      8
+    ],
+    [
+      2,
+      9
+    ],
+    [
+      2,
+      11
+    ],
+    [
+      3,
+      5
+    ],
+    [
+      3,
+      8
+    ],
+    [
+      3,
+      10
+    ],
+    [
+      3,
+      11
+    ],
+    [
+      4,
+      5
+    ],
+    [
+      5,
+      6
+    ],
+    [
+      6,
+      7
+    ],
+    [
+      7,
+      8
+    ],
+    [
+      9,
+      10
+    ]
+  ],
+  "local_search": "symmetry_crossover_hillclimb",
+  "lp_dual": {
+    "clique_0": 0.0,
+    "clique_1": 1.0,
+    "clique_10": 0.0,
+    "clique_11": 0.0,
+    "clique_12": 0.0,
+    "clique_13": 1.0,
+    "clique_14": 1.0,
+    "clique_15": 0.0,
+    "clique_16": 0.0,
+    "clique_17": 1.0,
+    "clique_18": 0.0,
+    "clique_19": 1.0,
+    "clique_2": 0.0,
+    "clique_3": 0.0,
+    "clique_4": 0.0,
+    "clique_5": 0.0,
+    "clique_6": 1.0,
+    "clique_7": 0.0,
+    "clique_8": 0.0,
+    "clique_9": 0.0
+  },
+  "lp_primal": {
+    "0": 0.5,
+    "1": 0.5,
+    "10": 0.5,
+    "11": 0.5,
+    "2": 0.5,
+    "3": 0.5,
+    "4": 0.5,
+    "5": 0.5,
+    "6": 0.5,
+    "7": 0.5,
+    "8": 0.5,
+    "9": 0.5
+  },
+  "max_clique_size": 2,
+  "maximal_cliques": [
+    [
+      0,
+      1
+    ],
+    [
+      1,
+      5
+    ],
+    [
+      1,
+      8
+    ],
+    [
+      1,
+      11
+    ],
+    [
+      0,
+      2
+    ],
+    [
+      2,
+      5
+    ],
+    [
+      2,
+      8
+    ],
+    [
+      2,
+      9
+    ],
+    [
+      2,
+      11
+    ],
+    [
+      0,
+      3
+    ],
+    [
+      3,
+      5
+    ],
+    [
+      3,
+      8
+    ],
+    [
+      3,
+      10
+    ],
+    [
+      3,
+      11
+    ],
+    [
+      0,
+      4
+    ],
+    [
+      4,
+      5
+    ],
+    [
+      5,
+      6
+    ],
+    [
+      6,
+      7
+    ],
+    [
+      7,
+      8
+    ],
+    [
+      9,
+      10
+    ]
+  ],
+  "n": 12,
+  "problem": "misr",
+  "rectangles": [
+    [
+      0,
+      1,
+      0,
+      10
+    ],
+    [
+      0,
+      10,
+      1,
+      2
+    ],
+    [
+      0,
+      10,
+      5,
+      6
+    ],
+    [
+      0,
+      10,
+      8,
+      9
+    ],
+    [
+      1,
+      2,
+      3,
+      4
+    ],
+    [
+      2,
+      3,
+      0,
+      10
+    ],
+    [
+      3,
+      4,
+      3,
+      4
+    ],
+    [
+      4,
+      5,
+      3,
+      4
+    ],
+    [
+      5,
+      6,
+      0,
+      10
+    ],
+    [
+      7,
+      8,
+      6,
+      7
+    ],
+    [
+      7,
+      8,
+      7,
+      8
+    ],
+    [
+      9,
+      10,
+      0,
+      10
+    ]
+  ],
+  "representation": "triangle_free_rect",
+  "schema": "misr_certificate_v1",
+  "score": 1.2,
+  "solver": {
+    "integer_solver": "branch_and_bound_maximum_independent_set",
+    "lp_method": "highs",
+    "lp_solver": "scipy.optimize.linprog",
+    "tolerance": 1e-08
+  },
+  "solver_status": "optimal",
+  "source_type": "local_mutation",
+  "surrogate": "triangle_free_exact_gap_pressure",
+  "tool_version": "0.1.0",
+  "triangle_free": true,
+  "triangle_witness": null
+}
