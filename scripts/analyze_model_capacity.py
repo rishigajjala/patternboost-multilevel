@@ -35,6 +35,14 @@ def _format_score(value: float | None) -> str:
     return "missing" if value is None else f"{value:.6f}"
 
 
+def _format_count(value: Any) -> str:
+    return "missing" if value in {None, ""} else str(int(value))
+
+
+def _format_seconds(value: Any) -> str:
+    return "missing" if value in {None, ""} else f"{float(value):.1f}"
+
+
 def build_rows(matrix: list[dict[str, Any]], summaries: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     for spec in matrix:
@@ -96,11 +104,13 @@ def write_markdown(rows: list[dict[str, Any]], path: Path) -> None:
         "# Model-capacity check",
         "",
         "The compact and scaled arms use the same geometry, search operators, exact-scoring cadence,",
-        "model-sample count, and wall-clock budget. They use independently generated random initial",
-        "states, so this is a matched descriptive comparison rather than a paired-seed experiment.",
+        "model-sample count, and wall-clock budget. The scaled intervention jointly increases the",
+        "initial corpus, training archive, and transformer capacity. The rows use independently",
+        "generated random states, so this is a descriptive comparison rather than a paired-seed",
+        "experiment.",
         "",
-        "| Problem | Rank | Configuration | Compact | Scaled | Scaled - compact |",
-        "|---|---:|---|---:|---:|---:|",
+        "| Problem | Rank | Configuration | Compact score | Scaled score | Delta | Compact gen. | Scaled gen. | Compact train s | Scaled train s |",
+        "|---|---:|---|---:|---:|---:|---:|---:|---:|---:|",
     ]
     for key in sorted(pairs):
         arms = pairs[key]
@@ -123,7 +133,11 @@ def write_markdown(rows: list[dict[str, Any]], path: Path) -> None:
         config = f"{row.get('representation')}/{row.get('local_search')}/{row.get('surrogate')}"
         lines.append(
             f"| {key[0]} | {key[1]} | `{config}` | {_format_score(compact_score)} | "
-            f"{_format_score(scaled_score)} | {_format_score(delta)} |"
+            f"{_format_score(scaled_score)} | {_format_score(delta)} | "
+            f"{_format_count(None if compact is None else compact['completed_iterations'])} | "
+            f"{_format_count(None if scaled is None else scaled['completed_iterations'])} | "
+            f"{_format_seconds(None if compact is None else compact['model_train_seconds'])} | "
+            f"{_format_seconds(None if scaled is None else scaled['model_train_seconds'])} |"
         )
 
     lines.extend(
@@ -132,9 +146,9 @@ def write_markdown(rows: list[dict[str, Any]], path: Path) -> None:
             f"Complete comparisons: {better + tied + worse}/9. Scaled better: {better}; "
             f"tied: {tied}; worse: {worse}; incomplete: {incomplete}.",
             "",
-            "Interpretation must be limited to the tested fixed-budget regime. A non-improvement supports",
-            "using the compact default for efficiency; it does not prove that larger models cannot help",
-            "with more compute, different optimization, or substantially larger corpora.",
+            "The primary result is the best new exact verified score. Efficiency comparisons must be",
+            "limited to this fixed-budget regime and read alongside completed generations and training",
+            "time; the experiment does not isolate architecture size from corpus/archive size.",
         ]
     )
     path.parent.mkdir(parents=True, exist_ok=True)

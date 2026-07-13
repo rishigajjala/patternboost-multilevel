@@ -33,6 +33,19 @@ def test_model_capacity_matrix_is_matched_and_separates_output_arms(monkeypatch)
     assert diversity_by_arm["scaled"]["training_archive_limit"] == 256
     assert all(row["elite"] == 6 for row in rows if row not in diversity_rows)
 
+    unit_compact = sorted(
+        (row for row in rows if row["problem"] == "unit_square" and row["experiment_arm"] == "compact"),
+        key=lambda row: row["selection_rank"],
+    )
+    assert [
+        (row["representation"], row["local_search"], row["surrogate"])
+        for row in unit_compact
+    ] == [
+        ("sqstab_exact_grid", "symmetry_crossover_hillclimb", "exact_stab_gap_pressure"),
+        ("fixed_symmetry_grid", "coord_mutation", "exact_stab_gap_pressure"),
+        ("fixed_symmetry_grid", "symmetry_crossover_hillclimb", "exact_stab_gap_pressure"),
+    ]
+
     keys = Counter(
         (row["problem"], row["representation"], row["local_search"], row["surrogate"])
         for row in rows

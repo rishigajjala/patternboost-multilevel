@@ -17,12 +17,16 @@ unit-square stabbing, and guillotine hardness in the final 81-cell table. This
 includes the diversity-island unit-square configuration that reached (20/13).
 Exact-score ties are resolved by configuration ID.
 
-## Matched arms
+## Compared arms
 
 Both arms use exact scoring every 5 generations, training every 10 generations,
 16 model samples, 3 training epochs, context length 128, and the same two-hour
-application budget. Geometry, local search, surrogate, and all non-model search
-settings are fixed within each comparison.
+application budget. Geometry, local search, surrogate, population, and search
+operators are fixed within each comparison. The intervention deliberately
+scales both the transformer and its available data: the scaled arm starts from a
+larger random initial corpus and retains a larger training archive. It is
+therefore a joint model-and-data capacity experiment, not an architecture-only
+ablation.
 
 | Arm | Initial pool | Training archive | Layers | Heads | Width |
 |---|---:|---:|---:|---:|---:|
@@ -88,6 +92,8 @@ python3 scripts/analyze_model_capacity.py \
 Report exact verified scores and the number of comparisons in which scaling was
 better, tied, or worse. The primary outcome is the best new exact score; an
 improvement is more valuable than evidence of a plateau. Also report
-model-training time and completed generations. Do not attribute a lower score
-solely to representational capacity if the scaled arm completed materially fewer
-search generations.
+model-training time, completed generations, parameter counts, and valid model
+samples. Do not attribute a lower score solely to representational capacity if
+the scaled arm completed materially fewer search generations. Because each row
+uses an independent fresh random state, treat the nine arm comparisons as
+descriptive rather than paired-seed estimates.

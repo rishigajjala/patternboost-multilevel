@@ -235,7 +235,7 @@ MODEL_CAPACITY_TOP_CONFIGS: dict[str, tuple[dict[str, object], ...]] = {
         },
         {
             "representation": "fixed_symmetry_grid",
-            "local_search": "symmetry_crossover_hillclimb",
+            "local_search": "coord_mutation",
             "surrogate": "exact_stab_gap_pressure",
             "reference_score": 1.5,
             "reference_score_fraction": "3/2",
@@ -243,7 +243,7 @@ MODEL_CAPACITY_TOP_CONFIGS: dict[str, tuple[dict[str, object], ...]] = {
         {
             "representation": "fixed_symmetry_grid",
             "local_search": "symmetry_crossover_hillclimb",
-            "surrogate": "incidence_statistics",
+            "surrogate": "exact_stab_gap_pressure",
             "reference_score": 1.5,
             "reference_score_fraction": "3/2",
         },
