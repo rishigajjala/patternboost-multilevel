@@ -172,6 +172,11 @@ construction figures, and a detailed limitations study. See
 [docs/FINAL_81_ANALYSIS.md](docs/FINAL_81_ANALYSIS.md) for an artifact map and
 rebuild commands.
 
+For a concise manuscript-methods checklist covering the final cohort-specific
+hyperparameters, transformer architecture, exact solvers, initialization
+ranges, Jubail hardware caveat, and focused convergence plots, see
+[docs/COLLABORATOR_EXPERIMENT_DETAILS.md](docs/COLLABORATOR_EXPERIMENT_DETAILS.md).
+
 The separately audited exploratory run produced:
 
 ```text

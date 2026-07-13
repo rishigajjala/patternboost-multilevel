@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1530" height="510" viewBox="0 0 1530 510">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#20252b}.title{font-size:20px;font-weight:700}.subtitle{font-size:12px}.axis{font-size:11px}.legend{font-size:11px}</style>
+<text class="title" x="765.0" y="29" text-anchor="middle">Unit Square: component-slice convergence around the best final cell</text>
+<text class="subtitle" x="295.0" y="56" text-anchor="middle" font-weight="700">Vary representation</text>
+<text class="subtitle" x="295.0" y="74" text-anchor="middle">local search=symmetry crossover hillclimb</text>
+<text class="subtitle" x="295.0" y="91" text-anchor="middle">surrogate=exact stab gap pressure</text>
+<line x1="55" y1="390" x2="470" y2="390" stroke="#525b66"/>
+<line x1="55" y1="115" x2="55" y2="390" stroke="#525b66"/>
+<line x1="55.00" y1="115" x2="55.00" y2="390" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="55.00" y="408" text-anchor="middle">0</text>
+<line x1="55" y1="115.00" x2="470" y2="115.00" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="48" y="119.00" text-anchor="end">1.590</text>
+<line x1="158.75" y1="115" x2="158.75" y2="390" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="158.75" y="408" text-anchor="middle">1111</text>
+<line x1="55" y1="183.75" x2="470" y2="183.75" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="48" y="187.75" text-anchor="end">1.456</text>
+<line x1="262.50" y1="115" x2="262.50" y2="390" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="262.50" y="408" text-anchor="middle">2222</text>
+<line x1="55" y1="252.50" x2="470" y2="252.50" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="48" y="256.50" text-anchor="end">1.322</text>
+<line x1="366.25" y1="115" x2="366.25" y2="390" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="366.25" y="408" text-anchor="middle">3332</text>
+<line x1="55" y1="321.25" x2="470" y2="321.25" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="48" y="325.25" text-anchor="end">1.188</text>
+<line x1="470.00" y1="115" x2="470.00" y2="390" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="470.00" y="408" text-anchor="middle">4443</text>
+<line x1="55" y1="390.00" x2="470" y2="390.00" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="48" y="394.00" text-anchor="end">1.053</text>
+<path d="M55.00,338.52 H55.00 V338.52 H55.00 V231.11 H56.96 V214.88 H56.96 V209.30 H62.29 V204.77 H64.53 V197.87 H92.55 V192.02 H93.11 V161.30 H470.00 V161.30" fill="none" stroke="#176B87" stroke-width="2.2" stroke-linejoin="round"/>
+<path d="M55.00,360.39 H55.00 V360.39 H55.00 V257.29 H55.00 V253.07 H55.56 V241.85 H56.12 V227.12 H59.20 V206.47 H74.62 V197.25 H76.58 V196.47 H79.38 V186.67 H79.94 V181.62 H80.50 V179.55 H116.65 V179.55" fill="none" stroke="#C44900" stroke-width="2.2" stroke-linejoin="round"/>
+<path d="M55.00,363.39 H55.00 V363.39 H55.00 V314.89 H55.00 V289.29 H55.00 V271.01 H55.00 V246.63 H55.00 V238.10 H55.28 V231.11 H55.28 V206.47 H55.56 V197.87 H56.40 V184.57 H56.96 V182.06 H57.24 V161.30 H60.04 V149.11 H60.04 V141.61 H344.46 V141.61" fill="none" stroke="#6A4C93" stroke-width="2.2" stroke-linejoin="round"/>
+<line x1="55" y1="432" x2="79" y2="432" stroke="#176B87" stroke-width="3"/>
+<text class="legend" x="86" y="436">fixed symmetry grid</text>
+<line x1="55" y1="451" x2="79" y2="451" stroke="#C44900" stroke-width="3"/>
+<text class="legend" x="86" y="455">line square incidence</text>
+<line x1="55" y1="470" x2="79" y2="470" stroke="#6A4C93" stroke-width="3"/>
+<text class="legend" x="86" y="474">sqstab exact grid</text>
+<text class="axis" x="295.0" y="430" text-anchor="middle">Cumulative transformer-training epochs</text>
+<text class="axis" transform="translate(14 252.5) rotate(-90)" text-anchor="middle">Best exact score so far</text>
+<text class="subtitle" x="790.0" y="56" text-anchor="middle" font-weight="700">Vary local search</text>
+<text class="subtitle" x="790.0" y="74" text-anchor="middle">representation=sqstab exact grid</text>
+<text class="subtitle" x="790.0" y="91" text-anchor="middle">surrogate=exact stab gap pressure</text>
+<line x1="550" y1="390" x2="965" y2="390" stroke="#525b66"/>
+<line x1="550" y1="115" x2="550" y2="390" stroke="#525b66"/>
+<line x1="550.00" y1="115" x2="550.00" y2="390" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="550.00" y="408" text-anchor="middle">0</text>
+<line x1="550" y1="115.00" x2="965" y2="115.00" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="543" y="119.00" text-anchor="end">1.590</text>
+<line x1="653.75" y1="115" x2="653.75" y2="390" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="653.75" y="408" text-anchor="middle">2030</text>
+<line x1="550" y1="183.75" x2="965" y2="183.75" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="543" y="187.75" text-anchor="end">1.456</text>
+<line x1="757.50" y1="115" x2="757.50" y2="390" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="757.50" y="408" text-anchor="middle">4059</text>
+<line x1="550" y1="252.50" x2="965" y2="252.50" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="543" y="256.50" text-anchor="end">1.322</text>
+<line x1="861.25" y1="115" x2="861.25" y2="390" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="861.25" y="408" text-anchor="middle">6088</text>
+<line x1="550" y1="321.25" x2="965" y2="321.25" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="543" y="325.25" text-anchor="end">1.188</text>
+<line x1="965.00" y1="115" x2="965.00" y2="390" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="965.00" y="408" text-anchor="middle">8118</text>
+<line x1="550" y1="390.00" x2="965" y2="390.00" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="543" y="394.00" text-anchor="end">1.053</text>
+<path d="M550.00,344.14 H550.00 V344.14 H550.00 V299.13 H550.31 V289.29 H550.46 V246.63 H552.15 V206.47 H555.98 V161.30 H965.00 V161.30" fill="none" stroke="#176B87" stroke-width="2.2" stroke-linejoin="round"/>
+<path d="M550.00,344.14 H550.00 V344.14 H550.00 V289.29 H550.15 V246.63 H551.84 V231.11 H552.91 V214.88 H553.99 V206.47 H554.14 V197.87 H569.02 V186.07 H569.17 V161.30 H921.29 V161.30" fill="none" stroke="#C44900" stroke-width="2.2" stroke-linejoin="round"/>
+<path d="M550.00,363.39 H550.00 V363.39 H550.00 V314.89 H550.00 V289.29 H550.00 V271.01 H550.00 V246.63 H550.00 V238.10 H550.15 V231.11 H550.15 V206.47 H550.31 V197.87 H550.77 V184.57 H551.07 V182.06 H551.23 V161.30 H552.76 V149.11 H552.76 V141.61 H708.42 V141.61" fill="none" stroke="#6A4C93" stroke-width="2.2" stroke-linejoin="round"/>
+<line x1="550" y1="432" x2="574" y2="432" stroke="#176B87" stroke-width="3"/>
+<text class="legend" x="581" y="436">coord mutation</text>
+<line x1="550" y1="451" x2="574" y2="451" stroke="#C44900" stroke-width="3"/>
+<text class="legend" x="581" y="455">sqstab local hillclimb</text>
+<line x1="550" y1="470" x2="574" y2="470" stroke="#6A4C93" stroke-width="3"/>
+<text class="legend" x="581" y="474">symmetry crossover hillclimb</text>
+<text class="axis" x="790.0" y="430" text-anchor="middle">Cumulative transformer-training epochs</text>
+<text class="subtitle" x="1285.0" y="56" text-anchor="middle" font-weight="700">Vary surrogate</text>
+<text class="subtitle" x="1285.0" y="74" text-anchor="middle">representation=sqstab exact grid</text>
+<text class="subtitle" x="1285.0" y="91" text-anchor="middle">local search=symmetry crossover hillclimb</text>
+<line x1="1045" y1="390" x2="1460" y2="390" stroke="#525b66"/>
+<line x1="1045" y1="115" x2="1045" y2="390" stroke="#525b66"/>
+<line x1="1045.00" y1="115" x2="1045.00" y2="390" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="1045.00" y="408" text-anchor="middle">0</text>
+<line x1="1045" y1="115.00" x2="1460" y2="115.00" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="1038" y="119.00" text-anchor="end">1.603</text>
+<line x1="1148.75" y1="115" x2="1148.75" y2="390" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="1148.75" y="408" text-anchor="middle">787</text>
+<line x1="1045" y1="183.75" x2="1460" y2="183.75" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="1038" y="187.75" text-anchor="end">1.436</text>
+<line x1="1252.50" y1="115" x2="1252.50" y2="390" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="1252.50" y="408" text-anchor="middle">1574</text>
+<line x1="1045" y1="252.50" x2="1460" y2="252.50" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="1038" y="256.50" text-anchor="end">1.269</text>
+<line x1="1356.25" y1="115" x2="1356.25" y2="390" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="1356.25" y="408" text-anchor="middle">2360</text>
+<line x1="1045" y1="321.25" x2="1460" y2="321.25" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="1038" y="325.25" text-anchor="end">1.102</text>
+<line x1="1460.00" y1="115" x2="1460.00" y2="390" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="1460.00" y="408" text-anchor="middle">3147</text>
+<line x1="1045" y1="390.00" x2="1460" y2="390.00" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="1038" y="394.00" text-anchor="end">0.935</text>
+<path d="M1045.00,320.03 H1045.00 V320.03 H1045.00 V281.01 H1045.00 V260.42 H1045.00 V245.71 H1045.00 V226.10 H1045.00 V219.23 H1045.40 V213.62 H1045.40 V193.80 H1045.79 V186.87 H1046.98 V176.18 H1047.77 V174.15 H1048.16 V157.45 H1052.12 V147.65 H1052.12 V141.61 H1453.67 V141.61" fill="none" stroke="#176B87" stroke-width="2.2" stroke-linejoin="round"/>
+<path d="M1045.00,363.39 H1045.00 V363.39 H1045.00 V331.71 H1045.00 V317.62 H1045.00 V281.01 H1045.00 V260.42 H1045.00 V251.06 H1045.00 V226.10 H1046.19 V193.80 H1050.14 V157.45 H1460.00 V157.45" fill="none" stroke="#C44900" stroke-width="2.2" stroke-linejoin="round"/>
+<path d="M1045.00,363.39 H1045.00 V363.39 H1045.00 V304.55 H1045.00 V281.01 H1045.00 V273.29 H1045.00 V260.42 H1045.00 V258.03 H1045.00 V226.10 H1047.77 V204.98 H1061.22 V186.87 H1090.10 V181.89 H1413.32 V181.89" fill="none" stroke="#6A4C93" stroke-width="2.2" stroke-linejoin="round"/>
+<line x1="1045" y1="432" x2="1069" y2="432" stroke="#176B87" stroke-width="3"/>
+<text class="legend" x="1076" y="436">exact stab gap pressure</text>
+<line x1="1045" y1="451" x2="1069" y2="451" stroke="#C44900" stroke-width="3"/>
+<text class="legend" x="1076" y="455">greedy partial lp bitset</text>
+<line x1="1045" y1="470" x2="1069" y2="470" stroke="#6A4C93" stroke-width="3"/>
+<text class="legend" x="1076" y="474">incidence statistics</text>
+<text class="axis" x="1285.0" y="430" text-anchor="middle">Cumulative transformer-training epochs</text>
+</svg>

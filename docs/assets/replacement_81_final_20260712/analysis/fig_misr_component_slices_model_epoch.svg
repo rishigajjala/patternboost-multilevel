@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1530" height="510" viewBox="0 0 1530 510">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#20252b}.title{font-size:20px;font-weight:700}.subtitle{font-size:12px}.axis{font-size:11px}.legend{font-size:11px}</style>
+<text class="title" x="765.0" y="29" text-anchor="middle">Misr: component-slice convergence around the best final cell</text>
+<text class="subtitle" x="295.0" y="56" text-anchor="middle" font-weight="700">Vary representation</text>
+<text class="subtitle" x="295.0" y="74" text-anchor="middle">local search=sequence pair pivot</text>
+<text class="subtitle" x="295.0" y="91" text-anchor="middle">surrogate=exact lp gap pressure</text>
+<line x1="55" y1="390" x2="470" y2="390" stroke="#525b66"/>
+<line x1="55" y1="115" x2="55" y2="390" stroke="#525b66"/>
+<line x1="55.00" y1="115" x2="55.00" y2="390" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="55.00" y="408" text-anchor="middle">0</text>
+<line x1="55" y1="115.00" x2="470" y2="115.00" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="48" y="119.00" text-anchor="end">1.560</text>
+<line x1="158.75" y1="115" x2="158.75" y2="390" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="158.75" y="408" text-anchor="middle">2089</text>
+<line x1="55" y1="183.75" x2="470" y2="183.75" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="48" y="187.75" text-anchor="end">1.405</text>
+<line x1="262.50" y1="115" x2="262.50" y2="390" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="262.50" y="408" text-anchor="middle">4178</text>
+<line x1="55" y1="252.50" x2="470" y2="252.50" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="48" y="256.50" text-anchor="end">1.250</text>
+<line x1="366.25" y1="115" x2="366.25" y2="390" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="366.25" y="408" text-anchor="middle">6266</text>
+<line x1="55" y1="321.25" x2="470" y2="321.25" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="48" y="325.25" text-anchor="end">1.095</text>
+<line x1="470.00" y1="115" x2="470.00" y2="390" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="470.00" y="408" text-anchor="middle">8355</text>
+<line x1="55" y1="390.00" x2="470" y2="390.00" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="48" y="394.00" text-anchor="end">0.940</text>
+<path d="M55.00,363.39 H55.00 V363.39 H57.09 V252.50 H167.06 V215.54 H470.00 V215.54" fill="none" stroke="#176B87" stroke-width="2.2" stroke-linejoin="round"/>
+<path d="M55.00,363.39 H55.00 V363.39 H55.30 V307.94 H80.33 V215.54 H382.68 V215.54" fill="none" stroke="#C44900" stroke-width="2.2" stroke-linejoin="round"/>
+<path d="M55.00,307.94 H55.00 V307.94 H55.15 V252.50 H55.30 V215.54 H59.02 V197.06 H147.39 V141.61 H370.76 V141.61" fill="none" stroke="#6A4C93" stroke-width="2.2" stroke-linejoin="round"/>
+<line x1="55" y1="432" x2="79" y2="432" stroke="#176B87" stroke-width="3"/>
+<text class="legend" x="86" y="436">fixed symmetry rectangles</text>
+<line x1="55" y1="451" x2="79" y2="451" stroke="#C44900" stroke-width="3"/>
+<text class="legend" x="86" y="455">quadratic program rectangles</text>
+<line x1="55" y1="470" x2="79" y2="470" stroke="#6A4C93" stroke-width="3"/>
+<text class="legend" x="86" y="474">triangle free rect</text>
+<text class="axis" x="295.0" y="430" text-anchor="middle">Cumulative transformer-training epochs</text>
+<text class="axis" transform="translate(14 252.5) rotate(-90)" text-anchor="middle">Best exact score so far</text>
+<text class="subtitle" x="790.0" y="56" text-anchor="middle" font-weight="700">Vary local search</text>
+<text class="subtitle" x="790.0" y="74" text-anchor="middle">representation=triangle free rect</text>
+<text class="subtitle" x="790.0" y="91" text-anchor="middle">surrogate=exact lp gap pressure</text>
+<line x1="550" y1="390" x2="965" y2="390" stroke="#525b66"/>
+<line x1="550" y1="115" x2="550" y2="390" stroke="#525b66"/>
+<line x1="550.00" y1="115" x2="550.00" y2="390" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="550.00" y="408" text-anchor="middle">0</text>
+<line x1="550" y1="115.00" x2="965" y2="115.00" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="543" y="119.00" text-anchor="end">1.560</text>
+<line x1="653.75" y1="115" x2="653.75" y2="390" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="653.75" y="408" text-anchor="middle">1597</text>
+<line x1="550" y1="183.75" x2="965" y2="183.75" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="543" y="187.75" text-anchor="end">1.405</text>
+<line x1="757.50" y1="115" x2="757.50" y2="390" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="757.50" y="408" text-anchor="middle">3194</text>
+<line x1="550" y1="252.50" x2="965" y2="252.50" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="543" y="256.50" text-anchor="end">1.250</text>
+<line x1="861.25" y1="115" x2="861.25" y2="390" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="861.25" y="408" text-anchor="middle">4790</text>
+<line x1="550" y1="321.25" x2="965" y2="321.25" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="543" y="325.25" text-anchor="end">1.095</text>
+<line x1="965.00" y1="115" x2="965.00" y2="390" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="965.00" y="408" text-anchor="middle">6387</text>
+<line x1="550" y1="390.00" x2="965" y2="390.00" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="543" y="394.00" text-anchor="end">0.940</text>
+<path d="M550.00,363.39 H550.00 V363.39 H550.00 V252.50 H550.39 V215.54 H572.81 V197.06 H860.71 V185.97 H965.00 V185.97" fill="none" stroke="#176B87" stroke-width="2.2" stroke-linejoin="round"/>
+<path d="M550.00,307.94 H550.00 V307.94 H550.19 V252.50 H550.39 V215.54 H555.26 V197.06 H670.85 V141.61 H963.05 V141.61" fill="none" stroke="#C44900" stroke-width="2.2" stroke-linejoin="round"/>
+<path d="M550.00,363.39 H550.00 V363.39 H550.00 V274.68 H840.83 V274.68" fill="none" stroke="#6A4C93" stroke-width="2.2" stroke-linejoin="round"/>
+<line x1="550" y1="432" x2="574" y2="432" stroke="#176B87" stroke-width="3"/>
+<text class="legend" x="581" y="436">program coeff pivot</text>
+<line x1="550" y1="451" x2="574" y2="451" stroke="#C44900" stroke-width="3"/>
+<text class="legend" x="581" y="455">sequence pair pivot</text>
+<line x1="550" y1="470" x2="574" y2="470" stroke="#6A4C93" stroke-width="3"/>
+<text class="legend" x="581" y="474">symmetry crossover hillclimb</text>
+<text class="axis" x="790.0" y="430" text-anchor="middle">Cumulative transformer-training epochs</text>
+<text class="subtitle" x="1285.0" y="56" text-anchor="middle" font-weight="700">Vary surrogate</text>
+<text class="subtitle" x="1285.0" y="74" text-anchor="middle">representation=triangle free rect</text>
+<text class="subtitle" x="1285.0" y="91" text-anchor="middle">local search=sequence pair pivot</text>
+<line x1="1045" y1="390" x2="1460" y2="390" stroke="#525b66"/>
+<line x1="1045" y1="115" x2="1045" y2="390" stroke="#525b66"/>
+<line x1="1045.00" y1="115" x2="1045.00" y2="390" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="1045.00" y="408" text-anchor="middle">0</text>
+<line x1="1045" y1="115.00" x2="1460" y2="115.00" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="1038" y="119.00" text-anchor="end">1.560</text>
+<line x1="1148.75" y1="115" x2="1148.75" y2="390" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="1148.75" y="408" text-anchor="middle">1642</text>
+<line x1="1045" y1="183.75" x2="1460" y2="183.75" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="1038" y="187.75" text-anchor="end">1.405</text>
+<line x1="1252.50" y1="115" x2="1252.50" y2="390" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="1252.50" y="408" text-anchor="middle">3284</text>
+<line x1="1045" y1="252.50" x2="1460" y2="252.50" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="1038" y="256.50" text-anchor="end">1.250</text>
+<line x1="1356.25" y1="115" x2="1356.25" y2="390" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="1356.25" y="408" text-anchor="middle">4925</text>
+<line x1="1045" y1="321.25" x2="1460" y2="321.25" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="1038" y="325.25" text-anchor="end">1.095</text>
+<line x1="1460.00" y1="115" x2="1460.00" y2="390" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="1460.00" y="408" text-anchor="middle">6567</text>
+<line x1="1045" y1="390.00" x2="1460" y2="390.00" stroke="#d8dde3" stroke-width="0.7"/>
+<text class="axis" x="1038" y="394.00" text-anchor="end">0.940</text>
+<path d="M1045.00,307.94 H1045.00 V307.94 H1045.19 V252.50 H1045.38 V215.54 H1050.12 V197.06 H1162.54 V141.61 H1446.73 V141.61" fill="none" stroke="#176B87" stroke-width="2.2" stroke-linejoin="round"/>
+<path d="M1045.00,363.39 H1045.00 V363.39 H1049.17 V307.94 H1460.00 V307.94" fill="none" stroke="#C44900" stroke-width="2.2" stroke-linejoin="round"/>
+<path d="M1045.00,363.39 H1045.00 V363.39 H1045.19 V307.94 H1045.38 V252.50 H1045.38 V215.54 H1059.60 V197.06 H1452.61 V197.06" fill="none" stroke="#6A4C93" stroke-width="2.2" stroke-linejoin="round"/>
+<line x1="1045" y1="432" x2="1069" y2="432" stroke="#176B87" stroke-width="3"/>
+<text class="legend" x="1076" y="436">exact lp gap pressure</text>
+<line x1="1045" y1="451" x2="1069" y2="451" stroke="#C44900" stroke-width="3"/>
+<text class="legend" x="1076" y="455">graph conflict proxy</text>
+<line x1="1045" y1="470" x2="1069" y2="470" stroke="#6A4C93" stroke-width="3"/>
+<text class="legend" x="1076" y="474">triangle free exact gap pressure</text>
+<text class="axis" x="1285.0" y="430" text-anchor="middle">Cumulative transformer-training epochs</text>
+</svg>
