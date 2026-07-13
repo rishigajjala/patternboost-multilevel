@@ -32,3 +32,19 @@ def test_transformer_sampling_has_valid_json_fallback():
     samples = sample_model(model, random.Random(7), count=6, max_tokens=512)
     assert samples
     assert all(isinstance(sample, dict) for sample in samples)
+    assert model.metadata["embed_dim"] == 32
+    assert model.metadata["num_heads"] == 4
+    assert model.metadata["num_layers"] == 1
+    assert model.metadata["num_parameters"] > 0
+
+
+def test_transformer_rejects_incompatible_width_and_heads():
+    pytest.importorskip("torch")
+    with pytest.raises(ValueError, match="divisible"):
+        train_transformer(
+            ["{}", "{}"],
+            seed=1,
+            epochs=1,
+            embed_dim=30,
+            num_heads=4,
+        )

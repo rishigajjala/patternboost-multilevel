@@ -207,6 +207,12 @@ def run_patternboost(
     model_kind: str,
     model_epochs: int,
     block_size: int,
+    model_embed_dim: int = 96,
+    model_num_heads: int = 4,
+    model_num_layers: int = 2,
+    model_batch_size: int = 32,
+    model_learning_rate: float = 3e-4,
+    training_archive_limit: int | None = None,
     checkpoint_every: int,
     resume: bool,
     control_mode: str,
@@ -226,6 +232,16 @@ def run_patternboost(
         raise ValueError(f"unknown control mode: {control_mode}")
     configured_initial_pool_size = max(population_size, int(initial_pool_size or population_size))
     configured_immigrants = max(0, int(immigrants_per_generation))
+    configured_training_archive_limit = max(
+        1,
+        int(training_archive_limit or max(elite_size * 8, 8)),
+    )
+    if model_embed_dim <= 0 or model_num_heads <= 0 or model_num_layers <= 0 or model_batch_size <= 0:
+        raise ValueError("transformer dimensions, layers, heads, and batch size must be positive")
+    if model_embed_dim % model_num_heads != 0:
+        raise ValueError("transformer embedding width must be divisible by the number of heads")
+    if model_learning_rate <= 0:
+        raise ValueError("transformer learning rate must be positive")
     if _resolution_diversity_active(problem, representation, preserve_resolution_diversity):
         resolution_count = len(_unit_square_resolution_values(grid))
         if population_size < resolution_count or elite_size < resolution_count:
@@ -267,6 +283,10 @@ def run_patternboost(
     repaired = 0
     duplicates = 0
     model_train_calls = 0
+    model_train_seconds = 0.0
+    latest_num_training_texts = 0
+    max_num_training_texts = 0
+    latest_model_num_parameters: int | None = None
     num_model_samples = 0
     num_model_samples_valid = 0
     num_random_immigrants = 0
@@ -312,6 +332,12 @@ def run_patternboost(
         repaired = int(checkpoint.get("num_repaired_samples", 0))
         duplicates = int(checkpoint.get("num_duplicates", 0))
         model_train_calls = int(checkpoint.get("num_model_train_calls", 0))
+        model_train_seconds = float(checkpoint.get("model_train_seconds", 0.0))
+        latest_num_training_texts = int(checkpoint.get("latest_num_training_texts", 0))
+        max_num_training_texts = int(checkpoint.get("max_num_training_texts", 0))
+        latest_model_num_parameters = checkpoint.get("latest_model_num_parameters")
+        if latest_model_num_parameters is not None:
+            latest_model_num_parameters = int(latest_model_num_parameters)
         num_model_samples = int(checkpoint.get("num_model_samples", 0))
         num_model_samples_valid = int(checkpoint.get("num_model_samples_valid", 0))
         num_random_immigrants = int(checkpoint.get("num_random_immigrants", 0))
@@ -409,7 +435,7 @@ def run_patternboost(
         purge_archive_for_training()
         top = _select_archive_rows(
             archive,
-            limit=max(elite_size * 8, 8),
+            limit=configured_training_archive_limit,
             problem=problem,
             representation=representation,
             preserve_resolution_diversity=preserve_resolution_diversity,
@@ -417,7 +443,7 @@ def run_patternboost(
         if control_mode == "shuffled_label":
             top = list(archive)
             rng.shuffle(top)
-            top = top[: max(elite_size * 8, 8)]
+            top = top[:configured_training_archive_limit]
         return [instance_to_text(instance) for _, instance in top]
 
     def budget_exhausted() -> bool:
@@ -446,7 +472,7 @@ def run_patternboost(
                     {"surrogate_score": score, "instance": instance}
                     for score, instance in _select_archive_rows(
                         archive,
-                        limit=max(population_size * 8, 64),
+                        limit=max(population_size * 8, 64, configured_training_archive_limit),
                         problem=problem,
                         representation=representation,
                         preserve_resolution_diversity=preserve_resolution_diversity,
@@ -468,6 +494,10 @@ def run_patternboost(
                 "num_repaired_samples": repaired,
                 "num_duplicates": duplicates,
                 "num_model_train_calls": model_train_calls,
+                "model_train_seconds": model_train_seconds,
+                "latest_num_training_texts": latest_num_training_texts,
+                "max_num_training_texts": max_num_training_texts,
+                "latest_model_num_parameters": latest_model_num_parameters,
                 "num_model_samples": num_model_samples,
                 "num_model_samples_valid": num_model_samples_valid,
                 "num_random_immigrants": num_random_immigrants,
@@ -627,14 +657,25 @@ def run_patternboost(
                     }, sort_keys=True) + "\n")
                 else:
                     try:
+                        train_started = time.perf_counter()
                         model = train_model(
                             texts,
                             model_kind=effective_model_kind,
                             seed=seed + generation,
                             epochs=model_epochs,
                             block_size=block_size,
+                            embed_dim=model_embed_dim,
+                            num_heads=model_num_heads,
+                            num_layers=model_num_layers,
+                            batch_size=model_batch_size,
+                            learning_rate=model_learning_rate,
                         )
+                        train_elapsed = time.perf_counter() - train_started
+                        model_train_seconds += train_elapsed
                         latest_model_kind = model.model_kind
+                        latest_num_training_texts = len(texts)
+                        max_num_training_texts = max(max_num_training_texts, len(texts))
+                        latest_model_num_parameters = model.metadata.get("num_parameters")
                         model_train_calls += 1
                         artifact_keep = _model_artifact_keep()
                         if artifact_keep:
@@ -688,6 +729,8 @@ def run_patternboost(
                             "generation": generation,
                             "model_kind": model.model_kind,
                             "num_training_texts": len(texts),
+                            "training_seconds": train_elapsed,
+                            "model_metadata": model.metadata,
                             "num_requested_samples": effective_model_samples,
                             "num_valid_samples_total": num_model_samples_valid,
                             "control_mode": control_mode,
@@ -858,12 +901,20 @@ def run_patternboost(
         "stop_reason": stop_reason,
         "population_size": population_size,
         "initial_pool_size": configured_initial_pool_size,
+        "training_archive_limit": configured_training_archive_limit,
         "immigrants_per_generation": configured_immigrants,
         "preserve_resolution_diversity": preserve_resolution_diversity,
         "elite_size": elite_size,
         "exact_every": exact_every,
         "train_every": train_every,
         "model_samples": model_samples,
+        "model_epochs": model_epochs,
+        "block_size": block_size,
+        "model_embed_dim": model_embed_dim,
+        "model_num_heads": model_num_heads,
+        "model_num_layers": model_num_layers,
+        "model_batch_size": model_batch_size,
+        "model_learning_rate": model_learning_rate,
         "effective_train_every": effective_train_every,
         "effective_model_samples": effective_model_samples,
         "effective_local_search": effective_local_search,
@@ -872,6 +923,12 @@ def run_patternboost(
             "model_kind_latest": latest_model_kind,
             "epochs": model_epochs,
             "block_size": block_size,
+            "embed_dim": model_embed_dim,
+            "num_heads": model_num_heads,
+            "num_layers": model_num_layers,
+            "batch_size": model_batch_size,
+            "learning_rate": model_learning_rate,
+            "latest_num_parameters": latest_model_num_parameters,
         },
         "checkpoint_path": str(checkpoint_path),
         "checkpoint_every": checkpoint_every,
@@ -898,6 +955,10 @@ def run_patternboost(
         "num_repaired_samples": repaired,
         "num_duplicates": duplicates,
         "num_model_train_calls": model_train_calls,
+        "model_train_seconds": model_train_seconds,
+        "latest_num_training_texts": latest_num_training_texts,
+        "max_num_training_texts": max_num_training_texts,
+        "latest_model_num_parameters": latest_model_num_parameters,
         "num_model_samples": num_model_samples,
         "num_model_samples_valid": num_model_samples_valid,
         "num_random_immigrants": num_random_immigrants,

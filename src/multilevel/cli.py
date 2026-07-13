@@ -14,9 +14,11 @@ from multilevel.components import (
     COMPONENTS,
     CONTROL_MODES,
     DEFAULT_STAGE_BUDGETS,
+    MODEL_CAPACITY_TOP_CONFIGS,
     REPLACEMENT_COMPONENTS,
     build_control_matrix,
     build_matrix,
+    build_model_capacity_matrix,
     build_replacement_delta_matrix,
     build_symmetry_crossover_matrix,
     fresh_rng_seed,
@@ -69,6 +71,21 @@ def cmd_matrix(args: argparse.Namespace) -> int:
     rows = build_matrix(
         stage=args.stage,
         budget_seconds=int(budget),
+        git_commit=commit,
+        problems=args.problem,
+    )
+    out = Path(args.out)
+    _write_jsonl(out, rows)
+    print(f"wrote {len(rows)} rows to {out}")
+    return 0
+
+
+def cmd_model_capacity_matrix(args: argparse.Namespace) -> int:
+    cwd = Path.cwd()
+    commit = args.git_commit if args.git_commit is not None else git_commit(cwd)
+    rows = build_model_capacity_matrix(
+        stage=args.stage,
+        budget_seconds=int(args.budget_seconds),
         git_commit=commit,
         problems=args.problem,
     )
@@ -181,6 +198,9 @@ def _row_out_dir(row: dict[str, Any], out_root: str | Path) -> Path:
         str(row["local_search"]),
         str(row["surrogate"]),
     ]
+    experiment_arm = row.get("experiment_arm") or row.get("capacity_arm")
+    if experiment_arm:
+        parts.insert(1, f"arm_{experiment_arm}")
     control_mode = row.get("control_mode")
     if control_mode:
         parts.insert(1, f"control_{control_mode}")
@@ -196,6 +216,11 @@ def _explore_row_out_dir(row: dict[str, Any], out_root: str | Path, index: int) 
 def _row_int(row: dict[str, Any], key: str, default: int) -> int:
     value = row.get(key)
     return default if value is None else int(value)
+
+
+def _row_float(row: dict[str, Any], key: str, default: float) -> float:
+    value = row.get(key)
+    return default if value is None else float(value)
 
 
 def _row_optional_int(row: dict[str, Any], key: str, default: int | None) -> int | None:
@@ -422,9 +447,19 @@ def cmd_patternboost_cell(args: argparse.Namespace) -> int:
         exact_every=_row_int(row, "exact_every", args.exact_every),
         train_every=_row_int(row, "train_every", args.train_every),
         model_samples=_row_int(row, "model_samples", args.model_samples),
-        model_kind=args.model_kind,
+        model_kind=str(row.get("model_kind") or args.model_kind),
         model_epochs=_row_int(row, "model_epochs", args.model_epochs),
         block_size=_row_int(row, "block_size", args.block_size),
+        model_embed_dim=_row_int(row, "model_embed_dim", args.model_embed_dim),
+        model_num_heads=_row_int(row, "model_num_heads", args.model_num_heads),
+        model_num_layers=_row_int(row, "model_num_layers", args.model_num_layers),
+        model_batch_size=_row_int(row, "model_batch_size", args.model_batch_size),
+        model_learning_rate=_row_float(row, "model_learning_rate", args.model_learning_rate),
+        training_archive_limit=_row_optional_int(
+            row,
+            "training_archive_limit",
+            args.training_archive_limit,
+        ),
         checkpoint_every=_row_int(row, "checkpoint_every", args.checkpoint_every),
         resume=args.resume,
         control_mode=control_mode,
@@ -504,6 +539,17 @@ def build_parser() -> argparse.ArgumentParser:
     matrix.add_argument("--problem", action="append", choices=sorted(COMPONENTS), default=None)
     matrix.add_argument("--out", default="runs/matrix.jsonl")
     matrix.set_defaults(func=cmd_matrix)
+
+    capacity_matrix = sub.add_parser(
+        "model-capacity-matrix",
+        help="generate compact-versus-scaled rows for the top automated configurations",
+    )
+    capacity_matrix.add_argument("--stage", default="model_capacity")
+    capacity_matrix.add_argument("--budget-seconds", type=int, default=2 * 3600)
+    capacity_matrix.add_argument("--git-commit", default=None)
+    capacity_matrix.add_argument("--problem", action="append", choices=sorted(MODEL_CAPACITY_TOP_CONFIGS), default=None)
+    capacity_matrix.add_argument("--out", default="runs/model_capacity_matrix.jsonl")
+    capacity_matrix.set_defaults(func=cmd_model_capacity_matrix)
 
     symmetry_matrix = sub.add_parser(
         "symmetry-crossover-matrix",
@@ -656,6 +702,12 @@ def build_parser() -> argparse.ArgumentParser:
     patternboost_cell.add_argument("--model-kind", choices=["auto", "transformer", "ngram"], default="auto")
     patternboost_cell.add_argument("--model-epochs", type=int, default=3)
     patternboost_cell.add_argument("--block-size", type=int, default=128)
+    patternboost_cell.add_argument("--model-embed-dim", type=int, default=96)
+    patternboost_cell.add_argument("--model-num-heads", type=int, default=4)
+    patternboost_cell.add_argument("--model-num-layers", type=int, default=2)
+    patternboost_cell.add_argument("--model-batch-size", type=int, default=32)
+    patternboost_cell.add_argument("--model-learning-rate", type=float, default=3e-4)
+    patternboost_cell.add_argument("--training-archive-limit", type=int, default=None)
     patternboost_cell.add_argument("--checkpoint-every", type=int, default=1)
     patternboost_cell.add_argument("--initial-pool-size", type=int, default=None)
     patternboost_cell.add_argument("--immigrants-per-generation", type=int, default=0)

@@ -65,6 +65,11 @@ def write_slurm_array(
             "--model-kind ${MODEL_KIND:-auto} "
             "--model-epochs ${MODEL_EPOCHS:-3} "
             "--block-size ${BLOCK_SIZE:-128} "
+            "--model-embed-dim ${MODEL_EMBED_DIM:-96} "
+            "--model-num-heads ${MODEL_NUM_HEADS:-4} "
+            "--model-num-layers ${MODEL_NUM_LAYERS:-2} "
+            "--model-batch-size ${MODEL_BATCH_SIZE:-32} "
+            "--model-learning-rate ${MODEL_LEARNING_RATE:-0.0003} "
             "--checkpoint-every ${CHECKPOINT_EVERY:-1} "
             "${RESUME:+--resume}"
         )

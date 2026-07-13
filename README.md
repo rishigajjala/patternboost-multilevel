@@ -176,6 +176,8 @@ For a concise manuscript-methods checklist covering the final cohort-specific
 hyperparameters, transformer architecture, exact solvers, initialization
 ranges, Jubail hardware caveat, and focused convergence plots, see
 [docs/COLLABORATOR_EXPERIMENT_DETAILS.md](docs/COLLABORATOR_EXPERIMENT_DETAILS.md).
+The compact-versus-scaled transformer check is specified in
+[docs/MODEL_CAPACITY_EXPERIMENT.md](docs/MODEL_CAPACITY_EXPERIMENT.md).
 
 The separately audited exploratory run produced:
 

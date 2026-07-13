@@ -36,6 +36,8 @@ def test_write_slurm_array_preserves_target_hpc_paths(tmp_path, monkeypatch):
         "export PYTHONPATH=src:/home/sg9396/patternboost/multi-level/.venv-hpc/lib/python3.11/site-packages"
         in script
     )
+    assert "--model-embed-dim ${MODEL_EMBED_DIM:-96}" in script
+    assert "--model-num-layers ${MODEL_NUM_LAYERS:-2}" in script
 
 
 def test_write_slurm_array_supports_exploratory_runner(tmp_path):

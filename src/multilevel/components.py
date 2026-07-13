@@ -190,6 +190,118 @@ REPLACEMENT_RUNTIME_OVERRIDES: dict[str, dict[str, int | bool]] = {
 }
 
 
+# Highest-scoring standard automated cells in the final 81-cell table. The
+# diversity-island unit-square follow-up is excluded because it is a separate
+# intervention. Ties are resolved lexicographically by configuration ID.
+MODEL_CAPACITY_TOP_CONFIGS: dict[str, tuple[dict[str, object], ...]] = {
+    "misr": (
+        {
+            "representation": "triangle_free_rect",
+            "local_search": "sequence_pair_pivot",
+            "surrogate": "exact_lp_gap_pressure",
+            "reference_score": 1.5,
+            "reference_score_fraction": "3/2",
+        },
+        {
+            "representation": "triangle_free_rect",
+            "local_search": "program_coeff_pivot",
+            "surrogate": "exact_lp_gap_pressure",
+            "reference_score": 1.4,
+            "reference_score_fraction": "7/5",
+        },
+        {
+            "representation": "triangle_free_rect",
+            "local_search": "program_coeff_pivot",
+            "surrogate": "triangle_free_exact_gap_pressure",
+            "reference_score": 1.375,
+            "reference_score_fraction": "11/8",
+        },
+    ),
+    "unit_square": (
+        {
+            "representation": "fixed_symmetry_grid",
+            "local_search": "symmetry_crossover_hillclimb",
+            "surrogate": "exact_stab_gap_pressure",
+            "reference_score": 1.5,
+            "reference_score_fraction": "3/2",
+        },
+        {
+            "representation": "fixed_symmetry_grid",
+            "local_search": "symmetry_crossover_hillclimb",
+            "surrogate": "incidence_statistics",
+            "reference_score": 1.5,
+            "reference_score_fraction": "3/2",
+        },
+        {
+            "representation": "line_square_incidence",
+            "local_search": "coord_mutation",
+            "surrogate": "exact_stab_gap_pressure",
+            "reference_score": 1.5,
+            "reference_score_fraction": "3/2",
+        },
+    ),
+    "guillotine": (
+        {
+            "representation": "rect_direct_disjoint",
+            "local_search": "witness_breaking",
+            "surrogate": "depth_limited_dp",
+            "reference_score": 1 / 3,
+            "reference_score_fraction": "1/3",
+        },
+        {
+            "representation": "rect_direct_disjoint",
+            "local_search": "packing_resize",
+            "surrogate": "depth_limited_dp",
+            "reference_score": 3 / 11,
+            "reference_score_fraction": "3/11",
+        },
+        {
+            "representation": "rect_direct_disjoint",
+            "local_search": "witness_breaking",
+            "surrogate": "first_cut_obstruction",
+            "reference_score": 3 / 11,
+            "reference_score_fraction": "3/11",
+        },
+    ),
+}
+
+
+MODEL_CAPACITY_ARMS: dict[str, dict[str, int | float]] = {
+    "compact": {
+        "initial_pool_size": 32,
+        "training_archive_limit": 48,
+        "model_embed_dim": 96,
+        "model_num_heads": 4,
+        "model_num_layers": 2,
+    },
+    "scaled": {
+        "initial_pool_size": 256,
+        "training_archive_limit": 256,
+        "model_embed_dim": 192,
+        "model_num_heads": 8,
+        "model_num_layers": 4,
+    },
+}
+
+
+MODEL_CAPACITY_RUNTIME_PARAMETERS: dict[str, int | float | str | bool] = {
+    "iterations": 1_000_000,
+    "population": 32,
+    "elite": 6,
+    "exact_every": 5,
+    "train_every": 10,
+    "model_samples": 16,
+    "model_kind": "transformer",
+    "model_epochs": 3,
+    "block_size": 128,
+    "model_batch_size": 32,
+    "model_learning_rate": 3e-4,
+    "checkpoint_every": 1,
+    "immigrants_per_generation": 0,
+    "preserve_resolution_diversity": False,
+}
+
+
 def iter_cells(problems: Iterable[str] | None = None):
     selected = tuple(problems) if problems is not None else tuple(COMPONENTS)
     for problem in selected:
@@ -267,6 +379,60 @@ def build_matrix(
                 **cell,
             }
         )
+    return rows
+
+
+def build_model_capacity_matrix(
+    *,
+    stage: str,
+    budget_seconds: int,
+    git_commit: str,
+    problems: Iterable[str] | None = None,
+) -> list[dict[str, object]]:
+    """Build matched compact-versus-scaled rows for the top automated cells."""
+    selected = tuple(problems) if problems is not None else tuple(MODEL_CAPACITY_TOP_CONFIGS)
+    unknown = sorted(set(selected) - set(MODEL_CAPACITY_TOP_CONFIGS))
+    if unknown:
+        raise ValueError(f"model-capacity experiment has no selected cells for: {', '.join(unknown)}")
+
+    short_git = git_commit[:12] if git_commit else "nogit"
+    rows: list[dict[str, object]] = []
+    for problem in selected:
+        n = 20 if problem == "unit_square" else 12
+        grid = 16 if problem == "unit_square" else 8
+        for rank, selected_cell in enumerate(MODEL_CAPACITY_TOP_CONFIGS[problem], start=1):
+            cell = {
+                "problem": problem,
+                "representation": str(selected_cell["representation"]),
+                "local_search": str(selected_cell["local_search"]),
+                "surrogate": str(selected_cell["surrogate"]),
+            }
+            for arm, arm_parameters in MODEL_CAPACITY_ARMS.items():
+                rows.append(
+                    {
+                        "schema": "run_matrix_row_v1",
+                        "run_id": (
+                            f"capacity/{arm}/{problem}/{cell['representation']}/"
+                            f"{cell['local_search']}/{cell['surrogate']}/"
+                            f"budget{budget_seconds}/git{short_git}"
+                        ),
+                        "stage": stage,
+                        "rng_seed": fresh_rng_seed(),
+                        "budget_seconds": budget_seconds,
+                        "git_commit": git_commit or None,
+                        "experiment_family": "model_capacity_v1",
+                        "experiment_arm": arm,
+                        "selection_rank": rank,
+                        "selection_rule": "top_standard_automated_score_then_config_id",
+                        "reference_score": selected_cell["reference_score"],
+                        "reference_score_fraction": selected_cell["reference_score_fraction"],
+                        "n": n,
+                        "grid": grid,
+                        **MODEL_CAPACITY_RUNTIME_PARAMETERS,
+                        **arm_parameters,
+                        **cell,
+                    }
+                )
     return rows
 
 

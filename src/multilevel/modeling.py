@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import json
-import math
 import random
 from collections import Counter, defaultdict
 from dataclasses import dataclass
@@ -106,6 +104,13 @@ def train_transformer(
     import torch.nn as nn
     import torch.nn.functional as F
 
+    if embed_dim <= 0 or num_heads <= 0 or num_layers <= 0 or batch_size <= 0:
+        raise ValueError("transformer dimensions, layers, heads, and batch size must be positive")
+    if embed_dim % num_heads != 0:
+        raise ValueError("transformer embedding width must be divisible by the number of heads")
+    if learning_rate <= 0:
+        raise ValueError("transformer learning rate must be positive")
+
     torch.manual_seed(seed)
     vocab = Vocabulary.from_texts(texts)
     encoded = [vocab.encode(text_to_tokens(text)) for text in texts]
@@ -153,6 +158,7 @@ def train_transformer(
             return self.head(h)
 
     model = TinyTransformer()
+    num_parameters = sum(parameter.numel() for parameter in model.parameters())
     opt = torch.optim.AdamW(model.parameters(), lr=learning_rate)
     rng = random.Random(seed)
     for _ in range(epochs):
@@ -182,6 +188,7 @@ def train_transformer(
             "num_layers": num_layers,
             "batch_size": batch_size,
             "learning_rate": learning_rate,
+            "num_parameters": num_parameters,
             "fallback_sampler": "char_ngram_order_8",
         },
     )
@@ -261,6 +268,11 @@ def train_model(
     seed: int,
     epochs: int,
     block_size: int,
+    embed_dim: int = 96,
+    num_heads: int = 4,
+    num_layers: int = 2,
+    batch_size: int = 32,
+    learning_rate: float = 3e-4,
 ) -> ModelResult:
     if model_kind == "auto":
         try:
@@ -270,7 +282,17 @@ def train_model(
         except Exception:
             model_kind = "ngram"
     if model_kind == "transformer":
-        return train_transformer(texts, seed=seed, epochs=epochs, block_size=block_size)
+        return train_transformer(
+            texts,
+            seed=seed,
+            epochs=epochs,
+            block_size=block_size,
+            embed_dim=embed_dim,
+            num_heads=num_heads,
+            num_layers=num_layers,
+            batch_size=batch_size,
+            learning_rate=learning_rate,
+        )
     if model_kind == "ngram":
         return train_ngram(texts)
     raise ValueError(f"unknown model kind: {model_kind}")
