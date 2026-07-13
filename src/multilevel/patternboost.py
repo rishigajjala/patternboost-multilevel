@@ -12,7 +12,7 @@ from typing import Any
 from multilevel.canonical import attach_certificate_hash, sha256_obj, write_json
 from multilevel.components import LARGE_EXAMPLE_CONSTRAINTS
 from multilevel.modeling import save_model_artifacts, sample_model, train_model
-from multilevel.mutations import mutate_instance
+from multilevel.mutations import DIVERSE_ANNEALED_LOCAL_SEARCH, mutate_instance
 from multilevel.provenance import attach_runtime_provenance
 from multilevel.representations import (
     decoded_geometry,
@@ -104,6 +104,49 @@ def _resolution_bucket(instance: dict[str, Any]) -> int:
         return 1
 
 
+def _unit_square_structural_signature(
+    row: tuple[float, dict[str, Any], dict[str, Any], str, str],
+) -> tuple[int, int, float, int, int, int]:
+    features = row[2]
+    try:
+        tau_lp = round(float(features.get("tau_lp", 0.0)), 2)
+    except (TypeError, ValueError):
+        tau_lp = 0.0
+    return (
+        _resolution_bucket(row[1]),
+        int(features.get("tau_int") or 0),
+        tau_lp,
+        int(features.get("lp_support") or 0),
+        int(features.get("max_line_frequency") or 0),
+        int(features.get("line_count") or 0) // 4,
+    )
+
+
+def _select_structurally_diverse(
+    rows: list[tuple[float, dict[str, Any], dict[str, Any], str, str]],
+    limit: int,
+) -> list[tuple[float, dict[str, Any], dict[str, Any], str, str]]:
+    selected = []
+    signatures = set()
+    for row in rows:
+        signature = _unit_square_structural_signature(row)
+        if selected and signature in signatures:
+            continue
+        selected.append(row)
+        signatures.add(signature)
+        if len(selected) >= limit:
+            return selected
+    selected_ids = {row[3] for row in selected}
+    for row in rows:
+        if row[3] in selected_ids:
+            continue
+        selected.append(row)
+        selected_ids.add(row[3])
+        if len(selected) >= limit:
+            break
+    return selected
+
+
 def _select_elites(
     scored: list[tuple[float, dict[str, Any], dict[str, Any], str, str]],
     *,
@@ -111,10 +154,16 @@ def _select_elites(
     problem: str,
     representation: str,
     preserve_resolution_diversity: bool,
+    local_search: str | None = None,
 ) -> list[tuple[float, dict[str, Any], dict[str, Any], str, str]]:
     limit = max(1, elite_size)
+    structural_diversity = (
+        problem == "unit_square"
+        and representation == "sqstab_exact_grid"
+        and local_search == DIVERSE_ANNEALED_LOCAL_SEARCH
+    )
     if not _resolution_diversity_active(problem, representation, preserve_resolution_diversity):
-        return scored[:limit]
+        return _select_structurally_diverse(scored, limit) if structural_diversity else scored[:limit]
 
     buckets: dict[int, list[tuple[float, dict[str, Any], dict[str, Any], str, str]]] = {}
     for row in scored:
@@ -135,7 +184,10 @@ def _select_elites(
         )
         objective_quota = quota - (1 if newest_immigrant is not None and quota >= 2 else 0)
         objective_rows = [row for row in rows if row is not newest_immigrant]
-        selected.extend(objective_rows[:objective_quota])
+        if structural_diversity:
+            selected.extend(_select_structurally_diverse(objective_rows, objective_quota))
+        else:
+            selected.extend(objective_rows[:objective_quota])
         if newest_immigrant is not None and quota >= 2:
             selected.append(newest_immigrant)
 
@@ -610,6 +662,7 @@ def run_patternboost(
                 problem=problem,
                 representation=representation,
                 preserve_resolution_diversity=preserve_resolution_diversity,
+                local_search=effective_local_search,
             )
 
             if generation % max(1, exact_every) == 0 or generation == iterations - 1:
@@ -766,6 +819,16 @@ def run_patternboost(
                 else:
                     parent = rng.choice(next_population)
                 try:
+                    mate = None
+                    if effective_local_search == DIVERSE_ANNEALED_LOCAL_SEARCH:
+                        same_resolution = [
+                            candidate
+                            for candidate in mutation_parents
+                            if candidate is not parent
+                            and _resolution_bucket(candidate) == _resolution_bucket(parent)
+                        ]
+                        if same_resolution:
+                            mate = rng.choice(same_resolution)
                     child = mutate_instance(
                         problem,
                         effective_local_search,
@@ -775,6 +838,7 @@ def run_patternboost(
                         n_min=search_n_min,
                         n_max=search_n_max,
                         representation=representation,
+                        mate=mate,
                     )
                 except Exception:
                     invalid += 1

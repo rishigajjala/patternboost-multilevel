@@ -145,6 +145,23 @@ def test_square_training_archive_round_robins_over_resolutions():
     assert Counter(instance["side"] for _, instance in selected) == {1: 2, 2: 2, 3: 2, 4: 2}
 
 
+def test_escape_search_elites_preserve_distinct_lp_structures():
+    scored = [
+        (10.0, {"side": 4}, {"tau_int": 4, "tau_lp": 2.67, "lp_support": 8, "line_count": 40}, "a", "local_mutation"),
+        (9.9, {"side": 4}, {"tau_int": 4, "tau_lp": 2.67, "lp_support": 8, "line_count": 41}, "b", "local_mutation"),
+        (9.0, {"side": 4}, {"tau_int": 4, "tau_lp": 2.60, "lp_support": 11, "line_count": 45}, "c", "local_mutation"),
+    ]
+    selected = _select_elites(
+        scored,
+        elite_size=2,
+        problem="unit_square",
+        representation="sqstab_exact_grid",
+        preserve_resolution_diversity=False,
+        local_search="diverse_annealed_crossover",
+    )
+    assert [row[3] for row in selected] == ["a", "c"]
+
+
 def test_subthreshold_square_can_evolve_but_cannot_be_exported():
     constraints = _nontrivial_constraints("unit_square", 20)
     instance = {"squares": [[index, 0] for index in range(20)], "side": 4}

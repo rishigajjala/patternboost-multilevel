@@ -21,6 +21,7 @@ from multilevel.components import (
     build_model_capacity_matrix,
     build_replacement_delta_matrix,
     build_symmetry_crossover_matrix,
+    build_unit_square_restart_matrix,
     fresh_rng_seed,
 )
 from multilevel.exploratory import run_exploratory_search
@@ -88,6 +89,20 @@ def cmd_model_capacity_matrix(args: argparse.Namespace) -> int:
         budget_seconds=int(args.budget_seconds),
         git_commit=commit,
         problems=args.problem,
+    )
+    out = Path(args.out)
+    _write_jsonl(out, rows)
+    print(f"wrote {len(rows)} rows to {out}")
+    return 0
+
+
+def cmd_unit_square_restart_matrix(args: argparse.Namespace) -> int:
+    cwd = Path.cwd()
+    commit = args.git_commit if args.git_commit is not None else git_commit(cwd)
+    rows = build_unit_square_restart_matrix(
+        stage=args.stage,
+        budget_seconds=int(args.budget_seconds),
+        git_commit=commit,
     )
     out = Path(args.out)
     _write_jsonl(out, rows)
@@ -550,6 +565,16 @@ def build_parser() -> argparse.ArgumentParser:
     capacity_matrix.add_argument("--problem", action="append", choices=sorted(MODEL_CAPACITY_TOP_CONFIGS), default=None)
     capacity_matrix.add_argument("--out", default="runs/model_capacity_matrix.jsonl")
     capacity_matrix.set_defaults(func=cmd_model_capacity_matrix)
+
+    square_restart_matrix = sub.add_parser(
+        "unit-square-restart-matrix",
+        help="generate six fresh unit-square capacity rows with target-free escape search",
+    )
+    square_restart_matrix.add_argument("--stage", default="unit_square_restart")
+    square_restart_matrix.add_argument("--budget-seconds", type=int, default=24 * 3600)
+    square_restart_matrix.add_argument("--git-commit", default=None)
+    square_restart_matrix.add_argument("--out", default="runs/unit_square_restart_matrix.jsonl")
+    square_restart_matrix.set_defaults(func=cmd_unit_square_restart_matrix)
 
     symmetry_matrix = sub.add_parser(
         "symmetry-crossover-matrix",

@@ -98,6 +98,7 @@ SYMMETRY_CROSSOVER_REPRESENTATIONS = {
 
 
 SYMMETRY_CROSSOVER_LOCAL_SEARCH = "symmetry_crossover_hillclimb"
+UNIT_SQUARE_ESCAPE_LOCAL_SEARCH = "diverse_annealed_crossover"
 
 
 REPLACEMENT_REMOVALS: dict[str, dict[str, str]] = {
@@ -454,6 +455,46 @@ def build_model_capacity_matrix(
                         **cell,
                     }
                 )
+    return rows
+
+
+def build_unit_square_restart_matrix(
+    *,
+    stage: str,
+    budget_seconds: int,
+    git_commit: str,
+) -> list[dict[str, object]]:
+    """Build six fresh unit-square rows without a target score in the matrix."""
+    rows = build_model_capacity_matrix(
+        stage=stage,
+        budget_seconds=budget_seconds,
+        git_commit=git_commit,
+        problems=("unit_square",),
+    )
+    short_git = git_commit[:12] if git_commit else "nogit"
+    for row in rows:
+        row["experiment_family"] = "unit_square_fresh_restart_v1"
+        row["fresh_start"] = True
+        row["selection_rule"] = "restart_prior_capacity_cells_without_target_value"
+        row.pop("reference_score", None)
+        row.pop("reference_score_fraction", None)
+        if int(row["selection_rank"]) == 1:
+            row["local_search"] = UNIT_SQUARE_ESCAPE_LOCAL_SEARCH
+            row["population"] = 48
+            row["elite"] = 16
+            row["immigrants_per_generation"] = 8
+            row["preserve_resolution_diversity"] = True
+            if row["experiment_arm"] == "compact":
+                row["initial_pool_size"] = 512
+                row["training_archive_limit"] = 192
+            else:
+                row["initial_pool_size"] = 1024
+                row["training_archive_limit"] = 512
+        row["run_id"] = (
+            f"unit_square_restart/{row['experiment_arm']}/{row['selection_rank']}/"
+            f"{row['representation']}/{row['local_search']}/{row['surrogate']}/"
+            f"budget{budget_seconds}/git{short_git}"
+        )
     return rows
 
 

@@ -12,8 +12,10 @@ from multilevel.components import (
     REPLACEMENT_RUNTIME_OVERRIDES,
     SYMMETRY_CROSSOVER_LOCAL_SEARCH,
     SYMMETRY_CROSSOVER_REPRESENTATIONS,
+    UNIT_SQUARE_ESCAPE_LOCAL_SEARCH,
     build_replacement_delta_matrix,
     build_symmetry_crossover_matrix,
+    build_unit_square_restart_matrix,
 )
 from multilevel.mutations import _exact_hillclimb_key, mutate_instance
 from multilevel.representations import (
@@ -227,3 +229,52 @@ def test_exact_hillclimb_prioritizes_admissible_square_instances():
     assert admissible_key[0] == 1.0
     assert small_cover_key[0] == 0.0
     assert admissible_key > small_cover_key
+
+
+def test_unit_square_restart_matrix_is_fresh_target_free_and_six_rows():
+    rows = build_unit_square_restart_matrix(
+        stage="restart",
+        budget_seconds=24 * 3600,
+        git_commit="abc123",
+    )
+    assert len(rows) == 6
+    assert len({row["rng_seed"] for row in rows}) == 6
+    assert {row["experiment_arm"] for row in rows} == {"compact", "scaled"}
+    assert all(row["fresh_start"] is True for row in rows)
+    assert all("reference_score" not in row for row in rows)
+    escape_rows = [row for row in rows if row["selection_rank"] == 1]
+    assert len(escape_rows) == 2
+    assert {row["local_search"] for row in escape_rows} == {UNIT_SQUARE_ESCAPE_LOCAL_SEARCH}
+    assert {row["population"] for row in escape_rows} == {48}
+    assert {row["elite"] for row in escape_rows} == {16}
+    assert {row["initial_pool_size"] for row in escape_rows} == {512, 1024}
+
+
+def test_diverse_annealed_square_search_retains_parent_or_better():
+    rng = random.Random(9300)
+    parent = initial_instance_for_representation(
+        "unit_square", "sqstab_exact_grid", rng, n=8, grid=8
+    )
+    mate = initial_instance_for_representation(
+        "unit_square", "sqstab_exact_grid", rng, n=8, grid=8
+    )
+    mate["side"] = parent["side"]
+    mate["_representation_payload"]["side"] = parent["side"]
+    before = unit_square.score_instance(decoded_geometry(parent))
+    child = mutate_instance(
+        "unit_square",
+        UNIT_SQUARE_ESCAPE_LOCAL_SEARCH,
+        parent,
+        rng,
+        grid=8,
+        n_min=8,
+        n_max=24,
+        representation="sqstab_exact_grid",
+        mate=mate,
+    )
+    after = unit_square.score_instance(decoded_geometry(child))
+    assert float(after["score"]) + 1e-12 >= float(before["score"])
+    payload = child["_local_search_payload"]
+    assert payload["algorithm"] == UNIT_SQUARE_ESCAPE_LOCAL_SEARCH
+    assert payload["steps"] == 32
+    assert payload["acceptance"] == "exact_simulated_annealing_with_best_retention"

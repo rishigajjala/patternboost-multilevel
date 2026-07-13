@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 import itertools
+import math
 import random
 from typing import Any
 
@@ -29,6 +30,8 @@ from multilevel.representations import (
 
 SYMMETRY_CROSSOVER_LOCAL_SEARCH = "symmetry_crossover_hillclimb"
 SYMMETRY_CROSSOVER_STEPS = 25
+DIVERSE_ANNEALED_LOCAL_SEARCH = "diverse_annealed_crossover"
+DIVERSE_ANNEALED_STEPS = 32
 
 
 def mutate_instance(
@@ -41,8 +44,21 @@ def mutate_instance(
     n_min: int = 2,
     n_max: int = 64,
     representation: str | None = None,
+    mate: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     rep = representation or str(instance.get("_representation") or default_representation(problem))
+    if local_search == DIVERSE_ANNEALED_LOCAL_SEARCH:
+        if problem != "unit_square":
+            raise ValueError(f"{DIVERSE_ANNEALED_LOCAL_SEARCH} only supports unit_square")
+        return _diverse_annealed_square_search(
+            instance,
+            mate,
+            rng,
+            grid=grid,
+            n_min=n_min,
+            n_max=n_max,
+            representation=rep,
+        )
     if local_search == SYMMETRY_CROSSOVER_LOCAL_SEARCH:
         return _symmetry_crossover_hillclimb(
             problem,
@@ -116,6 +132,240 @@ def _symmetry_crossover_hillclimb(
         "acceptance": "exact_nonworsening",
     }
     return best
+
+
+def _diverse_annealed_square_search(
+    instance: dict[str, Any],
+    mate: dict[str, Any] | None,
+    rng: random.Random,
+    *,
+    grid: int,
+    n_min: int,
+    n_max: int,
+    representation: str,
+) -> dict[str, Any]:
+    """Explore beyond a local optimum without encoding a desired construction."""
+    parent = repair_instance_for_representation(
+        "unit_square",
+        representation,
+        copy.deepcopy(instance),
+        grid=grid,
+        n_min=n_min,
+        n_max=n_max,
+    )
+    parent_cert = unit_square_scorer.score_instance(decoded_square_geometry(parent))
+    current = parent
+    current_cert = parent_cert
+    best = parent
+    best_cert = parent_cert
+    mate_used = False
+
+    if mate is not None and int(mate.get("side", 1)) == int(parent.get("side", 1)):
+        try:
+            recombined = _recombine_unit_square_parents(parent, mate, rng, grid=grid)
+            recombined = repair_instance_for_representation(
+                "unit_square",
+                representation,
+                recombined,
+                grid=grid,
+                n_min=n_min,
+                n_max=n_max,
+            )
+            recombined_cert = unit_square_scorer.score_instance(decoded_square_geometry(recombined))
+            current = recombined
+            current_cert = recombined_cert
+            mate_used = True
+            if _unit_square_escape_key(recombined_cert) > _unit_square_escape_key(best_cert):
+                best = recombined
+                best_cert = recombined_cert
+        except Exception:
+            pass
+
+    accepted = 0
+    accepted_downhill = 0
+    for step in range(DIVERSE_ANNEALED_STEPS):
+        trial = _compound_unit_square_trial(current, rng, grid=grid)
+        try:
+            trial = repair_instance_for_representation(
+                "unit_square",
+                representation,
+                trial,
+                grid=grid,
+                n_min=n_min,
+                n_max=n_max,
+            )
+            trial_cert = unit_square_scorer.score_instance(decoded_square_geometry(trial))
+        except Exception:
+            continue
+
+        progress = step / max(1, DIVERSE_ANNEALED_STEPS - 1)
+        temperature = 0.05 * (1.0 - progress) + 0.005
+        delta = _unit_square_escape_energy(trial_cert) - _unit_square_escape_energy(current_cert)
+        accept = delta >= 0.0 or rng.random() < math.exp(max(-50.0, delta / temperature))
+        if accept:
+            current = trial
+            current_cert = trial_cert
+            accepted += 1
+            if delta < 0.0:
+                accepted_downhill += 1
+        if _unit_square_escape_key(trial_cert) > _unit_square_escape_key(best_cert):
+            best = trial
+            best_cert = trial_cert
+
+    best["_local_search_payload"] = {
+        "algorithm": DIVERSE_ANNEALED_LOCAL_SEARCH,
+        "steps": DIVERSE_ANNEALED_STEPS,
+        "accepted": accepted,
+        "accepted_downhill": accepted_downhill,
+        "mate_used": mate_used,
+        "compound_moves": [2, 3, 4, 5],
+        "acceptance": "exact_simulated_annealing_with_best_retention",
+        "temperature": {"initial": 0.055, "final": 0.005},
+        "move_probabilities": {
+            "shift": 0.35,
+            "random_move": 0.20,
+            "coordinate_swap": 0.15,
+            "line_align": 0.20,
+            "cluster_shift": 0.10,
+        },
+    }
+    return best
+
+
+def decoded_square_geometry(instance: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "schema": "unit_square_instance_v1",
+        "squares": copy.deepcopy(instance.get("squares", [])),
+        "side": instance.get("side", 1),
+    }
+
+
+def _unit_square_escape_key(cert: dict[str, Any]) -> tuple[float, float, int, int, float, float]:
+    tau_int = float(cert.get("tau_int", 0.0))
+    min_tau = float(LARGE_EXAMPLE_CONSTRAINTS["unit_square"]["min_tau_int"])
+    return (
+        float(tau_int >= min_tau),
+        float(cert.get("score", 0.0)),
+        len(cert.get("lp_primal") or {}),
+        int(cert.get("line_count", 0)),
+        tau_int,
+        -float(cert.get("tau_lp", 0.0)),
+    )
+
+
+def _unit_square_escape_energy(cert: dict[str, Any]) -> float:
+    tau_int = float(cert.get("tau_int", 0.0))
+    min_tau = float(LARGE_EXAMPLE_CONSTRAINTS["unit_square"]["min_tau_int"])
+    admissibility = min(1.0, tau_int / max(1.0, min_tau))
+    return float(cert.get("score", 0.0)) + 0.20 * admissibility
+
+
+def _recombine_unit_square_parents(
+    first: dict[str, Any],
+    second: dict[str, Any],
+    rng: random.Random,
+    *,
+    grid: int,
+) -> dict[str, Any]:
+    child = copy.deepcopy(first)
+    first_squares = [list(row) for row in first.get("squares", [])]
+    second_squares = [list(row) for row in second.get("squares", [])]
+    if not first_squares or not second_squares:
+        return child
+    target = len(first_squares)
+
+    candidates: list[list[int]] = []
+    if rng.random() < 0.5:
+        first_order = rng.sample(first_squares, len(first_squares))
+        second_order = rng.sample(second_squares, len(second_squares))
+        cut = rng.randrange(1, target) if target > 1 else 1
+        candidates.extend(first_order[:cut])
+        candidates.extend(second_order[: max(0, target - cut)])
+    else:
+        xs = [int(row[0]) for row in first_squares]
+        ys = [int(row[1]) for row in second_squares]
+        rng.shuffle(xs)
+        rng.shuffle(ys)
+        candidates.extend([[xs[index % len(xs)], ys[index % len(ys)]] for index in range(target)])
+
+    unique: list[list[int]] = []
+    seen: set[tuple[int, int]] = set()
+    for x, y in [*candidates, *first_squares, *second_squares]:
+        point = (max(0, min(grid, int(x))), max(0, min(grid, int(y))))
+        if point in seen:
+            continue
+        seen.add(point)
+        unique.append([point[0], point[1]])
+        if len(unique) >= target:
+            break
+    while len(unique) < target:
+        point = (rng.randrange(grid + 1), rng.randrange(grid + 1))
+        if point in seen:
+            continue
+        seen.add(point)
+        unique.append([point[0], point[1]])
+    child["squares"] = unique
+    child.pop("_local_search_payload", None)
+    return child
+
+
+def _compound_unit_square_trial(
+    instance: dict[str, Any],
+    rng: random.Random,
+    *,
+    grid: int,
+) -> dict[str, Any]:
+    trial = copy.deepcopy(instance)
+    move_count = rng.choices((2, 3, 4, 5), weights=(4, 4, 2, 1), k=1)[0]
+    for _ in range(move_count):
+        _unit_square_escape_primitive(trial, rng, grid=grid)
+    trial.pop("_local_search_payload", None)
+    trial.pop("_representation_payload", None)
+    return trial
+
+
+def _unit_square_escape_primitive(instance: dict[str, Any], rng: random.Random, *, grid: int) -> None:
+    squares = instance.get("squares", [])
+    if not squares:
+        return
+    draw = rng.random()
+    if draw < 0.35:
+        index = rng.randrange(len(squares))
+        radius = rng.choice((1, 1, 1, 2))
+        dx = rng.randrange(-radius, radius + 1)
+        dy = rng.randrange(-radius, radius + 1)
+        if dx == 0 and dy == 0:
+            dx = rng.choice((-1, 1))
+        squares[index] = [
+            max(0, min(grid, int(squares[index][0]) + dx)),
+            max(0, min(grid, int(squares[index][1]) + dy)),
+        ]
+    elif draw < 0.55:
+        squares[rng.randrange(len(squares))] = [rng.randrange(grid + 1), rng.randrange(grid + 1)]
+    elif draw < 0.70 and len(squares) >= 2:
+        first, second = rng.sample(range(len(squares)), 2)
+        if rng.random() < 0.5:
+            squares[first][0], squares[second][0] = squares[second][0], squares[first][0]
+        else:
+            squares[first][1], squares[second][1] = squares[second][1], squares[first][1]
+    elif draw < 0.90 and len(squares) >= 2:
+        index, reference = rng.sample(range(len(squares)), 2)
+        side = max(1, int(instance.get("side", 1) or 1))
+        if rng.random() < 0.5:
+            squares[index][0] = max(0, min(grid, int(squares[reference][0]) + rng.choice((-side, 0, side))))
+        else:
+            squares[index][1] = max(0, min(grid, int(squares[reference][1]) + rng.choice((-side, 0, side))))
+    else:
+        count = rng.randrange(2, min(6, len(squares)) + 1) if len(squares) >= 2 else 1
+        selected = rng.sample(range(len(squares)), count)
+        dx, dy = rng.choice((-2, -1, 0, 1, 2)), rng.choice((-2, -1, 0, 1, 2))
+        if dx == 0 and dy == 0:
+            dx = rng.choice((-1, 1))
+        for index in selected:
+            squares[index] = [
+                max(0, min(grid, int(squares[index][0]) + dx)),
+                max(0, min(grid, int(squares[index][1]) + dy)),
+            ]
 
 
 def _exact_hillclimb_key(problem: str, instance: dict[str, Any]) -> tuple[float, float, float, float]:
