@@ -12,24 +12,29 @@ tested scaled setting did not improve exact scores under the same budget."
 
 ## Selected configurations
 
-The experiment uses the three highest-scoring standard automated configurations
-for each of MISR, unit-square stabbing, and guillotine hardness in the final
-81-cell table. The diversity-island unit-square follow-up is excluded because it
-is a separate human-informed intervention. Exact-score ties are resolved by
-configuration ID.
+The experiment uses the three highest-scoring configurations for each of MISR,
+unit-square stabbing, and guillotine hardness in the final 81-cell table. This
+includes the diversity-island unit-square configuration that reached (20/13).
+Exact-score ties are resolved by configuration ID.
 
 ## Matched arms
 
-Both arms use population 32, elite 6, exact scoring every 5 generations,
-training every 10 generations, 16 model samples, 3 training epochs, context
-length 128, no immigrants, no resolution-island retention, and the same
-two-hour application budget. Geometry, local search, and surrogate are fixed
-within each comparison.
+Both arms use exact scoring every 5 generations, training every 10 generations,
+16 model samples, 3 training epochs, context length 128, and the same two-hour
+application budget. Geometry, local search, surrogate, and all non-model search
+settings are fixed within each comparison.
 
 | Arm | Initial pool | Training archive | Layers | Heads | Width |
 |---|---:|---:|---:|---:|---:|
 | compact | 32 | 48 | 2 | 4 | 96 |
 | scaled | 256 | 256 | 4 | 8 | 192 |
+
+The (20/13) unit-square configuration preserves its original diversity
+mechanism in both arms: population 32, elite 12, four random immigrants per
+generation, and resolution-island retention. Its compact arm uses the original
+initial pool of 128 and an archive cap of 96; its scaled arm uses 256 for both.
+The other eight compact rows use population 32, elite 6, initial pool 32, and
+archive cap 48.
 
 The scaled transformer has roughly eight times the encoder parameters before
 small vocabulary-dependent terms. Exact parameter counts, model-training time,
@@ -81,6 +86,8 @@ python3 scripts/analyze_model_capacity.py \
 ## Reporting rule
 
 Report exact verified scores and the number of comparisons in which scaling was
-better, tied, or worse. Also report model-training time and completed
-generations. Do not attribute a lower score solely to representational capacity
-if the scaled arm completed materially fewer search generations.
+better, tied, or worse. The primary outcome is the best new exact score; an
+improvement is more valuable than evidence of a plateau. Also report
+model-training time and completed generations. Do not attribute a lower score
+solely to representational capacity if the scaled arm completed materially fewer
+search generations.

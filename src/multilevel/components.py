@@ -190,9 +190,9 @@ REPLACEMENT_RUNTIME_OVERRIDES: dict[str, dict[str, int | bool]] = {
 }
 
 
-# Highest-scoring standard automated cells in the final 81-cell table. The
-# diversity-island unit-square follow-up is excluded because it is a separate
-# intervention. Ties are resolved lexicographically by configuration ID.
+# Highest-scoring cells in the final 81-cell table. Ties are resolved
+# lexicographically by configuration ID. The winning unit-square cell retains
+# its diversity-island runtime settings in both capacity arms.
 MODEL_CAPACITY_TOP_CONFIGS: dict[str, tuple[dict[str, object], ...]] = {
     "misr": (
         {
@@ -219,6 +219,21 @@ MODEL_CAPACITY_TOP_CONFIGS: dict[str, tuple[dict[str, object], ...]] = {
     ),
     "unit_square": (
         {
+            "representation": "sqstab_exact_grid",
+            "local_search": "symmetry_crossover_hillclimb",
+            "surrogate": "exact_stab_gap_pressure",
+            "reference_score": 20 / 13,
+            "reference_score_fraction": "20/13",
+            "runtime_overrides": {
+                "population": 32,
+                "elite": 12,
+                "immigrants_per_generation": 4,
+                "preserve_resolution_diversity": True,
+            },
+            "compact_initial_pool_size": 128,
+            "compact_training_archive_limit": 96,
+        },
+        {
             "representation": "fixed_symmetry_grid",
             "local_search": "symmetry_crossover_hillclimb",
             "surrogate": "exact_stab_gap_pressure",
@@ -229,13 +244,6 @@ MODEL_CAPACITY_TOP_CONFIGS: dict[str, tuple[dict[str, object], ...]] = {
             "representation": "fixed_symmetry_grid",
             "local_search": "symmetry_crossover_hillclimb",
             "surrogate": "incidence_statistics",
-            "reference_score": 1.5,
-            "reference_score_fraction": "3/2",
-        },
-        {
-            "representation": "line_square_incidence",
-            "local_search": "coord_mutation",
-            "surrogate": "exact_stab_gap_pressure",
             "reference_score": 1.5,
             "reference_score_fraction": "3/2",
         },
@@ -408,6 +416,18 @@ def build_model_capacity_matrix(
                 "surrogate": str(selected_cell["surrogate"]),
             }
             for arm, arm_parameters in MODEL_CAPACITY_ARMS.items():
+                selected_arm_parameters = dict(arm_parameters)
+                if arm == "compact":
+                    selected_arm_parameters["initial_pool_size"] = int(
+                        selected_cell.get("compact_initial_pool_size", selected_arm_parameters["initial_pool_size"])
+                    )
+                    selected_arm_parameters["training_archive_limit"] = int(
+                        selected_cell.get(
+                            "compact_training_archive_limit",
+                            selected_arm_parameters["training_archive_limit"],
+                        )
+                    )
+                runtime_overrides = dict(selected_cell.get("runtime_overrides", {}))
                 rows.append(
                     {
                         "schema": "run_matrix_row_v1",
@@ -423,13 +443,14 @@ def build_model_capacity_matrix(
                         "experiment_family": "model_capacity_v1",
                         "experiment_arm": arm,
                         "selection_rank": rank,
-                        "selection_rule": "top_standard_automated_score_then_config_id",
+                        "selection_rule": "top_final_score_then_config_id",
                         "reference_score": selected_cell["reference_score"],
                         "reference_score_fraction": selected_cell["reference_score_fraction"],
                         "n": n,
                         "grid": grid,
                         **MODEL_CAPACITY_RUNTIME_PARAMETERS,
-                        **arm_parameters,
+                        **runtime_overrides,
+                        **selected_arm_parameters,
                         **cell,
                     }
                 )

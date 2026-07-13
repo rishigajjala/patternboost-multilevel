@@ -19,9 +19,19 @@ def test_model_capacity_matrix_is_matched_and_separates_output_arms(monkeypatch)
     assert {row["experiment_arm"] for row in rows} == {"compact", "scaled"}
     assert len({row["rng_seed"] for row in rows}) == 18
     assert all(row["population"] == 32 for row in rows)
-    assert all(row["elite"] == 6 for row in rows)
     assert all(row["model_samples"] == 16 for row in rows)
-    assert all(row["preserve_resolution_diversity"] is False for row in rows)
+
+    diversity_rows = [row for row in rows if row["preserve_resolution_diversity"]]
+    assert len(diversity_rows) == 2
+    assert all(row["problem"] == "unit_square" and row["selection_rank"] == 1 for row in diversity_rows)
+    assert all(row["elite"] == 12 for row in diversity_rows)
+    assert {row["reference_score_fraction"] for row in diversity_rows} == {"20/13"}
+    diversity_by_arm = {row["experiment_arm"]: row for row in diversity_rows}
+    assert diversity_by_arm["compact"]["initial_pool_size"] == 128
+    assert diversity_by_arm["compact"]["training_archive_limit"] == 96
+    assert diversity_by_arm["scaled"]["initial_pool_size"] == 256
+    assert diversity_by_arm["scaled"]["training_archive_limit"] == 256
+    assert all(row["elite"] == 6 for row in rows if row not in diversity_rows)
 
     keys = Counter(
         (row["problem"], row["representation"], row["local_search"], row["surrogate"])
@@ -39,6 +49,7 @@ def test_model_capacity_matrix_is_matched_and_separates_output_arms(monkeypatch)
     )
     assert compact["model_num_layers"] == 2
     assert scaled["model_num_layers"] == 4
-    assert compact["training_archive_limit"] == 48
+    expected_compact_archive = 96 if compact["preserve_resolution_diversity"] else 48
+    assert compact["training_archive_limit"] == expected_compact_archive
     assert scaled["training_archive_limit"] == 256
     assert compact["run_id"] != scaled["run_id"]
