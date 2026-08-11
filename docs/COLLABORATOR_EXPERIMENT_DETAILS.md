@@ -169,13 +169,3 @@ EPYC hardware.
 
 Official specifications:
 https://crc-docs.abudhabi.nyu.edu/hpc/training/system.html
-
-## Repository and anonymity
-
-The working public repository is:
-https://github.com/rishigajjala/patternboost-multilevel
-
-This URL is not anonymous because its owner is visible. For double-blind
-submission, export a clean release snapshot to an anonymous artifact service
-or a neutral organization account. A personal-account GitHub stub should not
-be described as genuinely anonymous.
