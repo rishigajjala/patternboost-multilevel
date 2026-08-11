@@ -158,7 +158,7 @@ PyTorch 2.8.0. Analysis uses Matplotlib 3.8 or newer, pandas 2.1 or newer, and
 PyPDF 5 or newer; those analysis packages were lower-bounded rather than
 fully frozen in the repository.
 
-NYUAD's official Jubail documentation lists the standard CPU node as two AMD
+The standard CPU node as two AMD
 EPYC 7742 64-core processors at 2.25 GHz (128 cores total) with 480 GB RAM
 (3.75 GB/core). It also notes that small jobs can be scheduled onto legacy
 Dalma nodes. The PatternBoost array template requested one task, 4 CPU cores,
@@ -167,5 +167,4 @@ not retain each row's Slurm `NodeList`, so the exact physical CPU model used by
 each row should be recovered from `sacct` before claiming that every row ran on
 EPYC hardware.
 
-Official specifications:
-https://crc-docs.abudhabi.nyu.edu/hpc/training/system.html
+
