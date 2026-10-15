@@ -77,3 +77,13 @@ nominal 24-hour budget, but the replacement regime changed object counts,
 population size, and unit-square diversity controls. The report therefore
 treats the merged matrix as the final algorithm comparison, not as a pure
 one-factor causal ablation.
+
+## Reproduction inputs
+
+The final evidence `data/` directory also contains `final_81_seeds.json`
+(all recorded seeds and dependencies), `final_81_runtime.jsonl` (complete
+per-row historical settings), and `final_81_runtime_provenance.json` (derivation
+and file hashes). Use the root `reproduce.py` entry point and
+[artifact guide](../ARTIFACT_EVALUATION.md) for single/full/Slurm execution.
+The generic main matrix is an earlier design rather than the final 36/42/3
+cohort mixture.

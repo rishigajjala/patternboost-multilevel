@@ -1,14 +1,23 @@
 # NYUAD Jubail HPC Workflow
 
-These commands assume the NYUAD username `sg9396` and the default remote
-directory `~/patternboost/multi-level`. Override `REMOTE` or `REMOTE_DIR` if
-needed.
+Set `REMOTE` explicitly to your NYUAD account; the sync scripts have no default
+account. Their default directories are relative to the remote account's home:
+`patternboost/multi-level` for working-tree sync and
+`patternboost/multi-level-<commit>` for commit deployment. Set `REMOTE_DIR` to
+an absolute path or a home-relative path to override the destination. A leading
+`~/` is also accepted and resolved relative to the remote home.
+
+For reproduction of the paper's final 81-row table, follow the
+[current repository guide](../README.md). This page describes the general HPC
+workflow and earlier snapshots. Its generic matrix and short example budgets
+do not select the paper's three runtime cohorts.
 
 ## 1. Sync from Local Machine
 
 From the local project root:
 
 ```bash
+export REMOTE='NETID@jubail.abudhabi.nyu.edu' # replace NETID with your username
 scripts/sync_to_hpc.sh
 ```
 
@@ -29,20 +38,29 @@ scripts/sync_git_commit_to_hpc.sh
 
 This refuses tracked local changes, sends `git archive HEAD`, and creates a
 clean commit-stamped directory such as
-`/home/sg9396/patternboost/multi-level-<commit>`. Generate final matrices from
+`~/patternboost/multi-level-<commit>`. Generate final matrices from
 inside that deployed directory so each row records the same commit SHA that was
 actually run.
 
 ## 2. Create the HPC Python Environment
 
-On Jubail:
+From the local shell where `REMOTE` was exported, connect to Jubail:
 
 ```bash
-ssh sg9396@jubail.abudhabi.nyu.edu
-cd ~/patternboost/multi-level
+ssh "$REMOTE"
+# Keep job I/O and generated outputs on scratch, not in the home source copy.
+PROJECT_SOURCE="$HOME/patternboost/multi-level"
+PROJECT_DIR="$SCRATCH/patternboost/multi-level"
+mkdir -p "$PROJECT_DIR"
+rsync -a "$PROJECT_SOURCE/" "$PROJECT_DIR/"
+cd "$PROJECT_DIR"
 scripts/prepare_hpc_scratch_venv.sh
 source /scratch/$USER/pb_multilevel_venv/bin/activate
 ```
+
+For a commit-stamped deployment, set `PROJECT_SOURCE` to that exact deployed
+source directory before copying. The remaining relative paths in this guide
+are then inside the scratch checkout.
 
 Run a smoke check:
 
@@ -214,7 +232,7 @@ PYTHONPATH=src python3 scripts/extract_learning_curves.py \
   --out runs/main_81_hpc/report/learning_curves.csv
 ```
 
-The final July 2026 submission snapshot was collected from a commit-stamped
+The historical July 8 submission snapshot was collected from a commit-stamped
 deployment:
 
 ```text
@@ -227,8 +245,8 @@ Its compact artifacts are committed under:
 docs/assets/final_submission_20260708_131302/
 ```
 
-Use this committed artifact directory, not live checkpoint values, for
-manuscript tables.
+Use this committed artifact directory when examining the July 8 results. For
+the final paper table, use the evidence and instructions in the root guide.
 
 For exploratory runs, preserve only compact final artifacts in git:
 

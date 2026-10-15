@@ -33,7 +33,7 @@ The main conclusion is:
 
 ### MISR old-framework best, score 1.40
 
-![MISR old framework best](study_assets/fig_misr_old_best_1p4.png)
+![MISR old framework best](../assets/study_assets/fig_misr_old_best_1p4.png)
 
 Certificate components:
 
@@ -48,7 +48,7 @@ Certificate components:
 
 ### MISR imported triangle-free best, score 1.185185
 
-![MISR triangle-free local best](study_assets/fig_misr_tf_local_1p185185.png)
+![MISR triangle-free local best](../assets/study_assets/fig_misr_tf_local_1p185185.png)
 
 Certificate components:
 
@@ -61,7 +61,7 @@ Certificate components:
 
 ### Unit-square old-framework best, score 4/3
 
-![Unit-square old framework best](study_assets/fig_unit_square_old_4_3.png)
+![Unit-square old framework best](../assets/study_assets/fig_unit_square_old_4_3.png)
 
 Certificate components:
 
@@ -75,7 +75,7 @@ Certificate components:
 
 ### Unit-square allowed imported best, score 1.5
 
-![Allowed square-stabbing best](study_assets/fig_unit_square_allowed_1p5.png)
+![Allowed square-stabbing best](../assets/study_assets/fig_unit_square_allowed_1p5.png)
 
 Certificate components:
 
@@ -88,7 +88,7 @@ Certificate components:
 
 ### Guillotine old-framework best, score 2/7
 
-![Guillotine old framework best](study_assets/fig_guillotine_old_2_7.png)
+![Guillotine old framework best](../assets/study_assets/fig_guillotine_old_2_7.png)
 
 Certificate components:
 
@@ -102,7 +102,7 @@ Certificate components:
 
 ### Guillotine imported n=40 best, exact score 0.30
 
-![Guillotine n40 exact best](study_assets/fig_guillotine_n40_0p30.png)
+![Guillotine n40 exact best](../assets/study_assets/fig_guillotine_n40_0p30.png)
 
 Certificate components:
 

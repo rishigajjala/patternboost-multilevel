@@ -2,6 +2,11 @@
 
 This is the minimal workflow for a new student taking over the project.
 
+For reproduction of the paper's final 81-row table, follow the
+[current repository guide](../README.md). The general workflow below includes
+earlier experiment snapshots and smoke settings; it does not select the final
+paper's three runtime cohorts.
+
 ## 1. Install and Test
 
 ```bash
@@ -45,15 +50,15 @@ The main paper table scope is `misr`, `unit_square`, and `guillotine`.
 exploratory snapshot, but keep them in a separate appendix/results section. Do
 not count discarded square-stabbing-14-9 evidence in current paper tables.
 
-The final submission artifacts are preserved at:
+The earlier July 8 submission artifacts are preserved at:
 
 ```text
 docs/assets/final_submission_20260708_131302/
 ```
 
-Use `docs/RESULTS.md` and
-`docs/manuscript/patternboost_experiment_report.pdf` as the authoritative
-snapshot for manuscript tables. The fresh final-array values are MISR `1.5`,
+`docs/RESULTS.md` and
+`docs/manuscript/patternboost_experiment_report.pdf` describe that historical
+snapshot. Its array values are MISR `1.5`,
 unit_square `1.5`, and guillotine `0.25`. A reverified previous-best
 guillotine certificate with score `0.3` is preserved separately and must be
 cited with that provenance.
@@ -92,8 +97,9 @@ Use `docs/HPC_JUBAIL.md`. Always run a small smoke/slice before a full array.
 Recommended first HPC sequence:
 
 ```bash
+export REMOTE='NETID@jubail.abudhabi.nyu.edu' # replace NETID with your username
 scripts/sync_to_hpc.sh
-ssh sg9396@jubail.abudhabi.nyu.edu
+ssh "$REMOTE"
 cd ~/patternboost/multi-level
 scripts/prepare_hpc_scratch_venv.sh
 PYTHONPATH=src python3 -m multilevel.cli smoke --out runs/hpc_smoke

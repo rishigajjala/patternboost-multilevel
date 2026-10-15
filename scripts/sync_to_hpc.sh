@@ -3,8 +3,10 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-REMOTE="${REMOTE:-sg9396@jubail.abudhabi.nyu.edu}"
-REMOTE_DIR="${REMOTE_DIR:-~/patternboost/multi-level}"
+: "${REMOTE:?Set REMOTE to your account, for example NETID@jubail.abudhabi.nyu.edu}"
+# SSH and rsync resolve relative paths from the remote account's home directory.
+REMOTE_DIR="${REMOTE_DIR:-patternboost/multi-level}"
+REMOTE_DIR="${REMOTE_DIR#\~/}"
 DRY_RUN="${DRY_RUN:-0}"
 
 RSYNC_ARGS=(

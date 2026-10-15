@@ -1,0 +1,43 @@
+{
+  "schema": "paper_runtime_manifest_provenance_v1",
+  "recovered_on": "2026-10-15",
+  "description": "Historical matrix rows joined with saved run summaries; every seed and final certificate hash was matched to the original final-table record.",
+  "row_count": 81,
+  "cohort_counts": {
+    "6f80dfec1a16": 42,
+    "20750a588a5b": 36,
+    "87326f25dbec": 3
+  },
+  "data_sha256": {
+    "final_81_runtime.jsonl": "53e90d3d069e3428d88052f83837e5f9dcb1b4063b23c4d6cd4eb1c3c5fd1cd9",
+    "final_81_seeds.json": "68ac381fb391ef4c3a55f1f5938a012bbffc73353ad131898159db06f829f38d",
+    "final_81_runs.csv": "4ea41481d5b86cb6abddb56c52397efa7dbff2d18efc59793ae31be5d194f7ee"
+  },
+  "derivation": {
+    "summary_field_mapping": {
+      "population": "population_size",
+      "elite": "elite_size",
+      "iterations": "iterations",
+      "budget_seconds": "budget_seconds",
+      "n": "n",
+      "grid": "grid",
+      "train_every": "train_every",
+      "exact_every": "exact_every",
+      "model_samples": "model_samples",
+      "checkpoint_every": "checkpoint_every",
+      "control_mode": "control_mode"
+    },
+    "model_hparams_mapping": {
+      "model_epochs": "epochs",
+      "block_size": "block_size"
+    },
+    "initial_population_and_diversity": "Original source initializes retained/replacement populations at population_size, with no periodic immigrants or resolution-diversity mechanism. Follow-up values come directly from original rows and saved summaries.",
+    "model_kind": "Use observed model_kind_latest=transformer for 77 rows. Preserve requested auto for four rows that recorded no trained model and zero model train calls/samples."
+  },
+  "limitations": [
+    "Historical runtime rows specify the recorded settings; reruns use the checked-out source. Original source revisions are recorded per row for historical comparisons.",
+    "Four rows recorded no trained model; their requested auto model mode is preserved.",
+    "A fixed seed is not a claim of bitwise determinism across hardware/library versions or success across other seeds.",
+    "Full search trajectories, model weights, and large checkpoints are not included."
+  ]
+}

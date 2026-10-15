@@ -56,7 +56,7 @@ def write_slurm_array(
     if runner == "patternboost":
         command = "patternboost-cell"
         extra = (
-            "--iterations ${ITERATIONS:-100} "
+            "--iterations ${ITERATIONS:-1000000} "
             "--population ${POPULATION:-32} "
             "--elite ${ELITE:-6} "
             "--exact-every ${EXACT_EVERY:-5} "

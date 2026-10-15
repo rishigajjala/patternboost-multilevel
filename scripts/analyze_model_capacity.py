@@ -55,7 +55,7 @@ def build_rows(matrix: list[dict[str, Any]], summaries: dict[str, dict[str, Any]
                 "local_search": spec["local_search"],
                 "surrogate": spec["surrogate"],
                 "experiment_arm": spec["experiment_arm"],
-                "reference_score": spec["reference_score"],
+                "reference_score": spec.get("reference_score"),
                 "best_exact_score": summary.get("best_exact_score"),
                 "stop_reason": summary.get("stop_reason", "missing"),
                 "completed_iterations": summary.get("completed_iterations"),

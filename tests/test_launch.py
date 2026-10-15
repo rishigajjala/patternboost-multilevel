@@ -1,6 +1,10 @@
 from __future__ import annotations
 
 import json
+import os
+import subprocess
+
+import pytest
 
 from multilevel.launch import write_slurm_array
 
@@ -79,3 +83,76 @@ def test_write_slurm_array_creates_log_dir_on_target_filesystem(tmp_path):
     )
 
     assert (results / "slurm").is_dir()
+
+
+@pytest.mark.parametrize(
+    ("row_iterations", "environment_iterations", "expected_iterations"),
+    [
+        (None, None, 1_000_000),
+        (None, "17", 17),
+        (1_000_000, "17", 1_000_000),
+        (13, None, 13),
+    ],
+)
+def test_patternboost_slurm_effective_iterations(
+    tmp_path, monkeypatch, row_iterations, environment_iterations, expected_iterations
+):
+    from multilevel import cli
+
+    row = {
+        "problem": "misr",
+        "representation": "triangle_free_rect",
+        "local_search": "sequence_pair_pivot",
+        "surrogate": "exact_lp_gap_pressure",
+        "rng_seed": 1,
+        "run_id": "iteration_cap_test",
+        "stage": "main",
+        "budget_seconds": 86400,
+    }
+    if row_iterations is not None:
+        row["iterations"] = row_iterations
+    matrix = tmp_path / "matrix.jsonl"
+    matrix.write_text(json.dumps(row) + "\n", encoding="utf-8")
+    script = write_slurm_array(
+        matrix_path=matrix,
+        out_path=tmp_path / "array.slurm",
+        project_dir=tmp_path,
+        results_dir=tmp_path / "results",
+        time_limit="25:00:00",
+        partition="compute",
+        cpus_per_task=4,
+        mem="16G",
+    )
+
+    # Execute the generated shell and capture its actual expanded CLI arguments.
+    # The fake environment prevents any search or cluster setup from running.
+    venv = tmp_path / "venv"
+    (venv / "bin").mkdir(parents=True)
+    (venv / "bin" / "activate").write_text(
+        'python3() { printf "%s\\0" "$@" > "$CAPTURE_ARGS"; }\n', encoding="utf-8"
+    )
+    captured = tmp_path / "arguments"
+    env = {
+        "PATH": os.defpath,
+        "VENV": str(venv),
+        "CAPTURE_ARGS": str(captured),
+        "SLURM_ARRAY_TASK_ID": "0",
+    }
+    if environment_iterations is not None:
+        env["ITERATIONS"] = environment_iterations
+    subprocess.run(["/bin/bash", str(script)], env=env, check=True, capture_output=True, text=True)
+    argv = captured.read_bytes().decode().split("\0")[:-1]
+    assert argv[:2] == ["-m", "multilevel.cli"]
+
+    calls = []
+
+    def capture_search(**kwargs):
+        calls.append(kwargs)
+        return {}
+
+    monkeypatch.setattr(cli, "run_patternboost", capture_search)
+    args = cli.build_parser().parse_args(argv[2:])
+    assert args.func(args) == 0
+    assert len(calls) == 1
+    assert calls[0]["iterations"] == expected_iterations
+    assert calls[0]["budget_seconds"] == 86400

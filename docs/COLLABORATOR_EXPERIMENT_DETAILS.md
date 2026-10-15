@@ -153,8 +153,12 @@ No target score, known certificate, or preferred side length was injected.
 
 ## Software and hardware
 
-The search environment is Python 3.11 with NumPy 2.0.2, SciPy 1.13.1, and
-PyTorch 2.8.0. Analysis uses Matplotlib 3.8 or newer, pandas 2.1 or newer, and
+The recorded environments use Python 3.11 with NumPy 2.0.2 and SciPy 1.13.1.
+Retained MISR/guillotine headline certificates record Python 3.11.3 and
+PyTorch 2.8.0+cu128; the unit-square headline records Python 3.11.14 and
+PyTorch 2.7.1. See `docs/assets/replacement_81_final_20260712/data/final_81_seeds.json`
+for per-certificate dependency provenance. The optional requirements file
+selects PyTorch 2.8.0 for a current environment. Analysis uses Matplotlib 3.8 or newer, pandas 2.1 or newer, and
 PyPDF 5 or newer; those analysis packages were lower-bounded rather than
 fully frozen in the repository.
 
@@ -168,3 +172,16 @@ each row should be recovered from `sacct` before claiming that every row ran on
 EPYC hardware.
 
 
+
+## Recovered seed and runtime manifests
+
+All 81 historical seeds and complete per-row settings are committed in
+`data/final_81_seeds.json` and `data/final_81_runtime.jsonl` under the final
+evidence directory. Use these rows for final-paper runs. The retained 36
+original matrix rows omitted settings that had been supplied at launch; the
+complete runtime manifest incorporates those saved-summary values.
+
+The final data contain one historical run per configuration. Seed recovery
+does not establish success rates across seeds or bitwise replay across
+environments. Four replacement Guillotine rows recorded no trained model;
+their requested auto mode is preserved in the runtime matrix.

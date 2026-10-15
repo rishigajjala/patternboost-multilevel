@@ -3,14 +3,16 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-REMOTE="${REMOTE:-sg9396@jubail.abudhabi.nyu.edu}"
+: "${REMOTE:?Set REMOTE to your account, for example NETID@jubail.abudhabi.nyu.edu}"
 SHA="$(git rev-parse HEAD)"
 SHORT="${SHA:0:12}"
-REMOTE_DIR="${REMOTE_DIR:-/home/sg9396/patternboost/multi-level-${SHORT}}"
+# SSH resolves relative paths from the remote account's home directory.
+REMOTE_DIR="${REMOTE_DIR:-patternboost/multi-level-${SHORT}}"
+REMOTE_DIR="${REMOTE_DIR#\~/}"
 SSH_CONTROL_PATH="${SSH_CONTROL_PATH:-$HOME/.ssh/cm/jubail-codex}"
-SSH_ARGS=()
+SSH_CMD=(ssh)
 if [ -S "$SSH_CONTROL_PATH" ]; then
-  SSH_ARGS=(-S "$SSH_CONTROL_PATH")
+  SSH_CMD+=(-S "$SSH_CONTROL_PATH")
 fi
 
 if ! git diff --quiet -- . || ! git diff --cached --quiet -- .; then
@@ -22,11 +24,11 @@ fi
 echo "deploying git commit $SHA"
 echo "remote: $REMOTE"
 echo "remote dir: $REMOTE_DIR"
-if [ "${#SSH_ARGS[@]}" -gt 0 ]; then
+if [ -S "$SSH_CONTROL_PATH" ]; then
   echo "ssh control socket: $SSH_CONTROL_PATH"
 fi
 
-ssh "${SSH_ARGS[@]}" "$REMOTE" "bash -s" -- "$REMOTE_DIR" "$SHA" <<'REMOTE_SETUP'
+"${SSH_CMD[@]}" "$REMOTE" "bash -s" -- "$REMOTE_DIR" "$SHA" <<'REMOTE_SETUP'
 set -euo pipefail
 REMOTE_DIR="$1"
 SHA="$2"
@@ -36,7 +38,7 @@ mkdir -p "$TMP_DIR"
 printf '%s\n' "$TMP_DIR"
 REMOTE_SETUP
 
-TMP_DIR="$(ssh "${SSH_ARGS[@]}" "$REMOTE" "bash -s" -- "$REMOTE_DIR" <<'REMOTE_TMP'
+TMP_DIR="$("${SSH_CMD[@]}" "$REMOTE" "bash -s" -- "$REMOTE_DIR" <<'REMOTE_TMP'
 set -euo pipefail
 REMOTE_DIR="$1"
 ls -td "${REMOTE_DIR}.tmp."* 2>/dev/null | head -n 1
@@ -48,9 +50,9 @@ if [ -z "$TMP_DIR" ]; then
   exit 1
 fi
 
-git archive --format=tar HEAD | ssh "${SSH_ARGS[@]}" "$REMOTE" "tar -xf - -C '$TMP_DIR'"
+git archive --format=tar HEAD | "${SSH_CMD[@]}" "$REMOTE" "tar -xf - -C '$TMP_DIR'"
 
-ssh "${SSH_ARGS[@]}" "$REMOTE" "bash -s" -- "$REMOTE_DIR" "$TMP_DIR" "$SHA" <<'REMOTE_FINALIZE'
+"${SSH_CMD[@]}" "$REMOTE" "bash -s" -- "$REMOTE_DIR" "$TMP_DIR" "$SHA" <<'REMOTE_FINALIZE'
 set -euo pipefail
 REMOTE_DIR="$1"
 TMP_DIR="$2"

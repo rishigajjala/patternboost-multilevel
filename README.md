@@ -1,221 +1,154 @@
 # PatternBoost Multi-Level Experiments
 
-This repository contains the cleaned experiment harness for the PatternBoost
-geometric extremal-search project. The main paper track focuses on three
-problems:
+Code and exact certificates for *Towards Learning-Guided Discovery of Extremal
+Geometric Constructions: A PatternBoost Study* (ALENEX 2027).
 
-- `misr`: maximum independent set of rectangles LP-gap search
-- `unit_square`: unit-square stabbing LP-gap search
-- `guillotine`: rectangle packing / guillotine nonseparability search
+The final study contains 27 configurations for each of three problems:
 
-Two exploratory appendix tasks are also implemented and audited separately:
+| Problem | Objective | Recorded best | Original RNG seed |
+| --- | --- | --- | --- |
+| MISR | Rectangle independent-set clique-LP gap | 3/2 | `5381899176938748427` |
+| Unit-square stabbing | Line-stabbing set-cover LP gap | 20/13 | `2072069136256961140` |
+| Guillotine | Destroyed fraction under optimal recursive cuts | 1/3 | `4475353812576049258` |
 
-- `epsilon_net`: finite halfplane epsilon-net lower-bound rediscovery
-- `graph_separation`: rectangle graphs versus bounded mixed square/segment representations
+All **81 recorded seeds, per-row runtime settings, and certificate hashes** are
+committed in [the seed manifest](docs/assets/replacement_81_final_20260712/data/final_81_seeds.json).
+The [complete runtime matrix](docs/assets/replacement_81_final_20260712/data/final_81_runtime.jsonl)
+combines the historical matrix rows with their saved launch settings.
+Generated searches go in the Git-ignored `runs/` directory; the committed
+certificates and compact data are under `docs/assets/`.
 
-The repository also contains `formulaboost`, a separate finite-to-family
-discovery prototype. It is documented in [docs/FORMULABOOST.md](docs/FORMULABOOST.md)
-and does not contribute evidence to the three-problem PatternBoost matrix.
+## Install
 
-The code generates random search instances, scores every reported candidate
-with an exact problem-specific verifier, writes certificate JSON files, and
-keeps checkpointable PatternBoost runs for local or NYUAD Jubail HPC execution.
-
-## Repository Layout
-
-```text
-src/multilevel/          Python package and CLI
-src/multilevel/scorers/  exact scorers and certificate verifiers
-src/formulaboost/        finite-to-family FormulaBoost prototype
-configs/                 FormulaBoost and experiment configuration files
-examples/               tiny explicit examples for smoke tests only
-scripts/                local, HPC, collection, and monitoring helpers
-tests/                  pytest regression tests
-docs/                   handoff docs, current results, archived notes
-runs/                   ignored local/HPC output directory
-```
-
-Generated artifacts are intentionally ignored by git. The old local run/output
-folders from the working session were preserved in `.local_artifacts/` and are
-not meant to be pushed.
-
-## Setup
-
-Use Python 3.10 or newer. Python 3.11 is recommended.
+Use Python 3.11 or 3.12 in a virtual environment:
 
 ```bash
-cd multi-level
-python3 --version
+git clone https://github.com/rishigajjala/patternboost-multilevel.git
+cd patternboost-multilevel
 python3 -m venv .venv
 source .venv/bin/activate
-python3 -m pip install --upgrade pip setuptools wheel
-python3 -m pip install -e . -r requirements.txt
+python -m pip install -e . -r requirements.txt
 ```
 
-If `python3 --version` is below 3.10, install a newer Python through conda,
-Homebrew, or the NYUAD HPC module system before creating the virtual
-environment.
-
-Install PyTorch only if you want transformer-guided PatternBoost sampling:
+The exact verifiers use NumPy, SciPy/HiGHS, and the bundled combinatorial
+solvers. No commercial solver is required. Install PyTorch for guided searches:
 
 ```bash
-python3 -m pip install -r requirements-torch.txt
+python -m pip install -r requirements-torch.txt
 ```
 
-Run the fast checks:
+Per-run dependency versions are recorded in the seed manifest and certificates.
+The headline unit-square run used PyTorch **2.7.1**, while retained MISR and
+guillotine runs record **2.8.0+cu128**. Use a separate matching environment when
+comparing a historical run. The default optional requirements select 2.8.0.
+
+## Verify the reported constructions
+
+These commands work without PyTorch:
 
 ```bash
-pytest -q
-PYTHONPATH=src python3 -m multilevel.cli smoke --out runs/smoke
+python reproduce.py --mode verify
+python reproduce.py --mode smoke
 ```
 
-## First Local Run
+Verification recomputes the scores of all 81 stored certificates. The smoke
+mode checks the small-example scoring pipeline. Neither is a repeated-seed
+search experiment.
 
-Generate the current 81-row, no-seed main matrix:
+## Re-run a paper configuration
+
+Inspect a complete recorded configuration before launching it:
 
 ```bash
-scripts/make_main_matrix.sh
+python reproduce.py --mode single --problem unit_square --dry-run
 ```
 
-Run one PatternBoost cell locally:
+A normal single run uses that configuration's recorded seed and historical
+**24-hour budget / 1,000,000-generation cap**:
 
 ```bash
-PYTHONPATH=src python3 -m multilevel.cli patternboost-cell \
-  --matrix runs/main_81_matrix.jsonl \
-  --index 0 \
-  --out-root runs/local_test \
-  --iterations 20 \
-  --population 16 \
-  --elite 4 \
-  --exact-every 5 \
-  --train-every 5 \
-  --model-samples 4 \
-  --model-kind ngram \
-  --checkpoint-every 1 \
-  --n 8 \
-  --grid 8
+python reproduce.py --mode single --problem unit_square
 ```
 
-Collect and audit results:
+Use `--problem misr` or `--problem guillotine` for their headline cells.
+`--paper-seeds` is accepted explicitly; `--seed INTEGER` selects a different
+single-run seed, and `--fresh-seeds` generates and records new seeds.
+Every invocation writes its effective matrix in an isolated run directory.
+For a deliberately shorter comparison, both overrides change the matrix row:
 
 ```bash
-PYTHONPATH=src python3 -m multilevel.cli summary --root runs/local_test --out runs/local_test/summary.csv
-PYTHONPATH=src python3 -m multilevel.cli audit --root runs/local_test --out runs/local_test/audit/audit.json --csv runs/local_test/audit/audit.csv
+python reproduce.py --mode single --problem misr --iterations 200 --budget-seconds 3600
 ```
 
-## NYUAD Jubail HPC
+Short runs and changed seeds may not reach a paper record. Generation counts
+are not interchangeable across different populations or training schedules.
+Fixed seeds also do not guarantee bitwise agreement across library versions,
+hardware, or source revisions. Historical source revisions are recorded per
+row; this entry point runs the checked-out harness with the recorded settings.
 
-The short version is:
+## The three historical cohorts
+
+| Cohort | Rows | Initial n / grid | Population / elite | Initial pool / immigrants per generation | Train interval |
+| --- | ---: | --- | --- | --- | ---: |
+| Retained July 9 | 36 (12 per problem) | 8 / 8 | 32 / 6 | 32 / 0 | 7 |
+| Main July 11 replacements | 42 | MISR/guillotine: 12 / 8; unit-square: 20 / 16 | 16 / 4 | 16 / 0 | 10 |
+| Unit-square follow-up | 3 | 20 / 16 | 32 / 12 | 128 / 4, resolution diversity enabled | 10 |
+
+Both headline MISR and guillotine records belong to the retained cohort.
+Assigning one setting tuple per problem loses this distinction. The ordinary
+`multilevel.cli matrix --stage main` command generates the older design and
+fresh seeds; use the committed final runtime matrix for the paper's final grid.
+
+## Full matrix and HPC
+
+Preview or run the same 81 per-row configurations locally:
 
 ```bash
-scripts/sync_to_hpc.sh
-ssh sg9396@jubail.abudhabi.nyu.edu
-cd ~/patternboost/multi-level
-scripts/prepare_hpc_scratch_venv.sh
-scripts/make_main_matrix.sh
-PYTHONPATH=src python3 -m multilevel.cli make-slurm \
-  --matrix runs/main_81_matrix.jsonl \
-  --out scripts/main_81_array.slurm \
+python reproduce.py --mode full --parallel 4 --dry-run
+python reproduce.py --mode full --parallel 4
+```
+
+For Slurm, check out the project and keep the results on the cluster's scratch
+filesystem. With the project environment activated, generate a 25-hour array:
+
+```bash
+python -m multilevel.cli make-slurm \
+  --matrix docs/assets/replacement_81_final_20260712/data/final_81_runtime.jsonl \
+  --out runs/paper_81_array.slurm \
   --project-dir "$PWD" \
-  --results-dir runs/main_81_hpc \
-  --time 04:30:00 \
-  --partition compute \
-  --cpus-per-task 4 \
-  --mem 16G \
+  --results-dir "$SCRATCH/patternboost-results" \
+  --time 25:00:00 --partition compute --cpus-per-task 4 --mem 16G \
   --runner patternboost
-VENV=/scratch/$USER/pb_multilevel_venv sbatch scripts/main_81_array.slurm
 ```
 
-Monitor the run:
+The PatternBoost Slurm fallback cap is 1,000,000 generations. Explicit matrix
+fields take precedence over launcher defaults. To submit shorter jobs, create
+rows with explicitly reduced iteration and wall-clock budgets instead of
+assuming a CLI fallback overrides the paper matrix.
+
+Read [ARTIFACT_EVALUATION.md](ARTIFACT_EVALUATION.md) for evaluation modes,
+source provenance, analysis regeneration, output locations, and limitations.
+[docs/HPC_JUBAIL.md](docs/HPC_JUBAIL.md) documents cluster-specific setup.
+Sync helpers require an explicit account, for example
+`REMOTE=NETID@jubail.abudhabi.nyu.edu scripts/sync_to_hpc.sh`.
+
+## Data, reports, and development
+
+- [Final 81-cell evidence](docs/assets/replacement_81_final_20260712)
+- [Full report PDF](docs/manuscript/patternboost_81_run_analysis.pdf) and
+  [analysis guide](docs/FINAL_81_ANALYSIS.md)
+- [Recorded implementation details](docs/COLLABORATOR_EXPERIMENT_DETAILS.md)
+- [Model-capacity study](docs/MODEL_CAPACITY_EXPERIMENT.md)
+- [Exploratory appendix tasks](docs/EXPLORATORY_RESULTS.md)
+- [Separate FormulaBoost prototype](docs/FORMULABOOST.md)
+
+For regression checks:
 
 ```bash
-scripts/monitor_hpc_run.sh JOB_ID runs/main_81_hpc
+python -m pip install pytest
+python -m pytest -q
 ```
 
-See [docs/HPC_JUBAIL.md](docs/HPC_JUBAIL.md) for the full step-by-step HPC
-workflow, including smoke tests, generated Slurm arrays, exploratory runs,
-resume commands, collection, and audit.
-
-## Final 81-Cell Evidence
-
-The updated final 81-cell matrix combines the strongest retained configurations
-from the July 9 study with the 45 replacement-component runs completed on July
-11. It has one independently generated run for every cell in the final
-$3 \times 3 \times 3$ component matrix per problem and no repeated-seed axis.
-
-The best exact audited values in this matrix are:
-
-```text
-misr         1.5
-unit_square 1.538461538461539  (20/13)
-guillotine  0.3333333333333333
-```
-
-All 81 final certificates pass exact verification: 45 replacement
-certificates were freshly recomputed, and 36 retained certificates match their
-prior passed audits by configuration, hash, and score.
-
-The updated evidence bundle, including the final 81-row table, epoch histories,
-construction renderings, figures, generated tables, and audit metadata, is
-stored in
-[docs/assets/replacement_81_final_20260712](docs/assets/replacement_81_final_20260712).
-The two principal data exports are
-[final_81_runs.csv](docs/assets/replacement_81_final_20260712/data/final_81_runs.csv)
-and
-[final_81_epoch_history.csv](docs/assets/replacement_81_final_20260712/data/final_81_epoch_history.csv).
-
-The full 81-cell report is available as
-[PDF](docs/manuscript/patternboost_81_run_analysis.pdf) and
-[TeX source](docs/manuscript/patternboost_81_run_analysis.tex). It includes
-27 configuration trajectories for each problem, component analyses, exact
-construction figures, and a detailed limitations study. See
-[docs/FINAL_81_ANALYSIS.md](docs/FINAL_81_ANALYSIS.md) for an artifact map and
-rebuild commands.
-
-For a concise manuscript-methods checklist covering the final cohort-specific
-hyperparameters, transformer architecture, exact solvers, initialization
-ranges, Jubail hardware caveat, and focused convergence plots, see
-[docs/COLLABORATOR_EXPERIMENT_DETAILS.md](docs/COLLABORATOR_EXPERIMENT_DETAILS.md).
-The compact-versus-scaled transformer check is specified in
-[docs/MODEL_CAPACITY_EXPERIMENT.md](docs/MODEL_CAPACITY_EXPERIMENT.md).
-
-The separately audited exploratory run produced:
-
-```text
-epsilon_net       1.4545454545454546
-graph_separation 0.0 exact, 1.3845054945054946 pressure/search
-```
-
-See [docs/EXPLORATORY_RESULTS.md](docs/EXPLORATORY_RESULTS.md). These values
-are not part of the three-problem main table.
-
-## Core Commands
-
-Show available components:
-
-```bash
-PYTHONPATH=src python3 -m multilevel.cli registry
-```
-
-Score, verify, and render one bundled smoke example:
-
-```bash
-PYTHONPATH=src python3 -m multilevel.cli score misr examples/misr_small.json --out runs/misr_small.cert.json
-PYTHONPATH=src python3 -m multilevel.cli verify runs/misr_small.cert.json
-PYTHONPATH=src python3 -m multilevel.cli render runs/misr_small.cert.json --out runs/misr_small.svg
-```
-
-Resume a checkpointed cell:
-
-```bash
-PYTHONPATH=src python3 -m multilevel.cli patternboost-cell \
-  --matrix runs/main_81_matrix.jsonl \
-  --index 0 \
-  --out-root runs/local_test \
-  --iterations 200 \
-  --resume
-```
-
-For a conceptual map of the 81 rows, see
-[docs/EXPERIMENT_MATRIX.md](docs/EXPERIMENT_MATRIX.md). For day-to-day
-handoff instructions, see [docs/HANDOFF.md](docs/HANDOFF.md).
+This public Git repository is versioned but its default branch can change.
+An immutable publication requires a separately deposited, versioned archive;
+no DOI is claimed here.
